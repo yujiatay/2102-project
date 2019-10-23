@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "skipLibCheck": true,
+    "strict": true,
+    "sourceMap": false,
+    "outDir": "dist"
+  },
+  "exclude": [
+    "**/*.spec.ts",
+    "node_modules",
+    "dist",
+    "www"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}
