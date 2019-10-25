@@ -3,6 +3,7 @@ import * as accounts from './accounts';
 import * as analytics from './analytics';
 import * as articles from './articles';
 import * as bookings from './bookings';
+import * as diners from './diners';
 import * as restaurants from './restaurants';
 import * as reviews from './reviews';
 
@@ -14,6 +15,7 @@ export default {
   analytics,
   articles,
   bookings,
+  diners,
   restaurants,
   reviews
 };

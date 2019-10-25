@@ -1,0 +1,12 @@
+export interface Booking {
+  dusername: string;
+  rusername: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  bookingDate: string;
+  pax: number;
+  message: string;
+  isConfirmed: boolean;
+  createdAt: number;
+}

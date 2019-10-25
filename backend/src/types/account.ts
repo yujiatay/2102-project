@@ -1,7 +1,7 @@
-
-export interface Account {
-  email: string;
+export interface TokenData {
+  type: AccountType;
   username: string;
+  email: string;
 }
 
 export const enum AccountType {

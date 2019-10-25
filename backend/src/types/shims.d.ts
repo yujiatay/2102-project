@@ -3,6 +3,11 @@ declare module '@koa/router' {
   export = Router;
 }
 
+declare module 'postgres-date' {
+  function parse(isoDate: string): Date;
+  export default parse;
+}
+
 declare module 'postgres-migrations' {
   export interface BaseDBConfig {
     readonly user: string;

@@ -6,6 +6,7 @@ import * as Koa from 'koa';
 import * as helmet from 'koa-helmet';
 import * as jwt from 'koa-jwt';
 import * as serveStatic from 'koa-static';
+import { JWT_COOKIE_NAME } from './constants';
 
 import router from './routes';
 
@@ -26,7 +27,7 @@ app.use(serveStatic('www', {
 
 // Add JWT middleware.
 // ctx.state.user will be set if the token is valid.
-app.use(jwt({ secret: process.env.JWT_SECRET!, cookie: 'c.jwt', passthrough: true }));
+app.use(jwt({ secret: process.env.JWT_SECRET!, cookie: JWT_COOKIE_NAME, passthrough: true }));
 
 // Add application routes.
 app.use(router.routes());
