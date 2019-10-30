@@ -1,6 +1,8 @@
 import { Pool, PoolClient, QueryResult, types as pgTypes } from 'pg';
-import parseDate from 'postgres-date';
 import { createDb, migrate } from 'postgres-migrations';
+
+// tslint:disable-next-line
+const parseDate = require('postgres-date');
 
 pgTypes.setTypeParser(20, 'text', parseInt); // bigint
 pgTypes.setTypeParser(1114, (val) => parseDate(val).getTime()); // timestamp without timezone

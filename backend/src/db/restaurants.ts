@@ -23,7 +23,7 @@ export async function addRestaurant(username: string, password: string, email: s
 
   return db.getOne<RestaurantPrivate>(`
     INSERT INTO Restaurants (username, password, email, name, cuisineType, branchLocation, openingHours, capacity)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING username, name, email, cuisineType, branchLocation, openingHours, capacity, createdAt
   `, [username, passwordHash, email, name, cuisineType, branchLocation, openingHours, capacity]);
 }
@@ -32,7 +32,7 @@ export async function addRestaurant(username: string, password: string, email: s
  * Adds a new tag.
  */
 export function addTag(name: string): Promise<Tag> {
-  return db.getOne<Tag>(`INSERT INTO Tags (name) VALUES (?) RETURNING *`, [name]) as Promise<Tag>;
+  return db.getOne<Tag>(`INSERT INTO Tags (name) VALUES ($1) RETURNING *`, [name]) as Promise<Tag>;
 }
 
 /**
@@ -41,7 +41,7 @@ export function addTag(name: string): Promise<Tag> {
 export function getNewestRestaurants(prev?: number): Promise<Restaurant[]> {
   return db.getAll(`
     SELECT username, name, cuisineType, branchLocation, openingHours, capacity, createdAt
-    FROM Restaurants WHERE createdAt < ? ORDER BY createdAt DESC LIMIT ${RESTAURANT_LIST_LIMIT}
+    FROM Restaurants WHERE createdAt < $1 ORDER BY createdAt DESC LIMIT ${RESTAURANT_LIST_LIMIT}
   `, [prev || Date.now()]);
 }
 
@@ -51,7 +51,7 @@ export function getNewestRestaurants(prev?: number): Promise<Restaurant[]> {
 export function getRestaurantByUsername(username: string): Promise<Restaurant | null> {
   return db.getOne(`
     SELECT username, name, cuisineType, branchLocation, openingHours, capacity, createdAt
-    FROM Restaurants WHERE username = ?
+    FROM Restaurants WHERE username = $1
   `, [username]);
 }
 
@@ -59,7 +59,7 @@ export function getRestaurantByUsername(username: string): Promise<Restaurant | 
  * Gets the full restaurant data of the restaurant with the given username.
  */
 export function getRestaurantWithPassword(username: string): Promise<RestaurantWithPassword | null> {
-  return db.getOne(`SELECT * FROM Restaurants WHERE username = ?`, [username]);
+  return db.getOne(`SELECT * FROM Restaurants WHERE username = $1`, [username]);
 }
 
 /**
@@ -68,7 +68,7 @@ export function getRestaurantWithPassword(username: string): Promise<RestaurantW
 export function getRestaurantWithPrivateData(username: string): Promise<RestaurantPrivate | null> {
   return db.getOne(`
     SELECT username, email, name, cuisineType, branchLocation, openingHours, capacity, createdAt
-    FROM Restaurants WHERE username = ?
+    FROM Restaurants WHERE username = $1
   `, [username]);
 }
 
@@ -76,7 +76,7 @@ export function getRestaurantWithPrivateData(username: string): Promise<Restaura
  * Gets all restaurant tags of the given restaurant.
  */
 export function getRestaurantTags(username: string): Promise<RestaurantTag[]> {
-  return db.getAll(`SELECT * FROM RestaurantTags WHERE username = ?`, [username]);
+  return db.getAll(`SELECT * FROM RestaurantTags WHERE username = $1`, [username]);
 }
 
 /**
@@ -92,7 +92,7 @@ export function getTags(): Promise<Tag[]> {
 export async function setRestaurantTags(username: string, tags: string[]): Promise<RestaurantTag[]> {
   return db.withTransaction(async (client) => {
     const initialTags = await client.getAll<RestaurantTag>(`
-      SELECT * FROM RestaurantTags WHERE username = ?
+      SELECT * FROM RestaurantTags WHERE username = $1
     `, [username]);
 
     const tagDict: { [key: string]: number } = {};
@@ -110,13 +110,13 @@ export async function setRestaurantTags(username: string, tags: string[]): Promi
 
     for (const tag in tagDict) {
       if (tagDict[tag] === -1) {
-        await client.query(`DELETE FROM RestaurantTags WHERE username = ? AND tag = ?`, [username, tag]);
+        await client.query(`DELETE FROM RestaurantTags WHERE username = $1 AND tag = $2`, [username, tag]);
       } else if (tagDict[tag] === 1) {
-        await client.query(`INSERT INTO RestaurantTags (username, tag) VALUES (?, ?)`, [username, tag]);
+        await client.query(`INSERT INTO RestaurantTags (username, tag) VALUES ($1, $2)`, [username, tag]);
       }
     }
 
-    return client.getAll<RestaurantTag>(`SELECT * FROM RestaurantTags WHERE username = ?`, [username]);
+    return client.getAll<RestaurantTag>(`SELECT * FROM RestaurantTags WHERE username = $1`, [username]);
   });
 }
 
@@ -126,7 +126,7 @@ export async function setRestaurantTags(username: string, tags: string[]): Promi
 export async function updateRestaurant(username: string, name: string, cuisineType: CuisineType, branchLocation: string,
                                        openingHours: string, capacity: number): Promise<RestaurantPrivate | null> {
   return db.getOne(`
-    UPDATE Restaurants SET (name, cuisineType, branchLocation, openingHours, capacity) = (?, ?, ?, ?, ?)
-    WHERE username = ?
+    UPDATE Restaurants SET (name, cuisineType, branchLocation, openingHours, capacity) = ($1, $2, $3, $4, $5)
+    WHERE username = $6
   `, [name, cuisineType, branchLocation, openingHours, capacity, username]);
 }

@@ -8,7 +8,7 @@ const REVIEW_LIST_LIMIT = 20;
  */
 export function addReview(rusername: string, dusername: string, comment: string, rating: number): Promise<Review> {
   return db.getOne(`
-    INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES (?, ?, ?, ?) RETURNING *
+    INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES ($1, $2, $3, $4) RETURNING *
   `, [rusername, dusername, comment, rating]) as Promise<Review>;
 }
 
@@ -17,7 +17,7 @@ export function addReview(rusername: string, dusername: string, comment: string,
  */
 export function deleteReview(review: Review): Promise<{}> {
   return db.query(`
-    DELETE FROM Reviews WHERE rusername = ? AND dusername = ?
+    DELETE FROM Reviews WHERE rusername = $1 AND dusername = $2
   `, [review.rusername, review.dusername]);
 }
 
@@ -26,7 +26,7 @@ export function deleteReview(review: Review): Promise<{}> {
  */
 export function getRecentReviewsByRestaurant(username: string, prev?: number): Promise<Review[]> {
   return db.getAll(`
-    SELECT * FROM Reviews WHERE username = ? AND createdAt < ? ORDER BY createdAt DESC LIMIT ${REVIEW_LIST_LIMIT}
+    SELECT * FROM Reviews WHERE username = $1 AND createdAt < $2 ORDER BY createdAt DESC LIMIT ${REVIEW_LIST_LIMIT}
   `, [username, prev || Date.now()]);
 }
 
@@ -35,7 +35,7 @@ export function getRecentReviewsByRestaurant(username: string, prev?: number): P
  */
 export function getReview(rusername: string, dusername: string): Promise<Review | null> {
   return db.getOne(`
-    SELECT * FROM Reviews WHERE rusername = ? AND dusername = ?
+    SELECT * FROM Reviews WHERE rusername = $1 AND dusername = $2
   `, [rusername, dusername]);
 }
 
@@ -44,7 +44,7 @@ export function getReview(rusername: string, dusername: string): Promise<Review 
  */
 export function updateReview(review: Review, comment: string, rating: number): Promise<Review | null> {
   return db.getOne(`
-    UPDATE Reviews SET (comment, rating, updatedAt) = (?, ?, NOW())
-    WHERE rusername = ? AND dusername = ? RETURNING *
+    UPDATE Reviews SET (comment, rating, updatedAt) = ($1, $2, NOW())
+    WHERE rusername = $3 AND dusername = $4 RETURNING *
   `, [comment, rating, review.rusername, review.dusername]);
 }

@@ -9,7 +9,7 @@ import db from './db';
  */
 export function addBookmark(dusername: string, rusername: string): Promise<Bookmark> {
   return db.getOne<Bookmark>(`
-    INSERT INTO Bookmarks (dusername, rusername) VALUES (?, ?) RETURNING *
+    INSERT INTO Bookmarks (dusername, rusername) VALUES ($1, $2) RETURNING *
   `, [dusername, rusername]) as Promise<Bookmark>;
 }
 
@@ -24,7 +24,7 @@ export async function addDiner(username: string, password: string, email: string
 
   return db.getOne<DinerPrivate>(`
     INSERT INTO Diners (username, password, email, referralCode, referrer)
-    VALUES (?, ?, ?, ?, ?) RETURNING username, email, createdAt, points, referralCode, referrer
+    VALUES ($1, $2, $3, $4, $5) RETURNING username, email, createdAt, points, referralCode, referrer
   `, [username, passwordHash, email, referralCode, referrer]);
 }
 
@@ -32,14 +32,14 @@ export async function addDiner(username: string, password: string, email: string
  * Gets the diner with the given username.
  */
 export function getDinerByUsername(username: string): Promise<Diner | null> {
-  return db.getOne(`SELECT username, createdAt FROM Diners WHERE username = ?`, [username]);
+  return db.getOne(`SELECT username, createdAt FROM Diners WHERE username = $1`, [username]);
 }
 
 /**
  * Gets the full diner data of the diner with the given username.
  */
 export function getDinerWithPassword(username: string): Promise<DinerWithPassword | null> {
-  return db.getOne(`SELECT * FROM Diners WHERE username = ?`, [username]);
+  return db.getOne(`SELECT * FROM Diners WHERE username = $1`, [username]);
 }
 
 /**
@@ -47,7 +47,7 @@ export function getDinerWithPassword(username: string): Promise<DinerWithPasswor
  */
 export function getDinerWithPrivateData(username: string): Promise<DinerPrivate | null> {
   return db.getOne(`
-    SELECT username, email, createdAt, points, referralCode, referrer FROM Diners WHERE username = ?
+    SELECT username, email, createdAt, points, referralCode, referrer FROM Diners WHERE username = $1
    `, [username]);
 }
 
@@ -55,7 +55,7 @@ export function getDinerWithPrivateData(username: string): Promise<DinerPrivate 
  * Gets the diner with the given referral code.
  */
 export function getDinerByReferralCode(referralCode: string): Promise<Diner | null> {
-  return db.getOne(`SELECT username, createdAt FROM Diners WHERE referralCode = ?`, [referralCode]);
+  return db.getOne(`SELECT username, createdAt FROM Diners WHERE referralCode = $1`, [referralCode]);
 }
 
 /**
@@ -63,7 +63,7 @@ export function getDinerByReferralCode(referralCode: string): Promise<Diner | nu
  */
 export async function isRestaurantBookmarked(dusername: string, rusername: string): Promise<boolean> {
   const result = await db.getOne(`
-    SELECT 1 FROM Bookmarks WHERE dusername = ? AND rusername = ?
+    SELECT 1 FROM Bookmarks WHERE dusername = $1 AND rusername = $2
   `, [dusername, rusername]);
   return !!result;
 }
@@ -73,6 +73,6 @@ export async function isRestaurantBookmarked(dusername: string, rusername: strin
  */
 export function removeBookmark(dusername: string, rusername: string): Promise<{}> {
   return db.query(`
-    DELETE FROM Bookmarks WHERE dusername = ? AND rusername = ?
+    DELETE FROM Bookmarks WHERE dusername = $1 AND rusername = $2
   `, [dusername, rusername]);
 }
