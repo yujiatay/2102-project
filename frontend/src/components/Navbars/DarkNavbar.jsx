@@ -17,8 +17,7 @@
 */
 import React from "react";
 import { Link } from "react-router-dom";
-// JavaScript plugin that hides or shows a component based on your scroll
-import Headroom from "headroom.js";
+
 // reactstrap components
 import {
   Button,
@@ -41,16 +40,13 @@ import {
 
 class DemoNavbar extends React.Component {
   componentDidMount() {
-    let headroom = new Headroom(document.getElementById("navbar-main"));
-    // initialise
-    headroom.init();
   }
   render() {
     return (
       <>
         <header className="header-global">
           <Navbar
-            className="navbar-main navbar-dark bg-gradient-default headroom"
+            className="navbar-main navbar-transparent navbar-dark bg-gradient-default"
             expand="lg"
             id="navbar-main"
           >

@@ -18,6 +18,7 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classnames from "classnames";
+import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -42,12 +43,16 @@ import Navbar from "components/Navbars/Navbar.jsx";
 import Background from '../../assets/img/restaurant.jpg';
 
 class Landing extends React.Component {
-  state = {};
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+
   render() {
     return (
       <>
@@ -73,29 +78,21 @@ class Landing extends React.Component {
                       Get seats for your next meal now
                     </h1>
                     <Row className="row-grid">
-                      <Col className="pr-0">
-                        <FormGroup>
-                          <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-calendar-grid-58" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <ReactDatetime
-                              inputProps={{
-                                placeholder: "Date"
-                              }}
-                              timeFormat={false}
-                            />
-                          </InputGroup>
-                        </FormGroup>
-                      </Col>
                       <Col>
-                        <Button className="btn-icon btn-2" color="info" type="button">
-                          <span className="btn-inner--icon">
-                            <i className="fa fa-search" />
-                          </span>
-                        </Button>
+                        <Link to="/search">
+                          <Button 
+                            className="btn-icon btn-2"
+                            color="info"
+                            type="button"
+                          >
+                            <span className="btn-inner--icon">
+                              <i className="fa fa-search" />
+                            </span>
+                            <span className="nav-link-inner--text ml-1">
+                              Find one now
+                            </span>
+                          </Button>
+                        </Link>
                       </Col>
                     </Row>
                   </Col>

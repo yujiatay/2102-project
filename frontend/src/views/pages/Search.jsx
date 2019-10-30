@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   Card,
+  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -11,8 +12,11 @@ import {
   InputGroup,
   Row,
   Col,
-  Container
+  Container,
+  Label,
+  Button
 } from "reactstrap";
+import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 
@@ -28,12 +32,87 @@ class Search extends React.Component {
         <Navbar />
         <main ref="main">
           <section className="section">
-            <Container>
+            <Container className="pt-md">
               <Row>
                 <Col xs="4">
-                  <Card body outline color="dark">
+                  <Card shadow>
+                    <CardHeader>
+                      Search criteria
+                    </CardHeader>
                     <CardBody>
-                      Some filter criteria
+                      <Form>
+                        <FormGroup>
+                          <Label for="date">Date</Label>
+                          <InputGroup className="input-group-alternative">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <i className="ni ni-calendar-grid-58" />
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <ReactDatetime
+                              inputProps={{
+                                placeholder: "Choose a date"
+                              }}
+                              timeFormat={false}
+                            />
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="time">Time</Label>
+                          <Input type="select" name="select" id="exampleSelect">
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            <option>1030</option>
+                            <option>1100</option>
+                            <option>1130</option>
+                            <option>1200</option>
+                            <option>1230</option>
+                          </Input>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="pax">Pax</Label>
+                          <Input type="select" name="select" id="exampleSelect">
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                          </Input>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="cuisine">Cuisine</Label>
+                          <Input type="select" name="select" id="exampleSelect">
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            <option>Japanese</option>
+                            <option>Lebanese</option>
+                            <option>Chinese</option>
+                            <option>Portuguese</option>
+                          </Input>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="location">Location</Label>
+                          <Input type="select" name="select" id="exampleSelect">
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            <option>North</option>
+                            <option>South</option>
+                            <option>East</option>
+                            <option>West</option>
+                          </Input>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="location">Budget</Label>
+                          <Input type="select" name="select" id="exampleSelect">
+                            <option value="" disabled selected hidden>Please Choose...</option>
+                            <option>$</option>
+                            <option>$$</option>
+                            <option>$$$</option>
+                            <option>$$$$</option>
+                          </Input>
+                        </FormGroup>
+                        <Button color="primary" type="button" block>
+                          Search
+                        </Button>
+                      </Form>
                     </CardBody>
                   </Card>
                 </Col>
