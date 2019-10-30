@@ -17,8 +17,8 @@ const router = new Router();
 
 async function setLoggedIn(ctx: RouterContext, type: AccountType, entity: RestaurantPrivate | DinerPrivate) {
   const token = await jwt.sign({ type, email: entity.email, username: entity.username },
-    process.env.JWT_SECRET!, { algorithm: 'ES256', expiresIn: '30d' });
-  ctx.cookies.set(JWT_COOKIE_NAME, token, { maxAge: COOKIE_EXPIRATION, secure: true });
+    process.env.JWT_SECRET!, { algorithm: 'HS256', expiresIn: '30d' });
+  ctx.cookies.set(JWT_COOKIE_NAME, token, { maxAge: COOKIE_EXPIRATION });
 }
 
 /**
@@ -184,7 +184,7 @@ router.post('/session', requireLoggedOut, async (ctx) => {
   ctx.body = {
     code: HttpStatus.Ok,
     msg: 'You are now logged in.',
-    data: { type, entity }
+    data: { type, entity: { ...entity, password: undefined } }
   };
 });
 
