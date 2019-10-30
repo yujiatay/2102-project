@@ -21,11 +21,25 @@ import ReactDatetime from "react-datetime";
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 
 class Search extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: null,
+
+    }
+  }
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+
+  valid = (current) => {
+    const yesterday = ReactDatetime.moment().subtract(1, 'day');
+    return current.isAfter(yesterday);
+  }
+
   render() {
     return (
       <>
@@ -54,13 +68,15 @@ class Search extends React.Component {
                                 placeholder: "Choose a date"
                               }}
                               timeFormat={false}
+                              isValidDate={this.valid}
+                              onChange={e => this.setState({ date: e })}
                             />
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>
                           <Label for="time">Time</Label>
                           <Input type="select" name="select" id="exampleSelect">
-                            <option value="" disabled selected hidden>Please Choose...</option>
+                            {/* <option value="" disabled selected hidden>Please Choose...</option> */}
                             <option>1030</option>
                             <option>1100</option>
                             <option>1130</option>
@@ -71,7 +87,7 @@ class Search extends React.Component {
                         <FormGroup>
                           <Label for="pax">Pax</Label>
                           <Input type="select" name="select" id="exampleSelect">
-                            <option value="" disabled selected hidden>Please Choose...</option>
+                            {/* <option value="" disabled selected hidden>Please Choose...</option> */}
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
