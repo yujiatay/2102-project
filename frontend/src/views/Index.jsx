@@ -21,7 +21,7 @@ import React from "react";
 import { Container, Row } from "reactstrap";
 
 // core components
-import NavBar from "components/Navbars/Navbar.jsx";
+import NavBar from "components/Navbars/DemoNavbar.jsx";
 import CardsFooter from "components/Footers/CardsFooter.jsx";
 
 // index page sections

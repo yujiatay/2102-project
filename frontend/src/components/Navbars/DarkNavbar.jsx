@@ -50,7 +50,7 @@ class DemoNavbar extends React.Component {
       <>
         <header className="header-global">
           <Navbar
-            className="navbar-main navbar-transparent navbar-light headroom"
+            className="navbar-main navbar-dark bg-gradient-default headroom"
             expand="lg"
             id="navbar-main"
           >
@@ -77,36 +77,50 @@ class DemoNavbar extends React.Component {
                     </Col>
                   </Row>
                 </div>
-                <NavLink className="align-items-lg-center ml-lg-auto" navbar>
-                  <NavItem className="d-none d-lg-block ml-lg-4">
-                    <Button
-                      className="btn-neutral btn-icon"
-                      color="default"
-                      href="/login"
+                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink
+                      href="#"
                     >
-                      <span className="btn-inner--icon">
-                        <i className="fa fa-sign-in mr-2" />
-                      </span>
-                      <span className="nav-link-inner--text ml-1">
-                        Sign In
-                      </span>
-                    </Button>
+                      <i className="ni ni-ui-04 d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">Articles</span>
+                    </NavLink>
                   </NavItem>
-                  <NavItem className="d-none d-sm-block d-md-block d-lg-none">
-                  <Button
-                      className="btn-neutral btn-icon"
-                      color="default"
-                      href="/login"
+                </Nav>
+                <Nav className="align-items-lg-center ml-lg-auto" navbar>
+                  <NavItem>
+                    <NavLink
+                      className="nav-link-icon"
+                      href="#"
+                      id="tooltip356693867"
+                      target="_blank"
                     >
-                      <span className="btn-inner--icon">
-                        <i className="fa fa-sign-in mr-2" />
+                      <i className="ni ni-notification-70" />
+                      <span className="nav-link-inner--text d-lg-none ml-2">
+                        Notifications
                       </span>
-                      <span className="nav-link-inner--text ml-1">
-                        Sign In
-                      </span>
-                    </Button>
+                    </NavLink>
+                    <UncontrolledTooltip delay={0} target="tooltip356693867">
+                      Notifications
+                    </UncontrolledTooltip>
                   </NavItem>
-                </NavLink>
+                </Nav>
+                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  <UncontrolledDropdown nav>
+                    <DropdownToggle nav>
+                      <i className="ni ni-collection d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">John</span>
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem to="/profile" tag={Link}>
+                        Profile
+                      </DropdownItem>
+                      <DropdownItem to="/landing" tag={Link}>
+                        Logout
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </Nav>
               </UncontrolledCollapse>
             </Container>
           </Navbar>

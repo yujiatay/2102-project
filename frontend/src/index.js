@@ -30,27 +30,32 @@ import Landing from "views/pages/Landing.jsx";
 import Login from "views/pages/Login.jsx";
 import Profile from "views/pages/Profile.jsx";
 import Register from "views/pages/Register.jsx";
+import Search from "views/pages/Search";
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        {/* <Route path="/" exact render={props => <Index {...props} />} /> */}
+        <Route path="/example" exact render={props => <Index {...props} />} />
         <Route
           path="/"
           exact
           render={props => <Landing {...props} />}
         />
-        <Route path="/login-page" exact render={props => <Login {...props} />} />
+        <Route path="/login" exact render={props => <Login {...props} />} />
         <Route
-          path="/profile-page"
+          path="/profile"
           exact
           render={props => <Profile {...props} />}
         />
         <Route
-          path="/register-page"
+          path="/register"
           exact
           render={props => <Register {...props} />}
+        />
+        <Route 
+          path="/search"
+          render={props => <Search {...props}/>}
         />
         <Redirect to="/" />
       </Switch>

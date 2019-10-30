@@ -16,6 +16,7 @@
 
 */
 import React from "react";
+import axios from "axios";
 
 // reactstrap components
 import {
@@ -39,11 +40,37 @@ import Navbar from "components/Navbars/Navbar.jsx";
 import SimpleFooter from "components/Footers/SimpleFooter.jsx";
 
 class Register extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      email: '',
+      password: ''
+    }
+  }
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+
+  handleChange = (value, event) => {
+    this.setState({[value]: event.target.value});
+  }
+
+  submitForm = () => {
+    const body = {
+      email: this.state.email,
+      password: this.state.password,
+      username: this.state.name
+    }
+    axios.post("http://localhost:8000/api/v1.0/diners", body)
+    .then((res) => {
+      console.log(res)
+    })
+  }
+
   render() {
     return (
       <>
@@ -76,7 +103,8 @@ class Register extends React.Component {
                                 <i className="ni ni-circle-08" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="Name" type="text" />
+                            <Input placeholder="Username" type="text" value={this.state.name}
+                              onChange={(e) => this.handleChange('name', e)}/>
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>
@@ -86,7 +114,8 @@ class Register extends React.Component {
                                 <i className="ni ni-email-83" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="Email" type="email" />
+                            <Input placeholder="Email" type="email" value={this.state.email}
+                              onChange={(e) => this.handleChange('email', e)}/>
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>
@@ -100,6 +129,8 @@ class Register extends React.Component {
                               placeholder="Password"
                               type="password"
                               autoComplete="off"
+                              value={this.state.password}
+                              onChange={(e) => this.handleChange('password', e)}
                             />
                           </InputGroup>
                         </FormGroup>
@@ -141,6 +172,7 @@ class Register extends React.Component {
                             className="mt-4"
                             color="primary"
                             type="button"
+                            onClick={this.submitForm}
                           >
                             Create account
                           </Button>
