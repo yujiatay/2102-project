@@ -18,6 +18,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
@@ -30,27 +32,30 @@ import Profile from "views/pages/Profile.jsx";
 import Register from "views/pages/Register.jsx";
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Switch>
-      {/* <Route path="/" exact render={props => <Index {...props} />} /> */}
-      <Route
-        path="/"
-        exact
-        render={props => <Landing {...props} />}
-      />
-      <Route path="/login-page" exact render={props => <Login {...props} />} />
-      <Route
-        path="/profile-page"
-        exact
-        render={props => <Profile {...props} />}
-      />
-      <Route
-        path="/register-page"
-        exact
-        render={props => <Register {...props} />}
-      />
-      <Redirect to="/" />
-    </Switch>
-  </BrowserRouter>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        {/* <Route path="/" exact render={props => <Index {...props} />} /> */}
+        <Route
+          path="/"
+          exact
+          render={props => <Landing {...props} />}
+        />
+        <Route path="/login-page" exact render={props => <Login {...props} />} />
+        <Route
+          path="/profile-page"
+          exact
+          render={props => <Profile {...props} />}
+        />
+        <Route
+          path="/register-page"
+          exact
+          render={props => <Register {...props} />}
+        />
+        <Redirect to="/" />
+      </Switch>
+    </BrowserRouter>
+  </Provider>
+  ,
   document.getElementById("root")
 );
