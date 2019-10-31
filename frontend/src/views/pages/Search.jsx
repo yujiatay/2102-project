@@ -3,7 +3,10 @@ import React from 'react';
 import {
   Card,
   CardHeader,
+  CardTitle,
   CardBody,
+  CardText,
+  CardImg,
   FormGroup,
   Form,
   Input,
@@ -14,9 +17,11 @@ import {
   Col,
   Container,
   Label,
-  Button
+  Button,
+  Modal
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
+import { Link } from "react-router-dom";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 
@@ -25,7 +30,7 @@ class Search extends React.Component {
     super(props);
     this.state = {
       date: null,
-
+      modal: false
     }
   }
 
@@ -38,6 +43,10 @@ class Search extends React.Component {
   valid = (current) => {
     const yesterday = ReactDatetime.moment().subtract(1, 'day');
     return current.isAfter(yesterday);
+  }
+
+  toggleModal = () => {
+    this.setState({ modal: !this.state.modal});
   }
 
   render() {
@@ -75,7 +84,7 @@ class Search extends React.Component {
                         </FormGroup>
                         <FormGroup>
                           <Label for="time">Time</Label>
-                          <Input type="select" name="select" id="exampleSelect">
+                          <Input type="select" name="select" id="time">
                             {/* <option value="" disabled selected hidden>Please Choose...</option> */}
                             <option>1030</option>
                             <option>1100</option>
@@ -86,7 +95,7 @@ class Search extends React.Component {
                         </FormGroup>
                         <FormGroup>
                           <Label for="pax">Pax</Label>
-                          <Input type="select" name="select" id="exampleSelect">
+                          <Input type="select" name="select" id="pax">
                             {/* <option value="" disabled selected hidden>Please Choose...</option> */}
                             <option>1</option>
                             <option>2</option>
@@ -107,7 +116,7 @@ class Search extends React.Component {
                         </FormGroup>
                         <FormGroup>
                           <Label for="location">Location</Label>
-                          <Input type="select" name="select" id="exampleSelect">
+                          <Input type="select" name="select" id="location">
                             <option value="" disabled selected hidden>Please Choose...</option>
                             <option>North</option>
                             <option>South</option>
@@ -117,7 +126,7 @@ class Search extends React.Component {
                         </FormGroup>
                         <FormGroup>
                           <Label for="location">Budget</Label>
-                          <Input type="select" name="select" id="exampleSelect">
+                          <Input type="select" name="select" id="budget">
                             <option value="" disabled selected hidden>Please Choose...</option>
                             <option>$</option>
                             <option>$$</option>
@@ -144,10 +153,48 @@ class Search extends React.Component {
                     </InputGroup>
                   </FormGroup>
                   {
-                    [1,2,3].map((x) => (
-                      <Card body outline color="dark">
+                    [1,2,3,4,5].map((x) => (
+                      <Card className="mt-4" style={{
+                        border: '1px solid #cad1d7'
+                      }}>
                         <CardBody>
-                          Res {x}
+                          <Row>
+                            <Col xs={4}>
+                              <img src="https://via.placeholder.com/150"/>
+                            </Col>
+                            <Col>
+                              <CardTitle>
+                                <Link to="/restaurants">
+                                  Restaurant {x}
+                                </Link>
+                              </CardTitle>
+                              <CardText>
+                                <Row>
+                                  Cuisine: ______
+                                </Row>
+                                <Row>
+                                  Location: ______
+                                </Row>
+                                <Row>
+                                  Price: $
+                                </Row>
+                              </CardText>
+                              <Row>
+                                <Col>
+                                  <Input type="select" name="select" id="booktime">
+                                    <option>1030</option>
+                                    <option>1100</option>
+                                    <option>1130</option>
+                                    <option>1200</option>
+                                    <option>1230</option>
+                                  </Input>
+                                </Col>
+                                <Col>
+                                  <Button onClick={this.toggleModal}>Book now</Button>
+                                </Col>
+                              </Row>
+                            </Col>
+                          </Row>
                         </CardBody>
                       </Card>
                     ))
@@ -156,6 +203,43 @@ class Search extends React.Component {
               </Row>
             </Container>
           </section>
+          <Modal
+            className="modal-dialog-centered"
+            isOpen={this.state.modal}
+            onClick={this.toggleModal}
+            >
+            <div className="modal-header">
+              <h5 className="modal-title" id="modalLabel">
+                Booking a reservation
+              </h5>
+              <button
+                aria-label="Close"
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                onClick={this.toggleModal}
+              >
+                <span aria-hidden={true}>×</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              You are making a reservation for
+              1 people at Bread Street Kitchen on Thu, 31 Oct 2019, 11:45 am            
+            </div>
+            <div className="modal-footer">
+              <Button
+                color="secondary"
+                data-dismiss="modal"
+                type="button"
+                onClick={this.toggleModal}
+              >
+                Cancel
+              </Button>
+              <Button color="primary" type="button">
+                Book now
+              </Button>
+            </div>
+          </Modal>
         </main>
       </>
     );
