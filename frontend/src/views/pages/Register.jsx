@@ -32,7 +32,8 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
 
 // core components
@@ -45,7 +46,12 @@ class Register extends React.Component {
     this.state = {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      alert: {
+        visible: false,
+        color: "primary",
+        msg: ""
+      }
     }
   }
 
@@ -67,13 +73,34 @@ class Register extends React.Component {
     }
     axios.post("http://localhost:8000/api/v1.0/diners", body)
     .then((res) => {
-      console.log(res)
+      // console.log(res)
+      this.setAlertVisible(true, "success", res.data.msg)
     })
+    .catch((err) => {
+      if (err.response) {
+        // console.log(err.response.data)
+        this.setAlertVisible(true, "danger", err.response.data.msg)
+      }
+    })
+  }
+
+  setAlertVisible = (visible, color, msg) => {
+    this.setState({ 
+      alert: { visible, color, msg } 
+    });
   }
 
   render() {
     return (
       <>
+        <Alert isOpen={this.state.alert.visible} color={this.state.alert.color} 
+          toggle={() => this.setState({ alert: { visible: false }})} 
+          style={{ zIndex: 1001, marginBottom: 0 }}
+        >  
+          <span className="alert-inner--text">
+            {this.state.alert.msg}
+          </span>
+        </Alert>
         <Navbar />
         <main ref="main">
           <section className="section section-shaped section-lg">
@@ -134,7 +161,7 @@ class Register extends React.Component {
                             />
                           </InputGroup>
                         </FormGroup>
-                        <div className="text-muted font-italic">
+                        {/* <div className="text-muted font-italic">
                           <small>
                             password strength:{" "}
                             <span className="text-success font-weight-700">
@@ -166,7 +193,7 @@ class Register extends React.Component {
                               </label>
                             </div>
                           </Col>
-                        </Row>
+                        </Row> */}
                         <div className="text-center">
                           <Button
                             className="mt-4"
