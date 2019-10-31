@@ -77,7 +77,7 @@ class DemoNavbar extends React.Component {
                     </Col>
                   </Row>
                 </div>
-                <NavLink className="align-items-lg-center ml-lg-auto" navbar>
+                <div className="align-items-lg-center ml-lg-auto">
                   <NavItem className="d-none d-lg-block ml-lg-4">
                     <Button
                       className="btn-neutral btn-icon"
@@ -93,7 +93,7 @@ class DemoNavbar extends React.Component {
                     </Button>
                   </NavItem>
                   <NavItem className="d-none d-sm-block d-md-block d-lg-none">
-                  <Button
+                    <Button
                       className="btn-neutral btn-icon"
                       color="default"
                       href="/login"
@@ -106,7 +106,7 @@ class DemoNavbar extends React.Component {
                       </span>
                     </Button>
                   </NavItem>
-                </NavLink>
+                </div>
               </UncontrolledCollapse>
             </Container>
           </Navbar>
