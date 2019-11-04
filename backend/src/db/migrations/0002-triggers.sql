@@ -14,7 +14,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER t_check_slot_overlap BEFORE INSERT OR UPDATE ON Bookings
+CREATE TRIGGER t_check_slot_overlap BEFORE INSERT OR UPDATE ON AvailableSlots
 FOR EACH ROW EXECUTE FUNCTION f_check_slot_overlap();
 
 -- [Bookings] Ensure that confirmed bookings do not exceed restaurant capacity at any moment.
