@@ -85,7 +85,7 @@ CREATE TABLE Reviews (
 );
 
 CREATE TABLE Articles (
-  username varchar(25) REFERENCES Diners (username),
+  username varchar(25) REFERENCES Diners (username) ON UPDATE CASCADE ON DELETE CASCADE,
   title varchar(255) NOT NULL,
   content text NOT NULL,
   created_at timestamp NOT NULL DEFAULT NOW(),
