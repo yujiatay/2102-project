@@ -10,3 +10,23 @@ export function generateCode(length: number) {
   }
   return result;
 }
+
+/**
+ * Converts the given string to camel case.
+ */
+export function toCamelCase(snakeCase: string): string {
+  const tokens = snakeCase.split(/_+/).filter((token) => token.length >= 1);
+
+  if (tokens.length <= 1) {
+    return snakeCase;
+  }
+
+  const first = tokens.shift()!.toLowerCase();
+  const rest = tokens.map((token) => {
+    return token.charAt(0).toUpperCase().concat(
+      token.substring(1).toLowerCase()
+    );
+  }).join('');
+
+  return first.concat(rest);
+}

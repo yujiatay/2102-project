@@ -23,8 +23,8 @@ export async function addDiner(username: string, password: string, email: string
   const referrer = code ? await getDinerByReferralCode(code) : null;
 
   return db.getOne<DinerPrivate>(`
-    INSERT INTO Diners (username, password, email, referralCode, referrer)
-    VALUES ($1, $2, $3, $4, $5) RETURNING username, email, createdAt, points, referralCode, referrer
+    INSERT INTO Diners (username, password, email, referral_code, referrer)
+    VALUES ($1, $2, $3, $4, $5) RETURNING username, email, created_at, points, referral_code, referrer
   `, [username, passwordHash, email, referralCode, referrer]);
 }
 
@@ -32,7 +32,7 @@ export async function addDiner(username: string, password: string, email: string
  * Gets the diner with the given username.
  */
 export function getDinerByUsername(username: string): Promise<Diner | null> {
-  return db.getOne(`SELECT username, createdAt FROM Diners WHERE username = $1`, [username]);
+  return db.getOne(`SELECT username, created_at FROM Diners WHERE username = $1`, [username]);
 }
 
 /**
@@ -47,7 +47,7 @@ export function getDinerWithPassword(username: string): Promise<DinerWithPasswor
  */
 export function getDinerWithPrivateData(username: string): Promise<DinerPrivate | null> {
   return db.getOne(`
-    SELECT username, email, createdAt, points, referralCode, referrer FROM Diners WHERE username = $1
+    SELECT username, email, created_at, points, referral_code, referrer FROM Diners WHERE username = $1
    `, [username]);
 }
 
@@ -55,7 +55,7 @@ export function getDinerWithPrivateData(username: string): Promise<DinerPrivate 
  * Gets the diner with the given referral code.
  */
 export function getDinerByReferralCode(referralCode: string): Promise<Diner | null> {
-  return db.getOne(`SELECT username, createdAt FROM Diners WHERE referralCode = $1`, [referralCode]);
+  return db.getOne(`SELECT username, created_at FROM Diners WHERE referral_code = $1`, [referralCode]);
 }
 
 /**

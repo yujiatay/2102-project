@@ -26,7 +26,7 @@ export function deleteReview(review: Review): Promise<{}> {
  */
 export function getRecentReviewsByRestaurant(username: string, prev?: number): Promise<Review[]> {
   return db.getAll(`
-    SELECT * FROM Reviews WHERE username = $1 AND createdAt < $2 ORDER BY createdAt DESC LIMIT ${REVIEW_LIST_LIMIT}
+    SELECT * FROM Reviews WHERE username = $1 AND created_at < $2 ORDER BY created_at DESC LIMIT ${REVIEW_LIST_LIMIT}
   `, [username, prev || Date.now()]);
 }
 
@@ -44,7 +44,7 @@ export function getReview(rusername: string, dusername: string): Promise<Review 
  */
 export function updateReview(review: Review, comment: string, rating: number): Promise<Review | null> {
   return db.getOne(`
-    UPDATE Reviews SET (comment, rating, updatedAt) = ($1, $2, NOW())
+    UPDATE Reviews SET (comment, rating, updated_at) = ($1, $2, NOW())
     WHERE rusername = $3 AND dusername = $4 RETURNING *
   `, [comment, rating, review.rusername, review.dusername]);
 }

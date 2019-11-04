@@ -1,13 +1,26 @@
-import { Pool, PoolClient, QueryResult, types as pgTypes } from 'pg';
+import * as pg from 'pg';
+import { Pool, PoolClient, QueryResult } from 'pg';
 import { createDb, migrate } from 'postgres-migrations';
 
 // tslint:disable-next-line
 const parseDate = require('postgres-date');
 
-pgTypes.setTypeParser(20, 'text', parseInt); // bigint
-pgTypes.setTypeParser(1114, (val) => parseDate(val).getTime()); // timestamp without timezone
-pgTypes.setTypeParser(1184, (val) => parseDate(val).getTime()); // timestamp
-pgTypes.setTypeParser(1700, 'text', parseFloat); // numeric/decimal
+import { toCamelCase } from '../utils/strings';
+
+pg.types.setTypeParser(20, 'text', parseInt); // bigint
+pg.types.setTypeParser(1114, (val) => parseDate(val).getTime()); // timestamp without timezone
+pg.types.setTypeParser(1184, (val) => parseDate(val).getTime()); // timestamp
+pg.types.setTypeParser(1700, 'text', parseFloat); // numeric/decimal
+
+const handleRowDescription = (pg.Query.prototype as any).handleRowDescription;
+
+// Convert camelCased database column names to snake_case.
+(pg.Query.prototype as any).handleRowDescription = function(message: any) {
+  message.fields.forEach((field: any) => {
+    field.name = toCamelCase(field.name);
+  });
+  return handleRowDescription.call(this, message);
+};
 
 const config = {
   host: process.env.DB_HOST!,

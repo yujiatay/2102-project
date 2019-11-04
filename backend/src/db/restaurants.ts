@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { PASSWORD_SALT_ROUNDS } from '../constants';
 import {
   CuisineType,
+  MenuItem,
   Restaurant,
   RestaurantPrivate,
   RestaurantTag,
@@ -14,6 +15,16 @@ import db from './db';
 const RESTAURANT_LIST_LIMIT = 20;
 
 /**
+ * Adds a new menu item for the given restaurant.
+ */
+export function addMenuItem(username: string, name: string, type: string, price: number, description: string,
+                            image: string): Promise<MenuItem> {
+  return db.getOne<MenuItem>(`
+    INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
+  `, [username, name, type, price, description, image]) as Promise<MenuItem>;
+}
+
+/**
  * Adds a new restaurant.
  */
 export async function addRestaurant(username: string, password: string, email: string,
@@ -22,9 +33,9 @@ export async function addRestaurant(username: string, password: string, email: s
   const passwordHash = await bcrypt.hash(password, PASSWORD_SALT_ROUNDS);
 
   return db.getOne<RestaurantPrivate>(`
-    INSERT INTO Restaurants (username, password, email, name, cuisineType, branchLocation, openingHours, capacity)
+    INSERT INTO Restaurants (username, password, email, name, cuisine_type, branch_location, opening_hours, capacity)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING username, name, email, cuisineType, branchLocation, openingHours, capacity, createdAt
+    RETURNING username, name, email, cuisine_type, branch_location, opening_hours, capacity, created_at
   `, [username, passwordHash, email, name, cuisineType, branchLocation, openingHours, capacity]);
 }
 
@@ -36,13 +47,40 @@ export function addTag(name: string): Promise<Tag> {
 }
 
 /**
+ * Deletes the given menu item.
+ */
+export function deleteMenuItem(username: string, name: string): Promise<{}> {
+  return db.query(`DELETE FROM MenuItems WHERE username = $1 AND name = $2`, [username, name]);
+}
+
+/**
+ * Gets all menu items belonging to the given restaurant.
+ */
+export function getMenuItems(username: string): Promise<MenuItem[]> {
+  return db.getAll(`SELECT * FROM MenuItems WHERE username = $1`, [username]);
+}
+
+/**
  * Gets the newest restaurants.
  */
-export function getNewestRestaurants(prev?: number): Promise<Restaurant[]> {
+export function getNewestRestaurants(name?: string, cuisineTypes?: number[], tags?: string[],
+                                     budget?: number, prev?: number): Promise<Restaurant[]> {
+  const noName = name ? 0 : 1;
+  const noCuisineTypes = cuisineTypes && cuisineTypes.length > 0 ? 0 : 1;
+  const noTags = tags && tags.length > 0 ? 0 : 1;
+  const noBudget = budget !== undefined && budget !== null && budget > 0 ? 0 : 1;
+
   return db.getAll(`
-    SELECT username, name, cuisineType, branchLocation, openingHours, capacity, createdAt
-    FROM Restaurants WHERE createdAt < $1 ORDER BY createdAt DESC LIMIT ${RESTAURANT_LIST_LIMIT}
-  `, [prev || Date.now()]);
+    SELECT username, name, cuisine_type, branch_location, opening_hours, capacity, created_at
+    FROM Restaurants R
+    WHERE (1 = $1 OR name ILIKE $2) AND (1 = $3 OR cuisine_type IN $4) AND (1 = $5 OR 1 = ANY (
+      SELECT (CASE WHEN T.tag IN $6 THEN 1 ELSE 0 END) FROM RestaurantTags T WHERE T.username = R.username
+    )) AND (1 = $7 OR (
+      SELECT AVG(price) FROM MenuItems M WHERE R.username = M.username AND M.type = 'main'
+    ) <= $8) AND created_at < $9
+    ORDER BY created_at DESC
+    LIMIT ${RESTAURANT_LIST_LIMIT}
+  `, [noName, name, noCuisineTypes, cuisineTypes, noTags, tags, noBudget, budget, prev || Date.now()]);
 }
 
 /**
@@ -50,7 +88,7 @@ export function getNewestRestaurants(prev?: number): Promise<Restaurant[]> {
  */
 export function getRestaurantByUsername(username: string): Promise<Restaurant | null> {
   return db.getOne(`
-    SELECT username, name, cuisineType, branchLocation, openingHours, capacity, createdAt
+    SELECT username, name, cuisine_type, branch_location, opening_hours, capacity, created_at
     FROM Restaurants WHERE username = $1
   `, [username]);
 }
@@ -67,7 +105,7 @@ export function getRestaurantWithPassword(username: string): Promise<RestaurantW
  */
 export function getRestaurantWithPrivateData(username: string): Promise<RestaurantPrivate | null> {
   return db.getOne(`
-    SELECT username, email, name, cuisineType, branchLocation, openingHours, capacity, createdAt
+    SELECT username, email, name, cuisine_type, branch_location, opening_hours, capacity, created_at
     FROM Restaurants WHERE username = $1
   `, [username]);
 }
@@ -126,7 +164,7 @@ export async function setRestaurantTags(username: string, tags: string[]): Promi
 export async function updateRestaurant(username: string, name: string, cuisineType: CuisineType, branchLocation: string,
                                        openingHours: string, capacity: number): Promise<RestaurantPrivate | null> {
   return db.getOne(`
-    UPDATE Restaurants SET (name, cuisineType, branchLocation, openingHours, capacity) = ($1, $2, $3, $4, $5)
+    UPDATE Restaurants SET (name, cuisine_type, branch_location, opening_hours, capacity) = ($1, $2, $3, $4, $5)
     WHERE username = $6
   `, [name, cuisineType, branchLocation, openingHours, capacity, username]);
 }

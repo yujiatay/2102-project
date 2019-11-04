@@ -1,7 +1,7 @@
 import * as Router from '@koa/router';
 
 import db from '../../db';
-import { requireDiner } from '../../middleware/auth';
+import { requireDiner, requireRestaurant } from '../../middleware/auth';
 import { loadRestaurantFromUsername } from '../../middleware/helpers';
 import { HttpStatus } from '../../types/http';
 import { Restaurant } from '../../types/restaurant';
@@ -10,9 +10,13 @@ const router = new Router();
 
 /**
  * [GET: /restaurants] Get newest restaurants.
+ * [Params] name?, cuisineTypes?, tags?, prev?.
  */
 router.get('/restaurants', async (ctx) => {
-  const restaurants = await db.restaurants.getNewestRestaurants(ctx.query.prev);
+  const cuisineTypes = ctx.query.cuisineTypes ? JSON.parse(ctx.query.cuisineTypes) : null;
+  const tags = ctx.query.tags ? JSON.parse(ctx.query.tags) : null;
+  const restaurants = await db.restaurants.getNewestRestaurants(ctx.query.name, cuisineTypes,
+    tags, ctx.query.budget, ctx.query.prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -30,6 +34,68 @@ router.get('/restaurants/:rusername', loadRestaurantFromUsername, async (ctx) =>
   ctx.body = {
     code: HttpStatus.Ok,
     data: { restaurant, tags }
+  };
+});
+
+/**
+ * [GET: /restaurants/:rusername/menuitems] Get all menu items of a restaurant.
+ */
+router.get('/restaurants/:rusername/menuitems', loadRestaurantFromUsername, async (ctx) => {
+  const restaurant: Restaurant = ctx.state.restaurant;
+  const menuItems = await db.restaurants.getMenuItems(restaurant.username);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: menuItems
+  };
+});
+
+/**
+ * [POST: /restaurants/:rusername/menuitems] Create a new menu item for a restaurant.
+ * [Params] name, type, price, description, image.
+ */
+router.post('/restaurants/:rusername/menuitems', requireRestaurant, loadRestaurantFromUsername, async (ctx) => {
+  const body = ctx.request.body;
+  const restaurant: Restaurant = ctx.state.restaurant;
+
+  if (ctx.state.user.username !== restaurant.username) {
+    return ctx.body = {
+      code: HttpStatus.Forbidden,
+      msg: 'You do not have permission to do that.'
+    };
+  }
+
+  const name = body.name.trim();
+  const type = body.type.trim();
+  const price = parseFloat(body.price);
+  const description = body.description.trim();
+  const menuItem = await db.restaurants.addMenuItem(restaurant.username, name, type, price, description, body.image);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    msg: `You have added ${menuItem.name}.`,
+    data: menuItem
+  };
+});
+
+/**
+ * [DELETE: /restaurants/:rusername/menuitems] Delete a menu item.
+ */
+router.delete('/restaurants/:rusername/menuitems/:name', requireRestaurant, loadRestaurantFromUsername, async (ctx) => {
+  const restaurant: Restaurant = ctx.state.restaurant;
+
+  if (ctx.state.user.username !== restaurant.username) {
+    return ctx.body = {
+      code: HttpStatus.Forbidden,
+      msg: 'You do not have permission to do that.'
+    };
+  }
+
+  await db.restaurants.deleteMenuItem(restaurant.username, ctx.query.name);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    msg: `You have deleted ${ctx.query.name}.`
   };
 });
 
