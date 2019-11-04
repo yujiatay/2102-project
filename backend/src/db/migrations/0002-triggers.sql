@@ -57,3 +57,25 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER t_check_reviewable BEFORE INSERT OR UPDATE ON Reviews
 FOR EACH ROW EXECUTE FUNCTION f_check_reviewable();
+
+-- [Diners / Restaurants] Ensure that usernames and emails are unique across both diners and restaurants.
+CREATE OR REPLACE FUNCTION f_check_credentials() RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM Diners D WHERE D.username = NEW.username OR D.email = NEW.email
+    UNION
+    SELECT 1 FROM Restaurants R WHERE R.username = NEW.username OR R.email = NEW.email
+  ) THEN
+    RAISE NOTICE 'Username or email is already in use.';
+    RETURN NULL;
+  ELSE
+    RETURN NEW;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER t_check_diner_credentials BEFORE INSERT ON Diners
+FOR EACH ROW EXECUTE FUNCTION f_check_credentials();
+
+CREATE TRIGGER t_check_restaurant_credentials BEFORE INSERT ON Restaurants
+FOR EACH ROW EXECUTE FUNCTION f_check_credentials();

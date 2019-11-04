@@ -84,6 +84,32 @@ export function getNewestRestaurants(name?: string, cuisineTypes?: number[], tag
 }
 
 /**
+ * Gets all recommended restaurants.
+ */
+export function getRecommendedRestaurants(username: string): Promise<Restaurant[]> {
+  return db.getAll(`
+    WITH triple AS (SELECT B1.rusername AS r1, B2.rusername AS r2, B3.rusername AS r3, B1.dusername AS diner
+      FROM Bookings B1, Bookings B2, Bookings B3
+      WHERE B1.dusername = B2.dusername AND B2.dusername = B3.dusername
+        AND B1.rusername < B2.rusername AND B2.rusername < B3.rusername
+        AND B1.is_confirmed AND B2.is_confirmed AND B3.is_confirmed),
+    common AS (SELECT T2.diner AS diner
+      FROM triple T1, triple T2
+      WHERE T1.diner = $1 AND T2.diner != $1 AND T1.r1 = T2.r1 AND T1.r2 = T2.r2 AND T1.r3 = T2.r3)
+    SELECT username, name, cuisine_type, branch_location, opening_hours, capacity, created_at
+    FROM (
+      SELECT diner, rusername
+      FROM common C JOIN Bookings B ON C.diner = B.dusername AND B.is_confirmed = TRUE
+      WHERE B.rusername NOT IN (SELECT B2.rusername FROM Bookings B2 WHERE B2.dusername = $1 AND B2.is_confirmed)
+      GROUP BY diner, rusername
+    ) AS T JOIN Restaurants R ON T.rusername = R.username
+    GROUP BY R.username
+    ORDER BY COUNT(*) DESC
+    LIMIT 5
+  `, [username]);
+}
+
+/**
  * Gets the restaurant with the given username.
  */
 export function getRestaurantByUsername(username: string): Promise<Restaurant | null> {
