@@ -15,7 +15,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER t_check_slot_overlap BEFORE INSERT OR UPDATE ON Bookings
-FOR EACH ROW EXECUTE PROCEDURE f_check_slot_overlap();
+FOR EACH ROW EXECUTE FUNCTION f_check_slot_overlap();
 
 -- [Bookings] Ensure that confirmed bookings do not exceed restaurant capacity at any moment.
 CREATE OR REPLACE FUNCTION f_check_pax_count() RETURNS TRIGGER AS $$
@@ -37,7 +37,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER t_check_pax_count BEFORE INSERT OR UPDATE ON Bookings
-FOR EACH ROW EXECUTE PROCEDURE f_check_pax_count();
+FOR EACH ROW EXECUTE FUNCTION f_check_pax_count();
 
 -- [Reviews] Prevent diners from reviewing a restaurant if he has not dined at the restaurant before.
 CREATE OR REPLACE FUNCTION f_check_reviewable() RETURNS TRIGGER AS $$
@@ -56,4 +56,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER t_check_reviewable BEFORE INSERT OR UPDATE ON Reviews
-FOR EACH ROW EXECUTE PROCEDURE f_check_reviewable();
+FOR EACH ROW EXECUTE FUNCTION f_check_reviewable();
