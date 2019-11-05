@@ -32,6 +32,8 @@ import Profile from "views/pages/Profile.jsx";
 import Register from "views/pages/Register.jsx";
 import Search from "views/pages/Search";
 import Restaurant from "views/pages/Restaurant";
+import Dashboard from "views/pages/Restaurant/Dashboard";
+import RestaurantProfile from "views/pages/Restaurant/RestaurantProfile";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -61,6 +63,14 @@ ReactDOM.render(
         <Route 
           path="/restaurants"
           render={props => <Restaurant {...props}/>}
+        />
+        <Route
+          path="/dashboard"
+          render={props => <Dashboard {...props}/>}
+        />
+        <Route
+          path="/restaurant-details"
+          render={props => <RestaurantProfile {...props}/>}
         />
         <Redirect to="/" />
       </Switch>
