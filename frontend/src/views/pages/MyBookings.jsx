@@ -70,6 +70,7 @@ class MyBookings extends React.Component {
         <main ref="main">
           <section className="section h-100vh">
             <Container className="my-lg">
+                <h2>Bookings</h2>
                 <div>
                   <Nav tabs>
                     <NavItem>
