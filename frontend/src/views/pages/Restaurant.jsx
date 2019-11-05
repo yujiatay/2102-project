@@ -89,6 +89,8 @@ class Restaurant extends React.Component {
                       
                     </Col>
                   </Row>
+                  <p></p>
+                  <Button>Reviews</Button>
                   <Row className="mt-4">
                     <Col xs="auto">
                       <FormGroup>
