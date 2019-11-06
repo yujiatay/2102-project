@@ -35,6 +35,8 @@ import Restaurant from "views/pages/Restaurant";
 import MyBookings from "views/pages/MyBookings";
 import ArticlesList from "views/pages/ArticlesList";
 import ArticleView from "views/pages/ArticleView";
+import Dashboard from "views/pages/Restaurant/Dashboard";
+import RestaurantProfile from "views/pages/Restaurant/RestaurantProfile";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -76,6 +78,14 @@ ReactDOM.render(
         <Route 
           path="/articleView"
           render={props => <ArticleView {...props}/>}
+        />
+        <Route
+          path="/dashboard"
+          render={props => <Dashboard {...props}/>}
+        />
+        <Route
+          path="/restaurant-details"
+          render={props => <RestaurantProfile {...props}/>}
         />
         <Redirect to="/" />
       </Switch>
