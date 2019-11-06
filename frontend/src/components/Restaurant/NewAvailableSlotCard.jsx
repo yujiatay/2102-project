@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Card, CardBody,
-  CardTitle, Button, FormGroup, Label, Input, Form
-} from 'reactstrap';
+import { Button, Card, CardBody, CardTitle, Form, FormGroup, Input, Label } from 'reactstrap';
 
 const NewAvailableSlotCard = (props) => {
   return (
@@ -50,7 +47,8 @@ const NewAvailableSlotCard = (props) => {
                 <option value={'01:30'}>01:30</option>
               </Input>
             </FormGroup>
-            <Button block>Confirm</Button>
+            <Button>Cancel</Button>
+            <Button>Confirm</Button>
           </Form>
         </CardBody>
       </Card>

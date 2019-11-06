@@ -50,7 +50,8 @@ const NewMenuItemCard = (props) => {
                 defaultValue={"https://via.placeholder.com/150"}
               />
             </FormGroup>
-            <Button block>Confirm</Button>
+            <Button>Cancel</Button>
+            <Button>Confirm</Button>
           </Form>
         </CardBody>
       </Card>
