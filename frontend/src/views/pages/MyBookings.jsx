@@ -30,6 +30,7 @@ import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import BookingCard from "components/BookingCard.jsx";
+import ReviewModal from 'components/ReviewModal.jsx'
 import classnames from 'classnames';
 
 class MyBookings extends React.Component {
@@ -110,17 +111,18 @@ class MyBookings extends React.Component {
                       <p>These are your confirmed requests:</p>
                       <Row>
                         <Col sm="12">
-                          <BookingCard />
+                          <BookingCard onReviewClick={this.toggleModal}/>
                         </Col>
                       </Row>
                       <Row>
                         <Col sm="12">
-                          <BookingCard />
+                          <BookingCard onReviewClick={this.toggleModal}/>
                         </Col>
                       </Row>
                     </TabPane>
                   </TabContent>
                 </div>
+                <ReviewModal isOpen={this.state.modal} toggleModal={this.toggleModal}/>
             </Container>
           </section>
         </main>
