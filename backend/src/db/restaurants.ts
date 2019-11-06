@@ -77,7 +77,7 @@ export function getNewestRestaurants(name?: string, cuisineTypes?: number[], tag
     WHERE (1 = $1 OR name ILIKE $2) AND (1 = $3 OR cuisine_type = ANY ($4)) AND (1 = $5 OR 1 = ANY (
       SELECT (CASE WHEN T.tag = ANY ($6) THEN 1 ELSE 0 END) FROM RestaurantTags T WHERE T.username = R.username
     )) AND (1 = $7 OR (
-      SELECT AVG(price) FROM MenuItems M WHERE R.username = M.username AND M.type = 'main'
+      SELECT AVG(price) FROM MenuItems M WHERE R.username = M.username AND M.type = 1
     ) <= $8) AND created_at < $9
     ORDER BY created_at DESC
     LIMIT ${RESTAURANT_LIST_LIMIT}
