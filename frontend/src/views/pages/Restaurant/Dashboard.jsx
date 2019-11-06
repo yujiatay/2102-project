@@ -6,6 +6,7 @@ import {
 import Navbar from "components/Navbars/DarkNavBarRestaurant";
 import BookingList from "../../../components/Restaurant/BookingList";
 import ReactDatetime from "react-datetime";
+import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -80,4 +81,4 @@ class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard;
+export default requireAuthentication(Dashboard, false, true);
