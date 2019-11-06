@@ -30,10 +30,27 @@ import {
   Row,
   Col
 } from "reactstrap";
+import http from "http.js";
 
 class DemoNavbar extends React.Component {
   componentDidMount() {
+    http.get("/session")
+      .then((res) => {
+        // console.log(res)
+        this.setState({ user: res.data.data.entity })
+      })
   }
+
+  logOut = () => {
+    http.delete("/session")
+      .then((res) => {
+        // console.log(res)
+        setTimeout(() => {
+          this.props.history.push("/")
+        }, 1000);
+      })
+  }
+
   render() {
     return (
       <>
@@ -90,7 +107,7 @@ class DemoNavbar extends React.Component {
                   <NavItem>
                     <NavLink href="#">
                       <i className="ni ni-button-power" />
-                      <span className="nav-link-inner--text">
+                      <span className="nav-link-inner--text" onClick={this.logOut}>
                         Log Out
                       </span>
                     </NavLink>
