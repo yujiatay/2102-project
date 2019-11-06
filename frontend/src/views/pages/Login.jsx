@@ -16,7 +16,6 @@
 
 */
 import React from "react";
-import axios from "axios";
 
 // reactstrap components
 import {
@@ -39,12 +38,13 @@ import {
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
 import SimpleFooter from "components/Footers/SimpleFooter.jsx";
+import http from "http.js";
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      username: '',
       password: '',
       alert: {
         visible: false,
@@ -66,13 +66,16 @@ class Login extends React.Component {
 
   submitForm = () => {
     const body = {
-      email: this.state.email,
+      username: this.state.username,
       password: this.state.password,
     }
-    axios.post("http://localhost:8000/api/v1.0/session", body)
+    http.post("/session", body)
     .then((res) => {
-      console.log(res)
+      // console.log(res)
       this.setAlertVisible(true, "success", res.data.msg)
+      setTimeout(() => {
+        this.props.history.push("/search")
+      }, 1000);
     })
     .catch((err) => {
       if (err.response) {
@@ -125,11 +128,11 @@ class Login extends React.Component {
                           <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
-                                <i className="ni ni-email-83" />
+                                <i className="ni ni-circle-08" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="Email" type="email" value={this.state.email}
-                              onChange={(e) => this.handleChange('email', e)}/>
+                            <Input placeholder="Username" type="username" value={this.state.username}
+                              onChange={(e) => this.handleChange('username', e)}/>
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>

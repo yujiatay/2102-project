@@ -37,10 +37,34 @@ import {
   Col,
   UncontrolledTooltip
 } from "reactstrap";
+import http from "http.js";
 
-class DemoNavbar extends React.Component {
-  componentDidMount() {
+class DarkNavbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null
+    }
   }
+
+  componentDidMount() {
+    http.get("/session")
+    .then((res) => {
+      // console.log(res)
+      this.setState({ user: res.data.data.entity })
+    })
+  }
+
+  logOut = () => {
+    http.delete("/session")
+    .then((res) => {
+      // console.log(res)
+      setTimeout(() => {
+        this.props.history.push("/")
+      }, 1000);
+    })
+  }
+
   render() {
     return (
       <>
@@ -132,20 +156,39 @@ class DemoNavbar extends React.Component {
                   </NavItem>
                 </Nav>
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  <UncontrolledDropdown nav>
-                    <DropdownToggle nav>
-                      <i className="ni ni-collection d-lg-none mr-1" />
-                      <span className="nav-link-inner--text">John</span>
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem to="/profile" tag={Link}>
-                        Profile
-                      </DropdownItem>
-                      <DropdownItem to="/landing" tag={Link}>
-                        Logout
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                  {
+                    this.state.user
+                    ? (
+                      <UncontrolledDropdown nav>
+                        <DropdownToggle nav>
+                          <i className="ni ni-collection d-lg-none mr-1" />
+                          <span className="nav-link-inner--text">{this.state.user.username}</span>
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem to="/profile" tag={Link}>
+                            Bookings
+                          </DropdownItem>
+                          <DropdownItem onClick={this.logOut}>
+                            Logout
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    ) : (
+                      <Button
+                        className="btn-neutral btn-icon"
+                        color="default"
+                        href="/login"
+                      >
+                        <span className="btn-inner--icon">
+                          <i className="fa fa-sign-in mr-2" />
+                        </span>
+                        <span className="nav-link-inner--text ml-1">
+                          Sign In
+                        </span>
+                      </Button>
+                    )
+                  }
+                  
                 </Nav>
               </UncontrolledCollapse>
             </Container>
@@ -155,5 +198,4 @@ class DemoNavbar extends React.Component {
     );
   }
 }
-
-export default DemoNavbar;
+export default DarkNavbar;

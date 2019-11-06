@@ -52,7 +52,7 @@ class Search extends React.Component {
   render() {
     return (
       <>
-        <Navbar />
+        <Navbar history={this.props.history}/>
         <main ref="main">
           <section className="section">
             <Container className="pt-md">
@@ -78,6 +78,7 @@ class Search extends React.Component {
                               }}
                               timeFormat={false}
                               isValidDate={this.valid}
+                              defaultValue={new Date()}
                               onChange={e => this.setState({ date: e })}
                             />
                           </InputGroup>
