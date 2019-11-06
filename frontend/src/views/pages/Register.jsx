@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import axios from "axios";
+import { connect } from "react-redux";
 
 // reactstrap components
 import {
@@ -39,6 +39,8 @@ import {
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
 import SimpleFooter from "components/Footers/SimpleFooter.jsx";
+import http from "http.js";
+import { logIn } from "redux/actions";
 
 class Register extends React.Component {
   constructor(props) {
@@ -71,10 +73,13 @@ class Register extends React.Component {
       password: this.state.password,
       username: this.state.name
     }
-    axios.post("http://localhost:8000/api/v1.0/diners", body)
+    http.post("/diners", body)
     .then((res) => {
-      // console.log(res)
+      // console.log(res.data)
       this.setAlertVisible(true, "success", res.data.msg)
+      setTimeout(() => {
+        this.props.history.push("/search")
+      }, 1000);
     })
     .catch((err) => {
       if (err.response) {
@@ -218,4 +223,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default connect(null, {logIn})(Register);

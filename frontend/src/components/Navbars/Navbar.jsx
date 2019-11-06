@@ -27,24 +27,70 @@ import {
   DropdownItem,
   DropdownToggle,
   UncontrolledDropdown,
-  Media,
   NavbarBrand,
   Navbar,
   NavItem,
-  NavLink,
-  Nav,
   Container,
   Row,
   Col,
-  UncontrolledTooltip
 } from "reactstrap";
+import http from "http.js";
 
-class DemoNavbar extends React.Component {
+class LightNavbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null
+    }
+  }
+
   componentDidMount() {
     let headroom = new Headroom(document.getElementById("navbar-main"));
     // initialise
     headroom.init();
+    http.get("/session")
+    .then((res) => {
+      // console.log(res)
+      this.setState({ user: res.data.data.entity })
+    })
   }
+
+  renderAuth = () => {
+    if (this.state.user) {
+      return (
+        <UncontrolledDropdown nav>
+          <DropdownToggle nav>
+            <i className="ni ni-collection d-lg-none mr-1" />
+            <span className="nav-link-inner--text">{this.state.user.username}</span>
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem to="/profile" tag={Link}>
+              Bookings
+            </DropdownItem>
+            <DropdownItem onClick={this.logOut}>
+              Logout
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      )
+    } else {
+      return (
+        <Button
+          className="btn-neutral btn-icon"
+          color="default"
+          href="/login"
+        >
+          <span className="btn-inner--icon">
+            <i className="fa fa-sign-in mr-2" />
+          </span>
+          <span className="nav-link-inner--text ml-1">
+            Sign In
+          </span>
+        </Button>
+      )
+    }
+  }
+
   render() {
     return (
       <>
@@ -79,32 +125,10 @@ class DemoNavbar extends React.Component {
                 </div>
                 <div className="align-items-lg-center ml-lg-auto">
                   <NavItem className="d-none d-lg-block ml-lg-4">
-                    <Button
-                      className="btn-neutral btn-icon"
-                      color="default"
-                      href="/login"
-                    >
-                      <span className="btn-inner--icon">
-                        <i className="fa fa-sign-in mr-2" />
-                      </span>
-                      <span className="nav-link-inner--text ml-1">
-                        Sign In
-                      </span>
-                    </Button>
+                    {this.renderAuth()}
                   </NavItem>
                   <NavItem className="d-none d-sm-block d-md-block d-lg-none">
-                    <Button
-                      className="btn-neutral btn-icon"
-                      color="default"
-                      href="/login"
-                    >
-                      <span className="btn-inner--icon">
-                        <i className="fa fa-sign-in mr-2" />
-                      </span>
-                      <span className="nav-link-inner--text ml-1">
-                        Sign In
-                      </span>
-                    </Button>
+                    {this.renderAuth()}
                   </NavItem>
                 </div>
               </UncontrolledCollapse>
@@ -116,4 +140,4 @@ class DemoNavbar extends React.Component {
   }
 }
 
-export default DemoNavbar;
+export default LightNavbar;

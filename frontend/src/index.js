@@ -32,6 +32,9 @@ import Profile from "views/pages/Profile.jsx";
 import Register from "views/pages/Register.jsx";
 import Search from "views/pages/Search";
 import Restaurant from "views/pages/Restaurant";
+import MyBookings from "views/pages/MyBookings";
+import ArticlesList from "views/pages/ArticlesList";
+import ArticleView from "views/pages/ArticleView";
 import Dashboard from "views/pages/Restaurant/Dashboard";
 import RestaurantProfile from "views/pages/Restaurant/RestaurantProfile";
 
@@ -63,6 +66,18 @@ ReactDOM.render(
         <Route 
           path="/restaurants"
           render={props => <Restaurant {...props}/>}
+        />
+        <Route 
+          path="/myBookings"
+          render={props => <MyBookings {...props}/>}
+        />
+        <Route 
+          path="/articles"
+          render={props => <ArticlesList {...props}/>}
+        />
+        <Route 
+          path="/articleView"
+          render={props => <ArticleView {...props}/>}
         />
         <Route
           path="/dashboard"
