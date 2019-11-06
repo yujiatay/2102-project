@@ -49,10 +49,13 @@ class DarkNavbar extends React.Component {
 
   componentDidMount() {
     http.get("/session")
-    .then((res) => {
-      // console.log(res)
-      this.setState({ user: res.data.data.entity })
-    })
+      .then((res) => {
+        // console.log(res)
+        this.setState({ user: res.data.data.entity })
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
   }
 
   logOut = () => {

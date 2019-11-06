@@ -49,10 +49,13 @@ class LightNavbar extends React.Component {
     // initialise
     headroom.init();
     http.get("/session")
-    .then((res) => {
-      // console.log(res)
-      this.setState({ user: res.data.data.entity })
-    })
+      .then((res) => {
+        // console.log(res)
+        this.setState({ user: res.data.data.entity })
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
   }
 
   renderAuth = () => {

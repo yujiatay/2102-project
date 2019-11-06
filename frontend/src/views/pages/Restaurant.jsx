@@ -67,27 +67,24 @@ class Restaurant extends React.Component {
                     </Col> */}
                     <Col className="ml-4">
                       <CardTitle>Bread Street Kitchen</CardTitle>
-                      <CardText>
                         <Row>
-                          Cuisine: ______
+                          <CardText>Cuisine: ______</CardText>
                         </Row>
                         <Row>
-                          Location: ______
+                          <CardText>Location: ______</CardText>
                         </Row>
                         <Row>
-                          Opening hours: _____
+                          <CardText>Opening hours: _____</CardText>
                         </Row>
                         <Row>
-                          Price: _____
+                          <CardText>Price: _____</CardText>
                         </Row>
                         <Row>
-                          Capacity: _____
+                          <CardText>Capacity: _____</CardText>
                         </Row>
                         <Row>
-                          Tags
+                          <CardText>Tags</CardText>
                         </Row>
-                      </CardText>
-                      
                     </Col>
                   </Row>
                   <p></p>

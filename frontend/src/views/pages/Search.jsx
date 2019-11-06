@@ -3,16 +3,10 @@ import React from 'react';
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardBody,
-  CardText,
-  CardImg,
   FormGroup,
   Form,
   Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Row,
   Col,
   Container,
@@ -21,10 +15,9 @@ import {
   Modal
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
-import { Link } from "react-router-dom";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
-import { cuisineTypes, cuisineTypesList } from "constants.js";
+import { cuisineTypesList } from "constants.js";
 import http from "http.js";
 import SearchCard from 'components/SearchCard';
 
@@ -32,11 +25,11 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: null,
+      date: undefined,
       modal: false,
       searchName: '',
-      searchCuisines: [],
-      searchBudget: null,
+      searchCuisines: [0],
+      searchBudget: undefined,
       restaurants: []
     }
   }
@@ -98,7 +91,7 @@ class Search extends React.Component {
             <Container className="pt-md">
               <Row>
                 <Col xs="4">
-                  <Card shadow>
+                  <Card>
                     <CardHeader>
                       Search criteria
                     </CardHeader>
@@ -155,10 +148,9 @@ class Search extends React.Component {
                           <Input type="select" name="selectMulti" id="cuisine" multiple
                             value={this.state.searchCuisines}
                             onChange={(e) => this.handleChange('searchCuisines', e)}>
-                            <option value="" disabled selected hidden>Please Choose...</option>
                             {
                               cuisineTypesList.map(ct => (
-                                <option value={ct[1]}>{ct[0]}</option>
+                                <option value={ct[1]} key={ct[1]}>{ct[0]}</option>
                               ))
                             }
                           </Input>
@@ -166,9 +158,10 @@ class Search extends React.Component {
                         <FormGroup>
                           <Label for="location">Budget</Label>
                           <Input type="select" name="select" id="budget"
+                            defaultValue={""}
                             value={this.state.searchBudget}
                             onChange={(e) => this.handleChange('searchBudget', e)}>
-                            <option value="" disabled selected hidden>Please Choose...</option>
+                            <option value="" disabled hidden>Please Choose...</option>
                             <option value={10}>$</option>
                             <option value={50}>$$</option>
                             <option value={100}>$$$</option>
