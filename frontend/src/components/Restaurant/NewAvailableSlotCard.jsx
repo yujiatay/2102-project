@@ -9,7 +9,7 @@ const NewAvailableSlotCard = (props) => {
     <div>
       <Card>
         <CardBody>
-          <CardTitle>New Menu Item Details</CardTitle>
+          <CardTitle>New Available Slot</CardTitle>
           <Form>
             <FormGroup row>
               <Label for="dayOfWeek">Day of Week</Label>
