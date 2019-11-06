@@ -8,12 +8,15 @@ import {
 import Navbar from "components/Navbars/DarkNavBarRestaurant";
 import MenuItemCard from "components/Restaurant/MenuItemCard";
 import NewMenuItemCard from "components/Restaurant/NewMenuItemCard";
+import NewAvailableSlot from "components/Restaurant/NewAvailableSlotCard";
+import AvailableSlotList from "components/Restaurant/AvailableSlotList";
 
 class RestaurantProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       newItem: false,
+      newSlot: false
     }
   }
 
@@ -25,6 +28,14 @@ class RestaurantProfile extends React.Component {
     this.setState({newItem: false});
   };
 
+  openNewSlotForm = () => {
+    this.setState({newSlot: true});
+  };
+
+  closeNewSlotForm = () => {
+    this.setState({newSlot: false});
+  };
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -32,7 +43,7 @@ class RestaurantProfile extends React.Component {
   }
 
   render() {
-    const newItem = this.state.newItem;
+    const {newItem, newSlot} = this.state;
     return (
       <>
         <Navbar/>
@@ -105,10 +116,27 @@ class RestaurantProfile extends React.Component {
             <Container className="pt-md">
               <Row className="justify-content-md-center">
                 <Col xs="10">
+                  <p className="h1">Available Slots for Booking</p>
+                  {
+                    newSlot
+                      ? <Button onClick={this.closeNewSlotForm} block>Cancel</Button>
+                      : <Button onClick={this.openNewSlotForm} block>Add new slot</Button>
+                  }
+                  {
+                    newSlot &&
+                    <NewAvailableSlot/>
+                  }
+                  <AvailableSlotList/>
+                </Col>
+              </Row>
+            </Container>
+            <Container className="pt-md">
+              <Row className="justify-content-md-center">
+                <Col xs="10">
                   <p className="h1">Menu Items</p>
                   {
                     newItem
-                    ? <Button onClick={this.closeNewItemForm} block>Cancel</Button>
+                      ? <Button onClick={this.closeNewItemForm} block>Cancel</Button>
                       : <Button onClick={this.openNewItemForm} block>Add new item</Button>
                   }
                   {
