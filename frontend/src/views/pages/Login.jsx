@@ -21,7 +21,6 @@ import React from "react";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -166,13 +165,13 @@ class Login extends React.Component {
                   </Card>
                   <Row className="mt-3">
                     <Col xs="6">
-                      <a
+                      {/* <a
                         className="text-light"
                         href="#pablo"
                         onClick={e => e.preventDefault()}
                       >
                         <small>Forgot password?</small>
-                      </a>
+                      </a> */}
                     </Col>
                     <Col className="text-right" xs="6">
                       <a

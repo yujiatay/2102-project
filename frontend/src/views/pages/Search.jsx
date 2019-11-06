@@ -45,6 +45,11 @@ class Search extends React.Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+    http.get("/restaurants/recommended")
+      .then((res) => {
+        // console.log(res.data.data)
+        this.setState({ restaurants: res.data.data });
+      })
   }
 
   valid = (current) => {
@@ -78,10 +83,10 @@ class Search extends React.Component {
     }
     // console.log(params)
     http.get("/restaurants", {params})
-    .then((res) => {
-      // console.log(res.data.data)
-      this.setState({ restaurants: res.data.data });
-    })
+      .then((res) => {
+        // console.log(res.data.data)
+        this.setState({ restaurants: res.data.data });
+      })
   }
 
   render() {
