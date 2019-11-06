@@ -76,7 +76,37 @@ class DemoNavbar extends React.Component {
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
                   <NavItem>
                     <NavLink
-                      href="#"
+                      href="/search"
+                    >
+                      <i className="ni ni-ui-04 d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">Search</span>
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink
+                      href="/restaurants"
+                    >
+                      <i className="ni ni-ui-04 d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">All Restaurants</span>
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink
+                      href="/myBookings"
+                    >
+                      <i className="ni ni-ui-04 d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">My Bookings</span>
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink
+                      href="/articles"
                     >
                       <i className="ni ni-ui-04 d-lg-none mr-1" />
                       <span className="nav-link-inner--text">Articles</span>
