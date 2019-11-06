@@ -1,9 +1,9 @@
 CREATE TABLE Restaurants (
-  username varchar(25) PRIMARY KEY,
+  username varchar(25) PRIMARY KEY CHECK (LENGTH(username) > 0),
   password text NOT NULL,
-  email varchar(255) UNIQUE NOT NULL,
+  email varchar(255) UNIQUE NOT NULL CHECK (email ~ '^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'),
   name varchar(100) NOT NULL,
-  cuisine_type integer NOT NULL,
+  cuisine_type integer NOT NULL CHECK (cuisine_type > 0),
   branch_location varchar(255) NOT NULL,
   opening_hours varchar(255) NOT NULL,
   capacity integer NOT NULL,
@@ -11,9 +11,9 @@ CREATE TABLE Restaurants (
 );
 
 CREATE TABLE Diners (
-  username varchar(25) PRIMARY KEY,
+  username varchar(25) PRIMARY KEY CHECK (LENGTH(username) > 0),
   password text NOT NULL,
-  email varchar(255) UNIQUE NOT NULL,
+  email varchar(255) UNIQUE NOT NULL CHECK (email ~ '^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'),
   points integer NOT NULL DEFAULT 0,
   referral_code varchar(25) UNIQUE NOT NULL,
   referrer varchar(255) REFERENCES Diners (email),
@@ -22,8 +22,8 @@ CREATE TABLE Diners (
 
 CREATE TABLE MenuItems (
   username varchar(25) REFERENCES Restaurants (username) ON UPDATE CASCADE ON DELETE CASCADE,
-  name varchar(100) NOT NULL,
-  type varchar(25) NOT NULL,
+  name varchar(100) NOT NULL CHECK (LENGTH(name) > 0),
+  type integer NOT NULL CHECK (type > 0),
   price numeric(10, 2) NOT NULL CHECK (price > 0.0),
   description text NOT NULL,
   image varchar(255),
@@ -42,7 +42,7 @@ CREATE TABLE AvailableSlots (
 );
 
 CREATE TABLE Tags (
-  name varchar(100) PRIMARY KEY,
+  name varchar(100) PRIMARY KEY CHECK (LENGTH(name) > 0),
   created_at timestamp NOT NULL DEFAULT NOW()
 );
 
@@ -86,8 +86,8 @@ CREATE TABLE Reviews (
 
 CREATE TABLE Articles (
   username varchar(25) REFERENCES Diners (username) ON UPDATE CASCADE ON DELETE CASCADE,
-  title varchar(255) NOT NULL,
-  content text NOT NULL,
+  title varchar(255) NOT NULL CHECK (LENGTH(title) > 0),
+  content text NOT NULL CHECK (LENGTH(content) > 0),
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW(),
   PRIMARY KEY (username, created_at)
@@ -97,7 +97,7 @@ CREATE TABLE Comments (
   ausername varchar(25) REFERENCES Diners (username),
   acreated_at timestamp,
   username varchar(25) REFERENCES Diners (username),
-  content text NOT NULL,
+  content text NOT NULL CHECK (LENGTH(content) > 0),
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW(),
   PRIMARY KEY (ausername, acreated_at, username, created_at),

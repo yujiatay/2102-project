@@ -13,7 +13,7 @@ export function addBooking(dusername: string, rusername: string, dayOfWeek: numb
   return db.getOne(`
     INSERT INTO Bookings (dusername, rusername, day_of_week, start_time, end_time, booking_date, pax, message)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
-  `, [dusername, rusername, dayOfWeek, startTime, endTime, date, pax, message]) as Promise<Booking>;
+  `, [dusername, rusername, dayOfWeek, startTime, endTime, new Date(date), pax, message]) as Promise<Booking>;
 }
 
 /**
@@ -34,7 +34,8 @@ export function confirmBooking(booking: Booking): Promise<{}> {
     UPDATE Bookings SET is_confirmed = TRUE
     WHERE rusername = $1 AND dusername = $2 AND day_of_week = $3 AND start_time = $4 AND end_time = $5 AND booking_date = $6
   `,
-    [booking.rusername, booking.dusername, booking.dayOfWeek, booking.startTime, booking.endTime, booking.bookingDate]);
+    [booking.rusername, booking.dusername, booking.dayOfWeek,
+      booking.startTime, booking.endTime, new Date(booking.bookingDate)]);
 }
 
 /**
@@ -66,7 +67,7 @@ export function getBooking(dusername: string, rusername: string, dayOfWeek: numb
   return db.getOne(`
     SELECT * FROM Bookings WHERE dusername = $1 AND rusername = $2 AND day_of_week = $3
       AND start_time = $4 AND end_time = $5 AND booking_date = $6
-  `, [dusername, rusername, dayOfWeek, startTime, endTime, date]);
+  `, [dusername, rusername, dayOfWeek, startTime, endTime, new Date(date)]);
 }
 
 /**

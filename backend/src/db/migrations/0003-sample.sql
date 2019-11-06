@@ -45,10 +45,10 @@ INSERT INTO AvailableSlots VALUES ('testrestaurant2', 5, '15:00', '16:00');
 INSERT INTO AvailableSlots VALUES ('testrestaurant2', 5, '16:00', '17:00');
 
 -- Add menu items for restaurants
-INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant1', 'Baguette', 'Appetiser', 5.5, 'Premium Bread Choice', 'https://via.placeholder.com/150C/');
-INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant1', 'Chicken Aglio Olio with Lobster', 'Main', 20.2, 'Served with a side of premium french bread.', 'https://via.placeholder.com/150C/');
-INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant2', 'Fried Lard', 'Side Dish', 3, 'Double fried for double the lard', 'https://via.placeholder.com/150C/');
-INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant2', 'Pad Thai', 'Main', 10, 'House specialty, extra spicy for the spice lovers.', 'https://via.placeholder.com/150C/');
+INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant1', 'Baguette', 3, 5.5, 'Premium Bread Choice', 'https://via.placeholder.com/150C/');
+INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant1', 'Chicken Aglio Olio with Lobster', 1, 20.2, 'Served with a side of premium french bread.', 'https://via.placeholder.com/150C/');
+INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant2', 'Fried Lard', 2, 3, 'Double fried for double the lard', 'https://via.placeholder.com/150C/');
+INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ('testrestaurant2', 'Pad Thai', 1, 10, 'House specialty, extra spicy for the spice lovers.', 'https://via.placeholder.com/150C/');
 
 -- Add bookings
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)

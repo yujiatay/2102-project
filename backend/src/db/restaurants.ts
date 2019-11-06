@@ -4,6 +4,7 @@ import { PASSWORD_SALT_ROUNDS } from '../constants';
 import {
   CuisineType,
   MenuItem,
+  MenuItemType,
   Restaurant,
   RestaurantPrivate,
   RestaurantTag,
@@ -17,7 +18,7 @@ const RESTAURANT_LIST_LIMIT = 20;
 /**
  * Adds a new menu item for the given restaurant.
  */
-export function addMenuItem(username: string, name: string, type: string, price: number, description: string,
+export function addMenuItem(username: string, name: string, type: MenuItemType, price: number, description: string,
                             image: string): Promise<MenuItem> {
   return db.getOne<MenuItem>(`
     INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *

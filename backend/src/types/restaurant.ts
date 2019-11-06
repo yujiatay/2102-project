@@ -39,11 +39,17 @@ export const enum CuisineType {
 export interface MenuItem {
   username: string;
   name: string;
-  type: string;
+  type: MenuItemType;
   price: number;
   description: string;
   image: string;
   createdAt: number;
+}
+
+export const enum MenuItemType {
+  Main = 1,
+  Side = 2,
+  Appetiser = 3
 }
 
 export interface AvailableSlot {
