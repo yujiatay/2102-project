@@ -20,13 +20,7 @@ import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
-  Button,
   UncontrolledCollapse,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  UncontrolledDropdown,
-  Media,
   NavbarBrand,
   Navbar,
   NavItem,
@@ -34,8 +28,7 @@ import {
   Nav,
   Container,
   Row,
-  Col,
-  UncontrolledTooltip
+  Col
 } from "reactstrap";
 
 class DemoNavbar extends React.Component {
