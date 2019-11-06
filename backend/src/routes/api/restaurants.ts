@@ -10,7 +10,7 @@ const router = new Router();
 
 /**
  * [GET: /restaurants] Get newest restaurants.
- * [Params] name?, cuisineTypes?, tags?, prev?.
+ * [Params] name?, cuisineTypes?, tags?, budget?, prev?.
  */
 router.get('/restaurants', async (ctx) => {
   const cuisineTypes = ctx.query.cuisineTypes ? JSON.parse(ctx.query.cuisineTypes) : null;

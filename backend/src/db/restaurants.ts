@@ -73,14 +73,14 @@ export function getNewestRestaurants(name?: string, cuisineTypes?: number[], tag
   return db.getAll(`
     SELECT username, name, cuisine_type, branch_location, opening_hours, capacity, created_at
     FROM Restaurants R
-    WHERE (1 = $1 OR name ILIKE $2) AND (1 = $3 OR cuisine_type IN $4) AND (1 = $5 OR 1 = ANY (
-      SELECT (CASE WHEN T.tag IN $6 THEN 1 ELSE 0 END) FROM RestaurantTags T WHERE T.username = R.username
+    WHERE (1 = $1 OR name ILIKE $2) AND (1 = $3 OR cuisine_type = ANY ($4)) AND (1 = $5 OR 1 = ANY (
+      SELECT (CASE WHEN T.tag = ANY ($6) THEN 1 ELSE 0 END) FROM RestaurantTags T WHERE T.username = R.username
     )) AND (1 = $7 OR (
       SELECT AVG(price) FROM MenuItems M WHERE R.username = M.username AND M.type = 'main'
     ) <= $8) AND created_at < $9
     ORDER BY created_at DESC
     LIMIT ${RESTAURANT_LIST_LIMIT}
-  `, [noName, name, noCuisineTypes, cuisineTypes, noTags, tags, noBudget, budget, prev || Date.now()]);
+  `, [noName, name, noCuisineTypes, cuisineTypes, noTags, tags, noBudget, budget, new Date(prev || Date.now())]);
 }
 
 /**

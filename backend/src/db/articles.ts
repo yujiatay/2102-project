@@ -46,7 +46,7 @@ export function deleteComment(comment: Comment): Promise<{}> {
 export function getRecentCommentsByDiner(dusername: string, prev?: number): Promise<Comment[]> {
   return db.getAll(`
     SELECT * FROM Comments WHERE username = $1 AND created_at < $2 ORDER BY created_at DESC LIMIT ${COMMENT_LIST_LIMIT}
-  `, [dusername, prev || Date.now()]);
+  `, [dusername, new Date(prev || Date.now())]);
 }
 
 /**
@@ -72,7 +72,7 @@ export function getComment(ausername: string, acreatedAt: string,
 export function getRecentArticles(prev?: number): Promise<Article[]> {
   return db.getAll(`
     SELECT * FROM Articles WHERE created_at < $1 ORDER BY created_at DESC LIMIT ${ARTICLE_LIST_LIMIT}
-  `, [prev || Date.now()]);
+  `, [new Date(prev || Date.now())]);
 }
 
 /**
@@ -81,7 +81,7 @@ export function getRecentArticles(prev?: number): Promise<Article[]> {
 export function getRecentArticlesByDiner(dusername: string, prev?: number): Promise<Article[]> {
   return db.getAll(`
     SELECT * FROM Articles WHERE username = $1 AND created_at < $2 ORDER BY created_at DESC LIMIT ${ARTICLE_LIST_LIMIT}
-  `, [dusername, prev || Date.now()]);
+  `, [dusername, new Date(prev || Date.now())]);
 }
 
 /**
@@ -91,7 +91,7 @@ export function getRecentCommentsOnArticle(article: Article, prev?: number): Pro
   return db.getAll(`
     SELECT * FROM Comments WHERE ausername = $1 AND acreated_at = $2 AND created_at < $3
     ORDER BY created_at DESC LIMIT ${COMMENT_LIST_LIMIT}
-  `, [article.username, article.createdAt, prev || Date.now()]);
+  `, [article.username, article.createdAt, new Date(prev || Date.now())]);
 }
 
 /**
