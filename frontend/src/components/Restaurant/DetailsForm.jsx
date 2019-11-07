@@ -1,99 +1,166 @@
 import React from 'react';
-import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { cuisineTypesList } from "constants.js";
+import http from "http.js";
 
 class DetailsForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editing: false
+      editing: false,
+      cuisineType: 1,
+      name: "",
+      branchLocation: "",
+      openingHours: "",
+      capacity: "",
+
+      alert: {
+        visible: false,
+        color: "primary",
+        msg: ""
+      }
+    }
+  }
+
+  componentDidMount() {
+    const { name, cuisineType, branchLocation, openingHours, capacity } = this.props.details;
+    this.setState({
+      name,
+      cuisineType,
+      branchLocation,
+      openingHours,
+      capacity
+    });
+  }
+
+  onValueChange(key) {
+    return (e) => {
+      const { target: { value } } = e;
+      this.setState({
+        [key]: value
+      })
     }
   }
 
   startEdit = () => {
-    this.setState({editing: true});
+    this.setState({ editing: true });
   };
 
-  cancelEdit = () => {
-    this.setState({editing: false});
+  setAlertVisible = (visible, color, msg) => {
+    this.setState({
+      alert: { visible, color, msg }
+    });
+  };
+
+  submitEdit = () => {
+    const { name, cuisineType, branchLocation, openingHours, capacity } = this.state;
+    const body = {
+      name,
+      cuisineType,
+      branchLocation,
+      openingHours,
+      capacity,
+      tags: []
+    };
+    http.patch(`/restaurants/${this.props.details.username}`, body)
+      .then((res) => {
+        this.setAlertVisible(true, "success", res.data.msg);
+        this.setState({
+          editing: false
+        })
+      })
+      .catch((err) => {
+        if (err.response) {
+          // console.log(err.response.data)
+          this.setAlertVisible(true, "danger", err.response.data.msg);
+        }
+      })
   };
 
   render() {
-    const {editing} = this.state;
+    const { editing, name, cuisineType, branchLocation, openingHours, capacity } = this.state;
     return (
       <>
-        <Form>
-          <FormGroup row>
-            <Label for="name">Restaurant Name</Label>
-            <Input
-              id="name"
-              type="text"
-              defaultValue={"ABC Foodings"}
-              disabled={!editing}
-            />
-          </FormGroup>
-          <FormGroup row>
-            <Label for="cuisine">Cuisine Type</Label>
-            <Input type="select" name="select" id="cuisine" disabled={!editing}>
-              <option value={1}>Bakery</option>
-              <option value={2}>Dessert</option>
-              <option value={3}>Fast Food</option>
-              <option value={4}>Vegetarian</option>
-              <option value={11}>American</option>
-              <option value={12}>Chinese</option>
-              <option value={13}>French</option>
-              <option value={14}>Indian</option>
-              <option value={15}>Indonesia</option>
-              <option value={16}>Italian</option>
-              <option value={17}>Japanese</option>
-              <option value={18}>Korean</option>
-              <option value={19}>Mexican</option>
-              <option value={20}>Middle Eastern</option>
-              <option value={21}>Thai</option>
-              <option value={22}>Vietnamese</option>
-              <option value={23}>Western</option>
-            </Input>
-          </FormGroup>
-          <FormGroup row>
-            <Label for="address">Address</Label>
-            <Input
-              id="address"
-              type="text"
-              value={"8 Club Street S123456"}
-              disabled={!editing}
-            />
-          </FormGroup>
-          <FormGroup row>
-            <Label for="opening">Opening Hours</Label>
-            <Input
-              id="opening"
-              type="textarea"
-              defaultValue={"Monday to Friday 8am - 8pm"}
-              disabled={!editing}
-            />
-          </FormGroup>
-          <FormGroup row>
-            <Label for="capacity">Maximum Capacity</Label>
-            <Input
-              id="capacity"
-              type="number"
-              defaultValue={1}
-              disabled={!editing}
-            />
-          </FormGroup>
-          {
-            editing
-              ? (
-                <>
-                  <Button onClick={this.cancelEdit}>Cancel</Button>
-                  <Button>Submit</Button>
-                </>
-              )
-              : <Button onClick={this.startEdit} block>Edit</Button>
-          }
-        </Form>
-      </>
-    );
-  }
-}
+        <Alert isOpen={this.state.alert.visible} color={this.state.alert.color}
+               toggle={() => this.setState({ alert: { visible: false }})}
+               style={{ zIndex: 1001, marginBottom: 0 }}
+        >
+          <span className="alert-inner--text">
+            {this.state.alert.msg}
+          </span>
+        </Alert>
+          <Form>
+            <FormGroup row>
+              <Label for="name">Restaurant Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={this.onValueChange("name")}
+                disabled={!editing}
+              />
+            </FormGroup>
+            <FormGroup row>
+              <Label for="cuisine">Cuisine Type</Label>
+              <Input
+                type="select"
+                name="select"
+                id="cuisine"
+                onChange={this.onValueChange("cuisineType")}
+                value={cuisineType}
+                disabled={!editing}>
+                {
+                  cuisineTypesList.map(entry => {
+                    const [name, value] = entry;
+                    return <option value={value} key={value}>{name}</option>
+                  })
+                }
+              </Input>
+            </FormGroup>
+            <FormGroup row>
+              <Label for="address">Address</Label>
+              <Input
+                id="address"
+                type="text"
+                value={branchLocation}
+                onChange={this.onValueChange("branchLocation")}
+                disabled={!editing}
+              />
+            </FormGroup>
+            <FormGroup row>
+              <Label for="opening">Opening Hours</Label>
+              <Input
+                id="opening"
+                type="textarea"
+                value={openingHours}
+                onChange={this.onValueChange("openingHours")}
+                disabled={!editing}
+              />
+            </FormGroup>
+            <FormGroup row>
+              <Label for="capacity">Maximum Capacity</Label>
+              <Input
+                id="capacity"
+                type="number"
+                value={capacity}
+                onChange={this.onValueChange("capacity")}
+                disabled={!editing}
+              />
+            </FormGroup>
+            {
+              editing
+                ? (
+                  <>
+                    <Button>Cancel</Button>
+                    <Button onClick={this.submitEdit}>Submit</Button>
+                  </>
+                )
+                : <Button onClick={this.startEdit} block>Edit</Button>
+            }
+          </Form>
+        </>
+        );
+        }
+        }
 
-export default DetailsForm;
+        export default DetailsForm;
