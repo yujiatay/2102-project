@@ -70,11 +70,11 @@ ReactDOM.render(
           render={props => <MyBookings {...props}/>}
         />
         <Route 
-          path="/articles"
+          exact path="/articles"
           render={props => <ArticlesList {...props}/>}
         />
         <Route 
-          path="/articleView"
+          path="/articles/:username/:createdAt"
           render={props => <ArticleView {...props}/>}
         />
         <Redirect to="/" />
