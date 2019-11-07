@@ -71,7 +71,7 @@ class Search extends React.Component {
     if (this.state.searchName.length > 0) {
       params.name = this.state.searchName;
     }
-    if (this.state.searchBudget !== null) {
+    if (this.state.searchBudget !== undefined) {
       params.budget = parseFloat(this.state.searchBudget);
     }
     if (this.state.searchCuisines.length > 0) {
@@ -191,14 +191,14 @@ class Search extends React.Component {
                 <Col>
                   {
                     this.state.restaurants.map((r) => (
-                      <SearchCard restaurant={r} toggleModal={this.toggleModal}/>
+                      <SearchCard key={r.username} restaurant={r} toggleModal={this.toggleModal}/>
                     ))
                   }
                 </Col>
               </Row>
             </Container>
           </section>
-          <Modal
+          {/* <Modal
             className="modal-dialog-centered"
             isOpen={this.state.modal}
             onClick={this.toggleModal}
@@ -234,7 +234,7 @@ class Search extends React.Component {
                 Book now
               </Button>
             </div>
-          </Modal>
+          </Modal> */}
         </main>
       </>
     );

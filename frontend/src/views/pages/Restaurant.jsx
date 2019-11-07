@@ -20,18 +20,31 @@ import {
   Label,
   Button,
   Modal,
+  Alert
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
+import http from "http.js";
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
+import { cuisineTypes } from "constants.js";
 
 class Restaurant extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: null,
-      modal: false
+      date: new Date(),
+      modal: false,
+      restaurant: undefined,
+      tags: [],
+      timeslots: [],
+      pax: 1,
+      selectedSlot: 0,
+      alert: {
+        visible: false,
+        color: "primary",
+        msg: ""
+      }
     }
   }
 
@@ -39,6 +52,31 @@ class Restaurant extends React.Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+
+    let username = this.props.match.params.username;
+    http.get(`/restaurants/${username}`)
+      .then((res) => {
+        console.log("restaurant", res.data.data)
+        this.setState({ 
+          restaurant: res.data.data.restaurant,
+          tags: res.data.data.tags
+        });
+        http.get(`/restaurants/${username}/slots`)
+        .then((res) => {
+          console.log("avail slots", res.data.data)
+          this.setState({ timeslots: res.data.data });
+        })
+      })
+  }
+
+  handleChange = (value, event) => {
+    this.setState({[value]: event.target.value});
+  }
+
+  setAlertVisible = (visible, color, msg) => {
+    this.setState({ 
+      alert: { visible, color, msg } 
+    });
   }
 
   valid = (current) => {
@@ -50,130 +88,195 @@ class Restaurant extends React.Component {
     this.setState({ modal: !this.state.modal});
   }
 
+  getTags = (tags) => {
+    return tags.map(t => t.tag).join(", ")
+  }
+
+  getTimeSlots = () => {
+    return this.state.timeslots.filter(ts => ts.dayOfWeek === this.state.date.getDay());
+  }
+
+  handleBooking = () => {
+    const slot = this.getTimeSlots()[this.state.selectedSlot];
+    const body = {
+      dayOfWeek: this.state.date.getDay(),
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      date: this.state.date.getTime(),
+      pax: parseInt(this.state.pax)
+    }
+    console.log(body)
+    http.post(`/restaurants/${this.state.restaurant.username}/bookings`, body)
+      .then((res) => {
+        console.log(res)
+        this.setAlertVisible(true, "success", `Your reservation is pending confirmation from ${this.state.restaurant.name}. :)`);
+        setTimeout(() => {
+          this.props.history.push("/myBookings")
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log(err)
+        this.setAlertVisible(true, "danger", err.response.data.msg)
+      })
+  }
+
+  renderRestaurant = () => {
+    if (!this.state.restaurant) {
+      return null;
+    }
+
+    const {name, cuisineType, branchLocation, openingHours, capacity} = this.state.restaurant;
+    return (
+      <Card className="mt-4" style={{
+        border: '1px solid #cad1d7'
+      }}>
+        <CardBody>
+          <Row>
+            {/* <Col xs={4}>
+              <img src="https://via.placeholder.com/150"/>
+            </Col> */}
+            <Col className="ml-4">
+              <CardTitle>{name}</CardTitle>
+                <Row>
+                  <CardText>Cuisine: {cuisineTypes[cuisineType]}</CardText>
+                </Row>
+                <Row>
+                  <CardText>Location: {branchLocation}</CardText>
+                </Row>
+                <Row>
+                  <CardText>Opening hours: {openingHours}</CardText>
+                </Row>
+                <Row>
+                  <CardText>Capacity: {capacity}</CardText>
+                </Row>
+                <Row>
+                  <CardText>Tags: {this.getTags(this.state.tags)}</CardText>
+                </Row>
+            </Col>
+          </Row>
+          <p></p>
+          <Button>Reviews</Button>
+          {
+            this.state.timeslots.length > 0
+            && (
+              <Row className="mt-4">
+                <Col xs="auto">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="ni ni-calendar-grid-58" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <ReactDatetime
+                        value={this.state.date}
+                        timeFormat={false}
+                        isValidDate={this.valid}
+                        onChange={e => this.setState({ date: e })}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col xs="auto" md="3">
+                  <Input type="select" name="select" id="booktime"
+                    value={this.state.selectedSlot} onChange={(e) => this.handleChange('selectedSlot', e)}>
+                    {
+                      this.getTimeSlots().map((ts, index) => (
+                        <option key={index} value={index}>{ts.startTime} to {ts.endTime}</option>
+                      ))
+                    }
+                  </Input>
+                </Col>
+                <Col xs="auto" md="3">
+                  <CustomInput type="select" id="pax" name="customSelect"
+                    value={this.state.pax} onChange={(e) => this.handleChange('pax', e)}>
+                    <option value={1}>1 pax</option>
+                    <option value={2}>2 pax</option>
+                    <option value={3}>3 pax</option>
+                    <option value={4}>4 pax</option>
+                    <option value={5}>5 pax</option>
+                  </CustomInput>
+                </Col>
+                <Col xs={2}>
+                  <Button onClick={this.toggleModal}>
+                    Book now
+                  </Button>
+                </Col>
+              </Row>
+            )
+          }
+          
+        </CardBody>
+      </Card>
+    )
+  }
+
+  renderModal = () => {
+    if (!this.state.restaurant || this.state.timeslots.length === 0 || !this.state.modal) {
+      return null;
+    }
+    return (
+      <Modal
+        className="modal-dialog-centered"
+        isOpen={this.state.modal}
+        onClick={this.toggleModal}
+        >
+        <div className="modal-header">
+          <h5 className="modal-title" id="modalLabel">
+            Booking a reservation
+          </h5>
+          <button
+            aria-label="Close"
+            className="close"
+            data-dismiss="modal"
+            type="button"
+            onClick={this.toggleModal}
+          >
+            <span aria-hidden={true}>×</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          You are making a reservation for {this.state.pax} people {" "}
+          at {this.state.restaurant.name} on {this.state.date.toString().slice(0, 15)}, {" "}
+          {this.getTimeSlots()[this.state.selectedSlot].startTime}           
+        </div>
+        <div className="modal-footer">
+          <Button
+            color="secondary"
+            data-dismiss="modal"
+            type="button"
+            onClick={this.toggleModal}
+          >
+            Cancel
+          </Button>
+          <Button color="primary" type="button" onClick={this.handleBooking}>
+            Book now
+          </Button>
+        </div>
+      </Modal>
+    )
+  }
+
   render() {
     const { user } = this.props;
     return (
       <>
+        <Alert isOpen={this.state.alert.visible} color={this.state.alert.color} 
+          toggle={() => this.setState({ alert: { visible: false }})} 
+          style={{ zIndex: 1001, marginBottom: 0 }}
+        >  
+          <span className="alert-inner--text">
+            {this.state.alert.msg}
+          </span>
+        </Alert>
         <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section h-100vh">
             <Container className="my-lg">
-              <h2>All Restaurants</h2>
-              <Card className="mt-4" style={{
-                border: '1px solid #cad1d7'
-              }}>
-                <CardBody>
-                  <Row>
-                    {/* <Col xs={4}>
-                      <img src="https://via.placeholder.com/150"/>
-                    </Col> */}
-                    <Col className="ml-4">
-                      <CardTitle>Bread Street Kitchen</CardTitle>
-                        <Row>
-                          <CardText>Cuisine: ______</CardText>
-                        </Row>
-                        <Row>
-                          <CardText>Location: ______</CardText>
-                        </Row>
-                        <Row>
-                          <CardText>Opening hours: _____</CardText>
-                        </Row>
-                        <Row>
-                          <CardText>Price: _____</CardText>
-                        </Row>
-                        <Row>
-                          <CardText>Capacity: _____</CardText>
-                        </Row>
-                        <Row>
-                          <CardText>Tags</CardText>
-                        </Row>
-                    </Col>
-                  </Row>
-                  <p></p>
-                  <Button>Reviews</Button>
-                  <Row className="mt-4">
-                    <Col xs="auto">
-                      <FormGroup>
-                        <InputGroup className="input-group-alternative">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="ni ni-calendar-grid-58" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <ReactDatetime
-                            defaultValue={new Date()}
-                            timeFormat={false}
-                            isValidDate={this.valid}
-                            onChange={e => this.setState({ date: e })}
-                          />
-                        </InputGroup>
-                      </FormGroup>
-                    </Col>
-                    <Col xs="auto" md="3">
-                      <Input type="select" name="select" id="booktime">
-                        <option>1030</option>
-                        <option>1100</option>
-                        <option>1130</option>
-                        <option>1200</option>
-                        <option>1230</option>
-                      </Input>
-                    </Col>
-                    <Col xs="auto" md="3">
-                      <CustomInput type="select" id="pax" name="customSelect">
-                        <option>1 pax</option>
-                        <option>2 pax</option>
-                        <option>3 pax</option>
-                        <option>4 pax</option>
-                        <option>5 pax</option>
-                      </CustomInput>
-                    </Col>
-                    <Col xs={2}>
-                      <Button onClick={this.toggleModal}>
-                        Book now
-                      </Button>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
+              {this.renderRestaurant()}
             </Container>
           </section>
-          <Modal
-            // className="modal-dialog-centered"
-            isOpen={this.state.modal}
-            onClick={this.toggleModal}
-            >
-            <div className="modal-header">
-              <h5 className="modal-title" id="modalLabel">
-                Booking a reservation
-              </h5>
-              <button
-                aria-label="Close"
-                className="close"
-                data-dismiss="modal"
-                type="button"
-                onClick={this.toggleModal}
-              >
-                <span aria-hidden={true}>×</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              You are making a reservation for
-              1 people at Bread Street Kitchen on Thu, 31 Oct 2019, 11:45 am            
-            </div>
-            <div className="modal-footer">
-              <Button
-                color="secondary"
-                data-dismiss="modal"
-                type="button"
-                onClick={this.toggleModal}
-              >
-                Cancel
-              </Button>
-              <Button color="primary" type="button">
-                Book now
-              </Button>
-            </div>
-          </Modal>
+          {this.renderModal()}
         </main>
       </>
     );

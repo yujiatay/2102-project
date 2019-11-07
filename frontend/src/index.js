@@ -25,7 +25,6 @@ import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
 import "assets/scss/argon-design-system-react.scss";
 
-import Index from "views/Index.jsx";
 import Landing from "views/pages/Landing.jsx";
 import Login from "views/pages/Login.jsx";
 import Profile from "views/pages/Profile.jsx";
@@ -42,7 +41,6 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path="/example" exact render={props => <Index {...props} />} />
         <Route
           path="/"
           exact
@@ -64,7 +62,7 @@ ReactDOM.render(
           render={props => <Search {...props}/>}
         />
         <Route 
-          path="/restaurants"
+          path="/restaurants/:username"
           render={props => <Restaurant {...props}/>}
         />
         <Route 

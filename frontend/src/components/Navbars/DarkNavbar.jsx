@@ -87,18 +87,8 @@ class DarkNavbar extends React.Component {
                     <NavLink
                       href="/search"
                     >
-                      <i className="ni ni-ui-04 d-lg-none mr-1"/>
+                      <i className="fa fa-search mr-1"/>
                       <span className="nav-link-inner--text">Search</span>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  <NavItem>
-                    <NavLink
-                      href="/restaurants"
-                    >
-                      <i className="ni ni-ui-04 d-lg-none mr-1"/>
-                      <span className="nav-link-inner--text">All Restaurants</span>
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -107,7 +97,7 @@ class DarkNavbar extends React.Component {
                     <NavLink
                       href="/articles"
                     >
-                      <i className="ni ni-ui-04 d-lg-none mr-1"/>
+                      <i className="fa fa-book mr-1"/>
                       <span className="nav-link-inner--text">Articles</span>
                     </NavLink>
                   </NavItem>
@@ -144,18 +134,18 @@ class DarkNavbar extends React.Component {
                     : (
                       <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
                         <NavItem>
-                        <Button
-                          className="btn-neutral btn-icon"
-                          color="default"
-                          href="/login"
-                        >
-                          <span className="btn-inner--icon">
-                            <i className="fa fa-sign-in mr-2"/>
-                          </span>
-                          <span className="nav-link-inner--text ml-1">
-                            Sign In
-                          </span>
-                        </Button>
+                          <Button
+                            className="btn-neutral btn-icon"
+                            color="default"
+                            href="/login"
+                          >
+                            <span className="btn-inner--icon">
+                              <i className="fa fa-sign-in mr-2"/>
+                            </span>
+                            <span className="nav-link-inner--text ml-1">
+                              Sign In
+                            </span>
+                          </Button>
                         </NavItem>
                       </Nav>
                     )
