@@ -1,12 +1,10 @@
 import React from 'react';
 
-import {
-  Container,
-} from "reactstrap";
-import ReactDatetime from "react-datetime";
+import { Container } from "reactstrap";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleCard from "components/ArticleCard";
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class ArticlesList extends React.Component {
   constructor(props) {
@@ -21,9 +19,10 @@ class ArticlesList extends React.Component {
 
 
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section h-100vh">
             <Container className="my-lg">
@@ -39,4 +38,8 @@ class ArticlesList extends React.Component {
   }
 }
 
-export default ArticlesList;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(ArticlesList, checkAuth);

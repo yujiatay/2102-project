@@ -20,6 +20,7 @@ import Navbar from "components/Navbars/DarkNavbar.jsx";
 import { cuisineTypesList } from "constants.js";
 import http from "http.js";
 import SearchCard from 'components/SearchCard';
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class Search extends React.Component {
   constructor(props) {
@@ -38,11 +39,13 @@ class Search extends React.Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
-    http.get("/restaurants/recommended")
-      .then((res) => {
-        // console.log(res.data.data)
-        this.setState({ restaurants: res.data.data });
-      })
+    if (this.props.user) {
+      http.get("/restaurants/recommended")
+        .then((res) => {
+          // console.log(res.data.data)
+          this.setState({ restaurants: res.data.data });
+        })
+    }
   }
 
   valid = (current) => {
@@ -55,7 +58,7 @@ class Search extends React.Component {
   }
 
   handleChange = (value, event) => {
-    if (value == "searchCuisines") {
+    if (value === "searchCuisines") {
       const selected = Array.from(event.target.options).filter(x => x.selected).map(x => x.value);
       this.setState({[value]: selected});
     } else {
@@ -83,9 +86,10 @@ class Search extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar history={this.props.history}/>
+        <Navbar user={user} history={this.props.history}/>
         <main ref="main">
           <section className="section">
             <Container className="pt-md">
@@ -237,4 +241,8 @@ class Search extends React.Component {
   }
 }
 
-export default Search;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(Search, checkAuth);

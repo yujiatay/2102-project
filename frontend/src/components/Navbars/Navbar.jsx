@@ -37,34 +37,29 @@ import {
 import http from "http.js";
 
 class LightNavbar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null
-    }
-  }
-
   componentDidMount() {
     let headroom = new Headroom(document.getElementById("navbar-main"));
     // initialise
     headroom.init();
-    http.get("/session")
-      .then((res) => {
-        // console.log(res)
-        this.setState({ user: res.data.data.entity })
-      })
-      .catch((err) => {
-        // console.log(err)
-      })
   }
 
+  logOut = () => {
+    http.delete("/session")
+      .then((res) => {
+        // console.log(res)
+        setTimeout(() => {
+          this.props.history.push("/")
+        }, 500);
+      })
+  };
+
   renderAuth = () => {
-    if (this.state.user) {
+    if (this.props.user) {
       return (
         <UncontrolledDropdown nav>
           <DropdownToggle nav>
             <i className="ni ni-collection d-lg-none mr-1" />
-            <span className="nav-link-inner--text">{this.state.user.username}</span>
+            <span className="nav-link-inner--text">{this.props.user.username}</span>
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem to="/profile" tag={Link}>

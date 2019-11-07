@@ -11,6 +11,7 @@ import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleComment from "components/ArticleComment";
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class ArticleView extends React.Component {
   constructor(props) {
@@ -25,9 +26,10 @@ class ArticleView extends React.Component {
 
 
   render() {
+    const { user } = this.user;
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section h-100vh">
             <Container className="my-lg">
@@ -56,4 +58,8 @@ class ArticleView extends React.Component {
   }
 }
 
-export default ArticleView;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(ArticleView, checkAuth);

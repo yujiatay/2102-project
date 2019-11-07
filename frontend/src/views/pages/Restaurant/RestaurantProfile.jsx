@@ -11,6 +11,7 @@ import NewMenuItemCard from "components/Restaurant/NewMenuItemCard";
 import NewAvailableSlot from "components/Restaurant/NewAvailableSlotCard";
 import AvailableSlotList from "components/Restaurant/AvailableSlotList";
 import DetailsForm from "components/Restaurant/DetailsForm";
+import {requireAuthentication} from "components/AuthenticatedComponent";
 
 class RestaurantProfile extends React.Component {
   constructor(props) {
@@ -38,9 +39,10 @@ class RestaurantProfile extends React.Component {
 
   render() {
     const {newItem, newSlot} = this.state;
+    const { user } = this.props;
     return (
       <>
-        <Navbar/>
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section">
             <Container className="pt-md align-content-md-center">
@@ -94,4 +96,8 @@ class RestaurantProfile extends React.Component {
   }
 }
 
-export default RestaurantProfile;
+function checkAuth(user, userType) {
+  return !!(user && userType === 2);
+}
+
+export default requireAuthentication(RestaurantProfile, checkAuth, "/");

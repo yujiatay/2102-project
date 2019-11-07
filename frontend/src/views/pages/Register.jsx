@@ -28,6 +28,7 @@ import SimpleFooter from "components/Footers/SimpleFooter.jsx";
 import http from "http.js";
 import RegisterDinerForm from "components/RegisterDiner";
 import RegisterRestaurantForm from "components/RegisterRestaurant";
+import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class Register extends React.Component {
   constructor(props) {
@@ -83,10 +84,15 @@ class Register extends React.Component {
     http.post("/diners", body)
       .then((res) => {
         // console.log(res.data)
-        this.setAlertVisible(true, "success", res.data.msg)
+        this.setAlertVisible(true, "success", res.data.msg);
+        const type = res.data.data.type;
         setTimeout(() => {
-          this.props.history.push("/search")
-        }, 1000);
+          if (type === 1) {
+            this.props.history.push("/search");
+          } else if (type === 2) {
+            this.props.history.push("/dashboard");
+          }
+        }, 500);
       })
       .catch((err) => {
         if (err.response) {
@@ -218,4 +224,18 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+function checkAuth(user) {
+  return !(user);
+}
+
+function redirectLink(user, userType) {
+  if (userType === 1) {
+    return "/search";
+  } else if (userType === 2) {
+    return "/dashboard";
+  } else {
+    return "/"
+  }
+}
+
+export default requireAuthentication(Register, checkAuth, "", redirectLink);

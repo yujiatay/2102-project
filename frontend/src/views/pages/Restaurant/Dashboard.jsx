@@ -31,9 +31,10 @@ class Dashboard extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar/>
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section h-100vh">
             <Container className="pt-md">
@@ -81,4 +82,8 @@ class Dashboard extends React.Component {
   }
 }
 
-export default requireAuthentication(Dashboard, false, true);
+function checkAuth(user, userType) {
+  return !!(user && userType === 2);
+}
+
+export default requireAuthentication(Dashboard, checkAuth, "/");

@@ -28,30 +28,23 @@ import {
   Nav,
   Container,
   Row,
-  Col
+  Col, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from "reactstrap";
 import http from "http.js";
 
 class DemoNavbar extends React.Component {
-  componentDidMount() {
-    http.get("/session")
-      .then((res) => {
-        // console.log(res)
-        this.setState({ user: res.data.data.entity })
-      })
-  }
-
   logOut = () => {
     http.delete("/session")
       .then((res) => {
         // console.log(res)
         setTimeout(() => {
           this.props.history.push("/")
-        }, 1000);
+        }, 500);
       })
-  }
+  };
 
   render() {
+    const { user } = this.props;
     return (
       <>
         <header className="header-global">
@@ -104,14 +97,17 @@ class DemoNavbar extends React.Component {
                   </NavItem>
                 </Nav>
                 <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
-                  <NavItem>
-                    <NavLink href="#">
-                      <i className="ni ni-button-power" />
-                      <span className="nav-link-inner--text" onClick={this.logOut}>
-                        Log Out
-                      </span>
-                    </NavLink>
-                  </NavItem>
+                  <UncontrolledDropdown nav>
+                    <DropdownToggle nav>
+                      <i className="ni ni-collection d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">{user.username}</span>
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={this.logOut}>
+                        Logout
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                 </Nav>
               </UncontrolledCollapse>
             </Container>

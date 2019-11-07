@@ -24,6 +24,7 @@ import {
 import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class Restaurant extends React.Component {
   constructor(props) {
@@ -50,9 +51,10 @@ class Restaurant extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section h-100vh">
             <Container className="my-lg">
@@ -178,4 +180,8 @@ class Restaurant extends React.Component {
   }
 }
 
-export default Restaurant;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(Restaurant, checkAuth);

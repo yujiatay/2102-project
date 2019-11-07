@@ -23,6 +23,7 @@ import { Button, Card, Container, Row, Col } from "reactstrap";
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
 import SimpleFooter from "components/Footers/SimpleFooter.jsx";
+import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class Profile extends React.Component {
   componentDidMount() {
@@ -31,9 +32,10 @@ class Profile extends React.Component {
     this.refs.main.scrollTop = 0;
   }
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main className="profile-page" ref="main">
           <section className="section-profile-cover section-shaped my-0">
             {/* Circles background */}
@@ -112,4 +114,8 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+function checkAuth(user, userType) {
+  return !!(user && userType === 1);
+}
+
+export default requireAuthentication(Profile, checkAuth, "/");

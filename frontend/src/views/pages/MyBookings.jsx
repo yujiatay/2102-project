@@ -32,6 +32,7 @@ import Navbar from "components/Navbars/DarkNavbar.jsx";
 import BookingCard from "components/BookingCard.jsx";
 import ReviewModal from 'components/ReviewModal.jsx'
 import classnames from 'classnames';
+import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class MyBookings extends React.Component {
   constructor(props) {
@@ -65,9 +66,10 @@ class MyBookings extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history}/>
         <main ref="main">
           <section className="section h-100vh">
             <Container className="my-lg">
@@ -131,4 +133,8 @@ class MyBookings extends React.Component {
   }
 }
 
-export default MyBookings;
+function checkAuth(user, userType) {
+  return !!(user && userType === 1);
+}
+
+export default requireAuthentication(MyBookings, checkAuth, "/");
