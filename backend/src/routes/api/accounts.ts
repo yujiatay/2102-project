@@ -69,7 +69,7 @@ router.post('/restaurants', requireLoggedOut, async (ctx) => {
  * [PATCH: /restaurants] Edit restaurant details.
  * [Params] name, cuisineType, branchLocation, openingHours, capacity, tags.
  */
-router.patch('/restaurants/:rusername', requireRestaurant, async (ctx) => {
+router.patch('/restaurants/:username', requireRestaurant, async (ctx) => {
   const body = ctx.request.body;
 
   if (ctx.params.username !== ctx.state.user.username) {
