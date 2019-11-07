@@ -26,7 +26,7 @@ class ArticleView extends React.Component {
 
 
   render() {
-    const { user } = this.user;
+    const { user } = this.props;
     return (
       <>
         <Navbar user={user} history={this.props.history} />
