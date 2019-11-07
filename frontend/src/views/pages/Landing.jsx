@@ -41,6 +41,7 @@ import ReactDatetime from "react-datetime";
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
 import Background from '../../assets/img/restaurant.jpg';
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class Landing extends React.Component {
   constructor(props) {
@@ -54,9 +55,10 @@ class Landing extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <section className="section section-lg"
             style={{
@@ -117,4 +119,8 @@ class Landing extends React.Component {
   }
 }
 
-export default Landing;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(Landing, checkAuth);

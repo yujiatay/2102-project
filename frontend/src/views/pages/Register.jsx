@@ -16,44 +16,40 @@
 
 */
 import React from "react";
-import { connect } from "react-redux";
+import classnames from "classnames";
 
 // reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
-  Row,
-  Col,
-  Alert
-} from "reactstrap";
+import { Alert, Card, CardBody, Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane } from "reactstrap";
+
 
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
 import SimpleFooter from "components/Footers/SimpleFooter.jsx";
 import http from "http.js";
-import { logIn } from "redux/actions";
+import RegisterDinerForm from "components/RegisterDiner";
+import RegisterRestaurantForm from "components/RegisterRestaurant";
+import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      email: '',
-      password: '',
+      form: {
+        username: '',
+        email: '',
+        password: '',
+        name: '',
+        branchLocation: '',
+        openingHours: '',
+        capacity: undefined,
+        cuisineType: 1,
+      },
       alert: {
         visible: false,
         color: "primary",
         msg: ""
-      }
+      },
+      tabs: 1,
     }
   }
 
@@ -64,29 +60,65 @@ class Register extends React.Component {
   }
 
   handleChange = (value, event) => {
-    this.setState({[value]: event.target.value});
+    this.setState({ 
+      form: {
+        ...this.state.form,
+        [value]: event.target.value,
+      }});
   }
 
-  submitForm = () => {
+  submitForm = (accountType) => {
+    if (accountType === "diner") {
+      this.registerDiner();
+    } else if (accountType === "restaurant") {
+      this.registerRestaurant();
+    }
+  }
+
+  registerDiner = () => {
     const body = {
-      email: this.state.email,
-      password: this.state.password,
-      username: this.state.name
+      email: this.state.form.email,
+      password: this.state.form.password,
+      username: this.state.form.username
     }
     http.post("/diners", body)
-    .then((res) => {
-      // console.log(res.data)
-      this.setAlertVisible(true, "success", res.data.msg)
-      setTimeout(() => {
-        this.props.history.push("/search")
-      }, 1000);
-    })
-    .catch((err) => {
-      if (err.response) {
-        // console.log(err.response.data)
-        this.setAlertVisible(true, "danger", err.response.data.msg)
-      }
-    })
+      .then((res) => {
+        // console.log(res.data)
+        this.setAlertVisible(true, "success", res.data.msg);
+        const type = res.data.data.type;
+        setTimeout(() => {
+          if (type === 1) {
+            this.props.history.push("/search");
+          } else if (type === 2) {
+            this.props.history.push("/dashboard");
+          }
+        }, 500);
+      })
+      .catch((err) => {
+        if (err.response) {
+          // console.log(err.response.data)
+          this.setAlertVisible(true, "danger", err.response.data.msg)
+        }
+      })
+  }
+
+  registerRestaurant = () => {
+    const body = {
+      ...this.state.form
+    }
+    http.post("/restaurants", body)
+      .then((res) => {
+        this.setAlertVisible(true, "success", res.data.msg)
+        setTimeout(() => {
+          this.props.history.push("/dashboard")
+        }, 1000);
+      })
+      .catch((err) => {
+        if (err.response) {
+          // console.log(err.response.data)
+          this.setAlertVisible(true, "danger", err.response.data.msg)
+        }
+      })
   }
 
   setAlertVisible = (visible, color, msg) => {
@@ -94,6 +126,13 @@ class Register extends React.Component {
       alert: { visible, color, msg } 
     });
   }
+
+  toggleNavs = (e, state, index) => {
+    e.preventDefault();
+    this.setState({
+      [state]: index
+    });
+  };
 
   render() {
     return (
@@ -127,89 +166,51 @@ class Register extends React.Component {
                       <div className="text-center text-muted mb-4">
                         <small>Sign up with credentials</small>
                       </div>
-                      <Form role="form">
-                        <FormGroup>
-                          <InputGroup className="input-group-alternative mb-3">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-circle-08" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input placeholder="Username" type="text" value={this.state.name}
-                              onChange={(e) => this.handleChange('name', e)}/>
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <InputGroup className="input-group-alternative mb-3">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-email-83" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input placeholder="Email" type="email" value={this.state.email}
-                              onChange={(e) => this.handleChange('email', e)}/>
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-lock-circle-open" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Password"
-                              type="password"
-                              autoComplete="off"
-                              value={this.state.password}
-                              onChange={(e) => this.handleChange('password', e)}
-                            />
-                          </InputGroup>
-                        </FormGroup>
-                        {/* <div className="text-muted font-italic">
-                          <small>
-                            password strength:{" "}
-                            <span className="text-success font-weight-700">
-                              strong
-                            </span>
-                          </small>
-                        </div>
-                        <Row className="my-4">
-                          <Col xs="12">
-                            <div className="custom-control custom-control-alternative custom-checkbox">
-                              <input
-                                className="custom-control-input"
-                                id="customCheckRegister"
-                                type="checkbox"
-                              />
-                              <label
-                                className="custom-control-label"
-                                htmlFor="customCheckRegister"
-                              >
-                                <span>
-                                  I agree with the{" "}
-                                  <a
-                                    href="#pablo"
-                                    onClick={e => e.preventDefault()}
-                                  >
-                                    Privacy Policy
-                                  </a>
-                                </span>
-                              </label>
-                            </div>
-                          </Col>
-                        </Row> */}
-                        <div className="text-center">
-                          <Button
-                            className="mt-4"
-                            color="primary"
-                            type="button"
-                            onClick={this.submitForm}
+                      <Nav
+                        className="nav-fill flex-column flex-md-row mb-4"
+                        id="tabs-icons-text"
+                        pills
+                        role="tablist"
+                      >
+                        <NavItem>
+                          <NavLink
+                            aria-selected={this.state.tabs === 1}
+                            className={classnames("mb-sm-3 mb-md-0", {
+                              active: this.state.tabs === 1
+                            })}
+                            onClick={e => this.toggleNavs(e, "tabs", 1)}
+                            href="#diner"
+                            role="tab"
                           >
-                            Create account
-                          </Button>
-                        </div>
-                      </Form>
+                            <i className="ni ni-single-02 mr-2" />
+                            Diner
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            aria-selected={this.state.tabs === 2}
+                            className={classnames("mb-sm-3 mb-md-0", {
+                              active: this.state.tabs === 2
+                            })}
+                            onClick={e => this.toggleNavs(e, "tabs", 2)}
+                            href="#restaurant"
+                            role="tab"
+                          >
+                            <i className="ni ni-shop mr-2" />
+                            Restaurant
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                      <TabContent activeTab={"tabs" + this.state.tabs}>
+                        <TabPane tabId="tabs1">
+                          <RegisterDinerForm handleChange={this.handleChange} submitForm={this.submitForm}
+                            form={this.state.form}/>
+                        </TabPane>
+                        <TabPane tabId="tabs2">
+                          <RegisterRestaurantForm handleChange={this.handleChange} submitForm={this.submitForm}
+                            form={this.state.form}/>
+                        </TabPane>
+                      </TabContent>
                     </CardBody>
                   </Card>
                 </Col>
@@ -223,4 +224,18 @@ class Register extends React.Component {
   }
 }
 
-export default connect(null, {logIn})(Register);
+function checkAuth(user) {
+  return !(user);
+}
+
+function redirectLink(user, userType) {
+  if (userType === 1) {
+    return "/search";
+  } else if (userType === 2) {
+    return "/dashboard";
+  } else {
+    return "/"
+  }
+}
+
+export default requireAuthentication(Register, checkAuth, "", redirectLink);

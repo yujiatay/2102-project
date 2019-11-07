@@ -4,6 +4,7 @@ import { PASSWORD_SALT_ROUNDS } from '../constants';
 import {
   CuisineType,
   MenuItem,
+  MenuItemType,
   Restaurant,
   RestaurantPrivate,
   RestaurantTag,
@@ -17,7 +18,7 @@ const RESTAURANT_LIST_LIMIT = 20;
 /**
  * Adds a new menu item for the given restaurant.
  */
-export function addMenuItem(username: string, name: string, type: string, price: number, description: string,
+export function addMenuItem(username: string, name: string, type: MenuItemType, price: number, description: string,
                             image: string): Promise<MenuItem> {
   return db.getOne<MenuItem>(`
     INSERT INTO MenuItems (username, name, type, price, description, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
@@ -76,7 +77,7 @@ export function getNewestRestaurants(name?: string, cuisineTypes?: number[], tag
     WHERE (1 = $1 OR name ILIKE $2) AND (1 = $3 OR cuisine_type = ANY ($4)) AND (1 = $5 OR 1 = ANY (
       SELECT (CASE WHEN T.tag = ANY ($6) THEN 1 ELSE 0 END) FROM RestaurantTags T WHERE T.username = R.username
     )) AND (1 = $7 OR (
-      SELECT AVG(price) FROM MenuItems M WHERE R.username = M.username AND M.type = 'main'
+      SELECT AVG(price) FROM MenuItems M WHERE R.username = M.username AND M.type = 1
     ) <= $8) AND created_at < $9
     ORDER BY created_at DESC
     LIMIT ${RESTAURANT_LIST_LIMIT}

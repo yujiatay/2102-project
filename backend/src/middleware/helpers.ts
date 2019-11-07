@@ -46,7 +46,7 @@ export const loadDinerFromUsername: Middleware = async (ctx, next) => {
  * the loaded Article object is attached to `ctx.state`.
  */
 export const loadArticleFromParams: Middleware = async (ctx, next) => {
-  const article = await db.articles.getArticle(ctx.params.ausername, ctx.params.acreated);
+  const article = await db.articles.getArticle(ctx.params.ausername, parseInt(ctx.params.acreated, 10));
 
   if (!article) {
     return ctx.body = {
@@ -91,8 +91,8 @@ export const loadBookingFromParams: Middleware = async (ctx, next) => {
  * the loaded Comment object is attached to `ctx.state`.
  */
 export const loadCommentFromParams: Middleware = async (ctx, next) => {
-  const comment = await db.articles.getComment(ctx.params.ausername, ctx.params.acreated,
-    ctx.params.username, ctx.params.createdAt);
+  const comment = await db.articles.getComment(ctx.params.ausername, parseInt(ctx.params.acreated, 10),
+    ctx.params.username, parseInt(ctx.params.createdAt, 10));
 
   if (!comment) {
     return ctx.body = {

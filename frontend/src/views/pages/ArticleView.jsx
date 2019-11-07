@@ -12,6 +12,7 @@ import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleComment from "components/ArticleComment";
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class ArticleView extends React.Component {
   constructor(props) {
@@ -64,11 +65,15 @@ class ArticleView extends React.Component {
   }
 
   render() {
+<<<<<<< HEAD
     const createdTimestamp = new Date(this.state.createdAt).toString();
     const isLoading = this.state.isLoading;
+=======
+    const { user } = this.user;
+>>>>>>> 66321b295aef3ce4ab60917ed985b48d0b44d44d
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <Container className="my-lg">
             <h2>Article Title</h2>
@@ -95,4 +100,8 @@ class ArticleView extends React.Component {
   }
 }
 
-export default ArticleView;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(ArticleView, checkAuth);

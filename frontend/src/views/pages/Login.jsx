@@ -21,7 +21,6 @@ import React from "react";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -39,6 +38,7 @@ import {
 import Navbar from "components/Navbars/Navbar.jsx";
 import SimpleFooter from "components/Footers/SimpleFooter.jsx";
 import http from "http.js";
+import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class Login extends React.Component {
   constructor(props) {
@@ -72,10 +72,15 @@ class Login extends React.Component {
     http.post("/session", body)
     .then((res) => {
       // console.log(res)
-      this.setAlertVisible(true, "success", res.data.msg)
+      this.setAlertVisible(true, "success", res.data.msg);
+      const type = res.data.data.type;
       setTimeout(() => {
-        this.props.history.push("/search")
-      }, 1000);
+        if (type === 1) {
+          this.props.history.push("/search");
+        } else if (type === 2) {
+          this.props.history.push("/dashboard");
+        }
+      }, 500);
     })
     .catch((err) => {
       if (err.response) {
@@ -166,13 +171,13 @@ class Login extends React.Component {
                   </Card>
                   <Row className="mt-3">
                     <Col xs="6">
-                      <a
+                      {/* <a
                         className="text-light"
                         href="#pablo"
                         onClick={e => e.preventDefault()}
                       >
                         <small>Forgot password?</small>
-                      </a>
+                      </a> */}
                     </Col>
                     <Col className="text-right" xs="6">
                       <a
@@ -194,4 +199,18 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+function checkAuth(user) {
+  return !(user);
+}
+
+function redirectLink(user, userType) {
+  if (userType === 1) {
+    return "/search";
+  } else if (userType === 2) {
+    return "/dashboard";
+  } else {
+    return "/"
+  }
+}
+
+export default requireAuthentication(Login, checkAuth, "", redirectLink);

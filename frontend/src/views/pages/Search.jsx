@@ -3,16 +3,10 @@ import React from 'react';
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardBody,
-  CardText,
-  CardImg,
   FormGroup,
   Form,
   Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Row,
   Col,
   Container,
@@ -21,16 +15,23 @@ import {
   Modal
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
-import { Link } from "react-router-dom";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
+import { cuisineTypesList } from "constants.js";
+import http from "http.js";
+import SearchCard from 'components/SearchCard';
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: null,
-      modal: false
+      date: undefined,
+      modal: false,
+      searchName: '',
+      searchCuisines: [0],
+      searchBudget: undefined,
+      restaurants: []
     }
   }
 
@@ -38,6 +39,13 @@ class Search extends React.Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+    if (this.props.user) {
+      http.get("/restaurants/recommended")
+        .then((res) => {
+          // console.log(res.data.data)
+          this.setState({ restaurants: res.data.data });
+        })
+    }
   }
 
   valid = (current) => {
@@ -49,22 +57,51 @@ class Search extends React.Component {
     this.setState({ modal: !this.state.modal});
   }
 
+  handleChange = (value, event) => {
+    if (value === "searchCuisines") {
+      const selected = Array.from(event.target.options).filter(x => x.selected).map(x => x.value);
+      this.setState({[value]: selected});
+    } else {
+      this.setState({[value]: event.target.value});
+    }
+  }
+
+  handleSearch = () => {
+    const params = {};
+    if (this.state.searchName.length > 0) {
+      params.name = this.state.searchName;
+    }
+    if (this.state.searchBudget !== undefined) {
+      params.budget = parseFloat(this.state.searchBudget);
+    }
+    if (this.state.searchCuisines.length > 0) {
+      params.cuisineTypes = this.state.searchCuisines.map(x => parseInt(x));
+    }
+    // console.log(params)
+    http.get("/restaurants", {params})
+      .then((res) => {
+        // console.log(res.data.data)
+        this.setState({ restaurants: res.data.data });
+      })
+  }
+
   render() {
+    const { user } = this.props;
     return (
       <>
-        <Navbar history={this.props.history}/>
+        <Navbar user={user} history={this.props.history}/>
         <main ref="main">
           <section className="section">
             <Container className="pt-md">
               <Row>
                 <Col xs="4">
-                  <Card shadow>
+                  <Card>
                     <CardHeader>
                       Search criteria
                     </CardHeader>
                     <CardBody>
                       <Form>
-                        <FormGroup>
+                        {/* <FormGroup>
                           <Label for="date">Date</Label>
                           <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
@@ -86,36 +123,55 @@ class Search extends React.Component {
                         <FormGroup>
                           <Label for="time">Time</Label>
                           <Input type="select" name="select" id="time">
-                            {/* <option value="" disabled selected hidden>Please Choose...</option> */}
                             <option>1030</option>
                             <option>1100</option>
                             <option>1130</option>
                             <option>1200</option>
                             <option>1230</option>
                           </Input>
-                        </FormGroup>
-                        <FormGroup>
+                        </FormGroup> */}
+                        {/* <FormGroup>
                           <Label for="pax">Pax</Label>
                           <Input type="select" name="select" id="pax">
-                            {/* <option value="" disabled selected hidden>Please Choose...</option> */}
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
                             <option>4</option>
                             <option>5</option>
                           </Input>
-                        </FormGroup>
+                        </FormGroup> */}
                         <FormGroup>
-                          <Label for="cuisine">Cuisine</Label>
-                          <Input type="select" name="select" id="exampleSelect">
-                            <option value="" disabled selected hidden>Please Choose...</option>
-                            <option>Japanese</option>
-                            <option>Lebanese</option>
-                            <option>Chinese</option>
-                            <option>Portuguese</option>
+                          <Label for="name">Restaurant</Label>
+                          <Input type="text" name="name" id="name" 
+                            placeholder="Restaurant name" value={this.state.searchName}
+                            onChange={(e) => this.handleChange('searchName', e)}>
                           </Input>
                         </FormGroup>
                         <FormGroup>
+                          <Label for="cuisine">Cuisine</Label>
+                          <Input type="select" name="selectMulti" id="cuisine" multiple
+                            value={this.state.searchCuisines}
+                            onChange={(e) => this.handleChange('searchCuisines', e)}>
+                            {
+                              cuisineTypesList.map(ct => (
+                                <option value={ct[1]} key={ct[1]}>{ct[0]}</option>
+                              ))
+                            }
+                          </Input>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="location">Budget</Label>
+                          <Input type="select" name="select" id="budget"
+                            defaultValue={""}
+                            value={this.state.searchBudget}
+                            onChange={(e) => this.handleChange('searchBudget', e)}>
+                            <option value="" disabled hidden>Please Choose...</option>
+                            <option value={10}>$</option>
+                            <option value={50}>$$</option>
+                            <option value={100}>$$$</option>
+                          </Input>
+                        </FormGroup>
+                        {/* <FormGroup>
                           <Label for="location">Location</Label>
                           <Input type="select" name="select" id="location">
                             <option value="" disabled selected hidden>Please Choose...</option>
@@ -124,18 +180,8 @@ class Search extends React.Component {
                             <option>East</option>
                             <option>West</option>
                           </Input>
-                        </FormGroup>
-                        <FormGroup>
-                          <Label for="location">Budget</Label>
-                          <Input type="select" name="select" id="budget">
-                            <option value="" disabled selected hidden>Please Choose...</option>
-                            <option>$</option>
-                            <option>$$</option>
-                            <option>$$$</option>
-                            <option>$$$$</option>
-                          </Input>
-                        </FormGroup>
-                        <Button color="primary" type="button" block>
+                        </FormGroup> */}
+                        <Button color="primary" type="button" block onClick={this.handleSearch}>
                           Search
                         </Button>
                       </Form>
@@ -143,68 +189,16 @@ class Search extends React.Component {
                   </Card>
                 </Col>
                 <Col>
-                  <FormGroup>
-                    <InputGroup className="mb-4">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="ni ni-zoom-split-in" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input placeholder="Search" type="text" />
-                    </InputGroup>
-                  </FormGroup>
                   {
-                    [1,2,3,4,5].map((x) => (
-                      <Card className="mt-4" style={{
-                        border: '1px solid #cad1d7'
-                      }}>
-                        <CardBody>
-                          <Row>
-                            <Col xs={4}>
-                              <img src="https://via.placeholder.com/150"/>
-                            </Col>
-                            <Col>
-                              <CardTitle>
-                                <Link to="/restaurants">
-                                  Restaurant {x}
-                                </Link>
-                              </CardTitle>
-                              <CardText>
-                                <Row>
-                                  Cuisine: ______
-                                </Row>
-                                <Row>
-                                  Location: ______
-                                </Row>
-                                <Row>
-                                  Price: $
-                                </Row>
-                              </CardText>
-                              <Row>
-                                <Col>
-                                  <Input type="select" name="select" id="booktime">
-                                    <option>1030</option>
-                                    <option>1100</option>
-                                    <option>1130</option>
-                                    <option>1200</option>
-                                    <option>1230</option>
-                                  </Input>
-                                </Col>
-                                <Col>
-                                  <Button onClick={this.toggleModal}>Book now</Button>
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        </CardBody>
-                      </Card>
+                    this.state.restaurants.map((r) => (
+                      <SearchCard key={r.username} restaurant={r} toggleModal={this.toggleModal}/>
                     ))
                   }
                 </Col>
               </Row>
             </Container>
           </section>
-          <Modal
+          {/* <Modal
             className="modal-dialog-centered"
             isOpen={this.state.modal}
             onClick={this.toggleModal}
@@ -240,11 +234,15 @@ class Search extends React.Component {
                 Book now
               </Button>
             </div>
-          </Modal>
+          </Modal> */}
         </main>
       </>
     );
   }
 }
 
-export default Search;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(Search, checkAuth);

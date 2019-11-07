@@ -17,32 +17,22 @@
 */
 import React from "react";
 import { Link } from "react-router-dom";
-// JavaScript plugin that hides or shows a component based on your scroll
-import Headroom from "headroom.js";
+
 // reactstrap components
 import {
-  Button,
   UncontrolledCollapse,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  UncontrolledDropdown,
   NavbarBrand,
   Navbar,
   NavItem,
+  NavLink,
+  Nav,
   Container,
   Row,
-  Col,
+  Col, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from "reactstrap";
 import http from "http.js";
 
-class LightNavbar extends React.Component {
-  componentDidMount() {
-    let headroom = new Headroom(document.getElementById("navbar-main"));
-    // initialise
-    headroom.init();
-  }
-
+class DemoNavbar extends React.Component {
   logOut = () => {
     http.delete("/session")
       .then((res) => {
@@ -53,54 +43,19 @@ class LightNavbar extends React.Component {
       })
   };
 
-  renderAuth = () => {
-    if (this.props.user) {
-      return (
-        <UncontrolledDropdown nav>
-          <DropdownToggle nav>
-            <i className="ni ni-collection d-lg-none mr-1" />
-            <span className="nav-link-inner--text">{this.props.user.username}</span>
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem to="/myBookings" tag={Link}>
-              Bookings
-            </DropdownItem>
-            <DropdownItem onClick={this.logOut}>
-              Logout
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      )
-    } else {
-      return (
-        <Button
-          className="btn-neutral btn-icon"
-          color="default"
-          href="/login"
-        >
-          <span className="btn-inner--icon">
-            <i className="fa fa-sign-in mr-2" />
-          </span>
-          <span className="nav-link-inner--text ml-1">
-            Sign In
-          </span>
-        </Button>
-      )
-    }
-  }
-
   render() {
+    const { user } = this.props;
     return (
       <>
         <header className="header-global">
           <Navbar
-            className="navbar-main navbar-transparent navbar-light headroom"
+            className="navbar-transparent navbar-dark bg-gradient-default"
             expand="lg"
             id="navbar-main"
           >
             <Container>
-              <NavbarBrand className="mr-lg-5" href="/">
-                BookLah!
+              <NavbarBrand className="mr-lg-5" href="/dashboard">
+                BookLah! (Restaurant)
               </NavbarBrand>
               <button className="navbar-toggler" id="navbar_global">
                 <span className="navbar-toggler-icon" />
@@ -109,8 +64,8 @@ class LightNavbar extends React.Component {
                 <div className="navbar-collapse-header">
                   <Row>
                     <Col className="collapse-brand" xs="6">
-                      <Link to="/">
-                        BookLah!
+                      <Link to="/dashboard">
+                        BookLah! (Restaurant)
                       </Link>
                     </Col>
                     <Col className="collapse-close" xs="6">
@@ -121,14 +76,39 @@ class LightNavbar extends React.Component {
                     </Col>
                   </Row>
                 </div>
-                <div className="align-items-lg-center ml-lg-auto">
-                  <NavItem className="d-none d-lg-block ml-lg-4">
-                    {this.renderAuth()}
+                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink href="/dashboard">
+                      <i className="ni ni-book-bookmark" />
+                      <span className="nav-link-inner--text">
+                        Bookings
+                      </span>
+                    </NavLink>
                   </NavItem>
-                  <NavItem className="d-none d-sm-block d-md-block d-lg-none">
-                    {this.renderAuth()}
+                </Nav>
+                <Nav className="align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink href="/restaurant-details">
+                      <i className="ni ni-shop" />
+                      <span className="nav-link-inner--text">
+                        Restaurant Profile
+                      </span>
+                    </NavLink>
                   </NavItem>
-                </div>
+                </Nav>
+                <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
+                  <UncontrolledDropdown nav>
+                    <DropdownToggle nav>
+                      <i className="ni ni-collection d-lg-none mr-1" />
+                      <span className="nav-link-inner--text">{user.username}</span>
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={this.logOut}>
+                        Logout
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </Nav>
               </UncontrolledCollapse>
             </Container>
           </Navbar>
@@ -138,4 +118,4 @@ class LightNavbar extends React.Component {
   }
 }
 
-export default LightNavbar;
+export default DemoNavbar;

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from "axios";
 
+<<<<<<< HEAD
 import {
   Container,
   Button,
@@ -10,6 +11,13 @@ import {
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleCard from "components/ArticleCard";
 import NewArticleModal from "components/NewArticleModal";
+=======
+import { Container } from "reactstrap";
+
+import Navbar from "components/Navbars/DarkNavbar.jsx";
+import ArticleCard from "components/ArticleCard";
+import { requireAuthentication } from "../../components/AuthenticatedComponent";
+>>>>>>> 66321b295aef3ce4ab60917ed985b48d0b44d44d
 
 class ArticlesList extends React.Component {
   constructor(props) {
@@ -57,10 +65,14 @@ class ArticlesList extends React.Component {
   }
 
   render() {
+<<<<<<< HEAD
     const { isLoading, articles } = this.state;
+=======
+    const { user } = this.props;
+>>>>>>> 66321b295aef3ce4ab60917ed985b48d0b44d44d
     return (
       <>
-        <Navbar />
+        <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <p></p>
           <Container className="my-lg">
@@ -89,4 +101,8 @@ class ArticlesList extends React.Component {
   }
 }
 
-export default ArticlesList;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(ArticlesList, checkAuth);

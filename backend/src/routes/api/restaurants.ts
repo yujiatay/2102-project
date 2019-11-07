@@ -78,7 +78,7 @@ router.post('/restaurants/:rusername/menuitems', requireRestaurant, loadRestaura
   }
 
   const name = body.name.trim();
-  const type = body.type.trim();
+  const type = parseInt(body.type, 10);
   const price = parseFloat(body.price);
   const description = body.description.trim();
   const menuItem = await db.restaurants.addMenuItem(restaurant.username, name, type, price, description, body.image);
