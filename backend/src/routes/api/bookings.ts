@@ -139,7 +139,7 @@ router.post('/restaurants/:rusername/bookings', requireDiner, loadRestaurantFrom
  * [DELETE: /restaurants/:rusername/bookings/:data] Delete a booking (creator only).
  * [Note] Format of 'data': dusername,dayOfWeek,startTime,endTime,date
  */
-router.delete('/restaurants/:rusername/bookings/:data', requireDiner, loadBookingFromParams, async (ctx) => {
+router.delete('/restaurants/:rusername/bookings', requireDiner, loadBookingFromParams, async (ctx) => {
   const booking: Booking = ctx.state.booking;
 
   if (ctx.state.user.username !== booking.dusername) {

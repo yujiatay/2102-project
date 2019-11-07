@@ -2,13 +2,10 @@ import React from 'react';
 
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardBody,
   CardText,
-  CardImg,
   FormGroup,
-  Form,
   Input,
   CustomInput,
   InputGroupAddon,
@@ -17,7 +14,6 @@ import {
   Row,
   Col,
   Container,
-  Label,
   Button,
   Modal,
   Alert
@@ -33,13 +29,14 @@ class Restaurant extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(),
+      date: ReactDatetime.moment().startOf('day'),
       modal: false,
       restaurant: undefined,
       tags: [],
       timeslots: [],
       pax: 1,
       selectedSlot: 0,
+      message: '',
       alert: {
         visible: false,
         color: "primary",
@@ -67,6 +64,9 @@ class Restaurant extends React.Component {
           this.setState({ timeslots: res.data.data });
         })
       })
+      .catch((err) => {
+        // console.log(err)
+      })
   }
 
   handleChange = (value, event) => {
@@ -93,18 +93,21 @@ class Restaurant extends React.Component {
   }
 
   getTimeSlots = () => {
-    return this.state.timeslots.filter(ts => ts.dayOfWeek === this.state.date.getDay());
+    console.log(this.state.date)
+    return this.state.timeslots.filter(ts => ts.dayOfWeek === this.state.date.day());
   }
 
   handleBooking = () => {
     const slot = this.getTimeSlots()[this.state.selectedSlot];
     const body = {
-      dayOfWeek: this.state.date.getDay(),
+      dayOfWeek: this.state.date.day(),
       startTime: slot.startTime,
       endTime: slot.endTime,
-      date: this.state.date.getTime(),
-      pax: parseInt(this.state.pax)
+      date: this.state.date.startOf('day'),
+      pax: parseInt(this.state.pax),
+      message: this.state.message
     }
+    console.log(this.state.date)
     console.log(body)
     http.post(`/restaurants/${this.state.restaurant.username}/bookings`, body)
       .then((res) => {
@@ -122,7 +125,9 @@ class Restaurant extends React.Component {
 
   renderRestaurant = () => {
     if (!this.state.restaurant) {
-      return null;
+      return (
+        <div>404 Restaurant Not Found</div>
+      );
     }
 
     const {name, cuisineType, branchLocation, openingHours, capacity} = this.state.restaurant;
@@ -219,7 +224,7 @@ class Restaurant extends React.Component {
       <Modal
         className="modal-dialog-centered"
         isOpen={this.state.modal}
-        onClick={this.toggleModal}
+        toggle={this.toggleModal}
         >
         <div className="modal-header">
           <h5 className="modal-title" id="modalLabel">
@@ -236,9 +241,17 @@ class Restaurant extends React.Component {
           </button>
         </div>
         <div className="modal-body">
-          You are making a reservation for {this.state.pax} people {" "}
-          at {this.state.restaurant.name} on {this.state.date.toString().slice(0, 15)}, {" "}
-          {this.getTimeSlots()[this.state.selectedSlot].startTime}           
+          <p>You are making a reservation for {this.state.pax} people {" "}
+          at {this.state.restaurant.name} on {this.state.date.format('MMM Do YYYY')}, {" "}
+          {this.getTimeSlots()[this.state.selectedSlot].startTime}.</p>
+          <InputGroup>
+            <Input
+              placeholder="Include any food allergies or special arrangements.." 
+              type="textarea" 
+              rows
+              value={this.state.message}
+              onChange={(e) => this.handleChange('message', e)}/>
+          </InputGroup>
         </div>
         <div className="modal-footer">
           <Button

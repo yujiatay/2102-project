@@ -1,25 +1,9 @@
 import React from 'react';
 
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody,
-  CardText,
-  CardImg,
-  FormGroup,
-  Form,
-  Input,
-  CustomInput,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Row,
   Col,
   Container,
-  Label,
-  Button,
-  Modal,
   TabContent,
   TabPane,
   Nav,
@@ -33,6 +17,7 @@ import BookingCard from "components/BookingCard.jsx";
 import ReviewModal from 'components/ReviewModal.jsx'
 import classnames from 'classnames';
 import { requireAuthentication } from "components/AuthenticatedComponent";
+import http from "http.js";
 
 class MyBookings extends React.Component {
   constructor(props) {
@@ -40,7 +25,9 @@ class MyBookings extends React.Component {
     this.state = {
       date: null,
       modal: false,
-      activeTab: '1' 
+      activeTab: '1',
+      unconfirmedRes: [],
+      confirmedRes: [],
     }
   }
 
@@ -54,11 +41,32 @@ class MyBookings extends React.Component {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+
+    http.get(`/diners/${this.props.user.username}/bookings`)
+      .then((res) => {
+        let reservations = res.data.data;
+        console.log(reservations)
+        let unconfirmed = reservations.filter(x => !x.isConfirmed);
+        let confirmed = reservations.filter(x => x.isConfirmed);
+        this.setState({
+          unconfirmedRes: unconfirmed,
+          confirmedRes: confirmed
+        })
+      })
   }
 
   valid = (current) => {
     const yesterday = ReactDatetime.moment().subtract(1, 'day');
     return current.isAfter(yesterday);
+  }
+
+  cancelBooking = (rusername, data) => {
+    console.log(data)
+    http.delete(`/restaurants/${rusername}/bookings/`, { params: data })
+      .then((res) => {
+        console.log(res)
+
+      })
   }
 
   toggleModal = () => {
@@ -71,7 +79,7 @@ class MyBookings extends React.Component {
       <>
         <Navbar user={user} history={this.props.history}/>
         <main ref="main">
-          <section className="section h-100vh">
+          <section className="section">
             <Container className="my-lg">
                 <h2>Bookings</h2>
                 <div>
@@ -96,31 +104,38 @@ class MyBookings extends React.Component {
                   <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
                       <p></p>
-                      <p>These are your unconfirmed requests:</p>
-                      <Row>
-                        <Col sm="12">
-                          <BookingCard />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col sm="12">
-                          <BookingCard />
-                        </Col>
-                      </Row>
+                      {
+                        this.state.unconfirmedRes.length > 0
+                        ? <p>These are your unconfirmed reservations:</p>
+                        : <p>You have no unconfirmed reservations.</p>
+                      }
+                      {
+                        this.state.unconfirmedRes.map((res) => (
+                          <Row key={`${res.createdAt}${res.restaurant}`}>
+                            <Col sm="12">
+                              <BookingCard booking={res} onCancel={this.cancelBooking}/>
+                            </Col>
+                          </Row>
+                        ))
+                      }
+                      
                     </TabPane>
                     <TabPane tabId="2">
                       <p></p>
-                      <p>These are your confirmed requests:</p>
-                      <Row>
-                        <Col sm="12">
-                          <BookingCard onReviewClick={this.toggleModal}/>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col sm="12">
-                          <BookingCard onReviewClick={this.toggleModal}/>
-                        </Col>
-                      </Row>
+                      {
+                        this.state.confirmedRes.length > 0
+                        ? <p>These are your confirmed reservations:</p>
+                        : <p>You have no confirmed reservations.</p>
+                      }
+                      {
+                        this.state.confirmedRes.map((res) => (
+                          <Row key={`${res.createdAt}${res.restaurant}`}>
+                            <Col sm="12">
+                              <BookingCard booking={res} onReviewClick={this.toggleModal}/>
+                            </Col>
+                          </Row>
+                        ))
+                      }
                     </TabPane>
                   </TabContent>
                 </div>
