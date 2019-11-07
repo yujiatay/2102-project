@@ -65,12 +65,9 @@ class ArticleView extends React.Component {
   }
 
   render() {
-<<<<<<< HEAD
     const createdTimestamp = new Date(this.state.createdAt).toString();
     const isLoading = this.state.isLoading;
-=======
-    const { user } = this.user;
->>>>>>> 66321b295aef3ce4ab60917ed985b48d0b44d44d
+    const { user } = this.props;
     return (
       <>
         <Navbar user={user} history={this.props.history} />
