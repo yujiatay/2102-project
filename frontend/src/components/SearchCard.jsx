@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-import { Button, Card, CardBody, CardText, CardTitle, Col, Input, Row } from "reactstrap";
+import { Card, CardBody, CardText, CardTitle, Col, Row } from "reactstrap";
 import { cuisineTypes } from "constants.js";
 import http from "http.js";
 
@@ -30,7 +30,7 @@ class SearchCard extends React.Component {
         <CardBody>
           <Row>
             <Col xs={4}>
-              <img src="https://via.placeholder.com/150"/>
+              <img alt="restaurant" src="https://via.placeholder.com/150"/>
             </Col>
             <Col>
               <CardTitle>

@@ -12,7 +12,6 @@ import {
   Container,
   Label,
   Button,
-  Modal
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 

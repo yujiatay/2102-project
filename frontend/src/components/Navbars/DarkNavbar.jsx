@@ -34,7 +34,6 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip
 } from "reactstrap";
 import http from "http.js";
 

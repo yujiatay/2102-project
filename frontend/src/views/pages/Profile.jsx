@@ -18,11 +18,10 @@
 import React from "react";
 
 // reactstrap components
-import { Button, Card, Container, Row, Col } from "reactstrap";
+import { Card, Container, Row, Col } from "reactstrap";
 
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
-import SimpleFooter from "components/Footers/SimpleFooter.jsx";
 import { requireAuthentication } from "components/AuthenticatedComponent";
 
 class Profile extends React.Component {

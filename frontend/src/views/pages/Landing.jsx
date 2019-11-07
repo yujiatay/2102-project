@@ -17,26 +17,15 @@
 */
 import React from "react";
 // nodejs library that concatenates classes
-import classnames from "classnames";
 import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
-  Badge,
   Button,
-  Card,
-  CardBody,
-  CardImg,
-  FormGroup,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Container,
   Row,
   Col
 } from "reactstrap";
-import ReactDatetime from "react-datetime";
 
 // core components
 import Navbar from "components/Navbars/Navbar.jsx";
@@ -44,10 +33,6 @@ import Background from '../../assets/img/restaurant.jpg';
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class Landing extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
