@@ -62,7 +62,7 @@ class LightNavbar extends React.Component {
             <span className="nav-link-inner--text">{this.props.user.username}</span>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem to="/profile" tag={Link}>
+            <DropdownItem to="/myBookings" tag={Link}>
               Bookings
             </DropdownItem>
             <DropdownItem onClick={this.logOut}>

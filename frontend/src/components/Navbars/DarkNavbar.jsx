@@ -105,16 +105,6 @@ class DarkNavbar extends React.Component {
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
                   <NavItem>
                     <NavLink
-                      href="/myBookings"
-                    >
-                      <i className="ni ni-ui-04 d-lg-none mr-1"/>
-                      <span className="nav-link-inner--text">My Bookings</span>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  <NavItem>
-                    <NavLink
                       href="/articles"
                     >
                       <i className="ni ni-ui-04 d-lg-none mr-1"/>
@@ -122,58 +112,54 @@ class DarkNavbar extends React.Component {
                     </NavLink>
                   </NavItem>
                 </Nav>
-                <Nav className="align-items-lg-center ml-lg-auto" navbar>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="#"
-                      id="tooltip356693867"
-                      target="_blank"
-                    >
-                      <i className="ni ni-notification-70"/>
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Notifications
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip356693867">
-                      Notifications
-                    </UncontrolledTooltip>
-                  </NavItem>
-                </Nav>
-                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  {
-                    user
-                      ? (
-                        <UncontrolledDropdown nav>
-                          <DropdownToggle nav>
-                            <i className="ni ni-collection d-lg-none mr-1"/>
-                            <span className="nav-link-inner--text">{user.username}</span>
-                          </DropdownToggle>
-                          <DropdownMenu>
-                            <DropdownItem to="/profile" tag={Link}>
-                              Bookings
-                            </DropdownItem>
-                            <DropdownItem onClick={this.logOut}>
-                              Logout
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
-                      ) : (
+                {
+                  user
+                    ? (
+                      <>
+                        <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
+                          <NavItem>
+                            <NavLink
+                              href="/myBookings"
+                            >
+                              <i className="ni ni-ui-04 d-lg-none mr-1"/>
+                              <span className="nav-link-inner--text">My Bookings</span>
+                            </NavLink>
+                          </NavItem>
+                        </Nav>
+                        <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                          <UncontrolledDropdown nav>
+                            <DropdownToggle nav>
+                              <i className="ni ni-collection d-lg-none mr-1"/>
+                              <span className="nav-link-inner--text">{user.username}</span>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem onClick={this.logOut}>
+                                Logout
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
+                        </Nav>
+                      </>
+                    )
+                    : (
+                      <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
+                        <NavItem>
                         <Button
                           className="btn-neutral btn-icon"
                           color="default"
                           href="/login"
                         >
-                        <span className="btn-inner--icon">
-                          <i className="fa fa-sign-in mr-2"/>
-                        </span>
+                          <span className="btn-inner--icon">
+                            <i className="fa fa-sign-in mr-2"/>
+                          </span>
                           <span className="nav-link-inner--text ml-1">
-                          Sign In
-                        </span>
+                            Sign In
+                          </span>
                         </Button>
-                      )
-                  }
-                </Nav>
+                        </NavItem>
+                      </Nav>
+                    )
+                }
               </UncontrolledCollapse>
             </Container>
           </Navbar>
