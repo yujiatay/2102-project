@@ -54,9 +54,10 @@ export function deleteAvailableSlot(rusername: string, dayOfWeek: number,
 export function deleteBooking(booking: Booking): Promise<{}> {
   return db.query(`
     DELETE FROM Bookings
-    WHERE rusername = $1 AND dusername = $2 AND day_of_week = $3 AND start_time = $4 AND end_time = $5 AND booking_date = $6
-  `,
-    [booking.rusername, booking.dusername, booking.dayOfWeek, booking.startTime, booking.endTime, booking.bookingDate]);
+    WHERE rusername = $1 AND dusername = $2 AND day_of_week = $3
+    AND start_time = $4 AND end_time = $5 AND booking_date = $6
+  `, [booking.rusername, booking.dusername, booking.dayOfWeek, booking.startTime,
+    booking.endTime, new Date(booking.bookingDate)]);
 }
 
 /**
