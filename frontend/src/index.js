@@ -27,7 +27,6 @@ import "assets/scss/argon-design-system-react.scss";
 
 import Landing from "views/pages/Landing.jsx";
 import Login from "views/pages/Login.jsx";
-import Profile from "views/pages/Profile.jsx";
 import Register from "views/pages/Register.jsx";
 import Search from "views/pages/Search";
 import Restaurant from "views/pages/Restaurant";
@@ -37,6 +36,7 @@ import ArticlesList from "views/pages/ArticlesList";
 import ArticleView from "views/pages/ArticleView";
 import Dashboard from "views/pages/Restaurant/Dashboard";
 import RestaurantProfile from "views/pages/Restaurant/RestaurantProfile";
+import InviteFriends from "views/pages/InviteFriends";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -49,9 +49,9 @@ ReactDOM.render(
         />
         <Route path="/login" exact render={props => <Login {...props} />} />
         <Route
-          path="/profile"
+          path="/invite"
           exact
-          render={props => <Profile {...props} />}
+          render={props => <InviteFriends {...props} />}
         />
         <Route
           path="/register"

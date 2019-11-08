@@ -130,6 +130,9 @@ class DarkNavbar extends React.Component {
                               <span className="nav-link-inner--text">{user.username}</span>
                             </DropdownToggle>
                             <DropdownMenu>
+                              <DropdownItem to="/invite" tag={Link}>
+                                Invite friends
+                              </DropdownItem>
                               <DropdownItem onClick={this.logOut}>
                                 Logout
                               </DropdownItem>
