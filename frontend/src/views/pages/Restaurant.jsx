@@ -1,30 +1,14 @@
 import React from 'react';
-
-import {
-  Card,
-  CardTitle,
-  CardBody,
-  CardText,
-  FormGroup,
-  Input,
-  CustomInput,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Row,
-  Col,
-  Container,
-  Button,
-  Modal,
-  Alert
-} from "reactstrap";
+import classnames from "classnames";
 import ReactDatetime from "react-datetime";
 
+import { Alert, Button, Card, CardBody, CardText, CardTitle, Col, Container, CustomInput, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, Nav, NavItem, NavLink, Row, TabContent, TabPane } from "reactstrap";
+
+import BookmarkButton from 'components/BookmarkButton';
 import Navbar from "components/Navbars/DarkNavbar.jsx";
+import { cuisineTypes, menuItemTypes } from "constants.js";
 import http from "http.js";
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
-import { cuisineTypes } from "constants.js";
-import BookmarkButton from 'components/BookmarkButton';
 
 class Restaurant extends React.Component {
   constructor(props) {
@@ -36,6 +20,7 @@ class Restaurant extends React.Component {
       tags: [],
       timeslots: [],
       reviews: [],
+      menuitems: [],
       bookmarked: false,
       pax: 1,
       selectedSlot: 0,
@@ -44,7 +29,8 @@ class Restaurant extends React.Component {
         visible: false,
         color: "primary",
         msg: ""
-      }
+      },
+      tabs: 1,
     }
   }
 
@@ -67,6 +53,11 @@ class Restaurant extends React.Component {
         http.get(`/restaurants/${username}/reviews`)
           .then((res) => {
             this.setState({ reviews: res.data.data });            
+          })
+        http.get(`/restaurants/${username}/menuitems`)
+          .then((res) => {
+            console.log(res.data.data)
+            this.setState({ menuitems: res.data.data });
           })
         http.get(`/bookmarks`)
           .then((res) => {
@@ -109,6 +100,13 @@ class Restaurant extends React.Component {
   getTimeSlots = () => {
     return this.state.timeslots.filter(ts => ts.dayOfWeek === this.state.date.day());
   }
+
+  toggleNavs = (e, state, index) => {
+    e.preventDefault();
+    this.setState({
+      [state]: index
+    });
+  };
 
   handleBooking = () => {
     const slot = this.getTimeSlots()[this.state.selectedSlot];
@@ -165,114 +163,173 @@ class Restaurant extends React.Component {
       }}>       
         <CardBody>
           <CardTitle>{name}</CardTitle>
-          <Row>
-            {/* <Col xs={4}>
-              <img src="https://via.placeholder.com/150"/>
-            </Col> */}
-            <Col className="ml-4">
-                <Row>
-                  <CardText>Cuisine: {cuisineTypes[cuisineType]}</CardText>
-                </Row>
-                <Row>
-                  <CardText>Location: {branchLocation}</CardText>
-                </Row>
-                <Row>
-                  <CardText>Opening hours: {openingHours}</CardText>
-                </Row>
-                <Row>
-                  <CardText>Capacity: {capacity}</CardText>
-                </Row>
-                <Row>
-                  <CardText>Tags: {this.getTags(this.state.tags)}</CardText>
-                </Row>
-            </Col>
-            <Col xs="auto">
-              <BookmarkButton
-                bookmarked={this.state.bookmarked}
-                bookmark={this.bookmarkRestaurant}
-                rusername={this.state.restaurant.username}
-              />
-            </Col>
-          </Row>
-          <p></p>
-          {
-            this.state.timeslots.length > 0
-            && (
-              <Row className="mt-4">
-                <Col xs="auto">
-                  <FormGroup>
-                    <InputGroup className="input-group-alternative">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="ni ni-calendar-grid-58" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <ReactDatetime
-                        value={this.state.date}
-                        timeFormat={false}
-                        isValidDate={this.valid}
-                        onChange={e => this.setState({ date: e })}
-                      />
-                    </InputGroup>
-                  </FormGroup>
+              <Row>
+                {/* <Col xs={4}>
+                  <img src="https://via.placeholder.com/150"/>
+                </Col> */}
+                <Col className="ml-4">
+                    <Row>
+                      <CardText>Cuisine: {cuisineTypes[cuisineType]}</CardText>
+                    </Row>
+                    <Row>
+                      <CardText>Location: {branchLocation}</CardText>
+                    </Row>
+                    <Row>
+                      <CardText>Opening hours: {openingHours}</CardText>
+                    </Row>
+                    <Row>
+                      <CardText>Capacity: {capacity}</CardText>
+                    </Row>
+                    <Row>
+                      <CardText>Tags: {this.getTags(this.state.tags)}</CardText>
+                    </Row>
                 </Col>
-                {
-                  this.getTimeSlots().length > 0
-                  ? <>
-                      <Col xs="auto" md="3">
-                        <Input type="select" name="select" id="booktime"
-                          value={this.state.selectedSlot} onChange={(e) => this.handleChange('selectedSlot', e)}>
-                          {
-                            this.getTimeSlots().map((ts, index) => (
-                              <option key={index} value={index}>{ts.startTime} to {ts.endTime}</option>
-                            ))
-                          }
-                        </Input>
-                      </Col>
-                      <Col xs="auto" md="3">
-                        <CustomInput type="select" id="pax" name="customSelect"
-                          value={this.state.pax} onChange={(e) => this.handleChange('pax', e)}>
-                          <option value={1}>1 pax</option>
-                          <option value={2}>2 pax</option>
-                          <option value={3}>3 pax</option>
-                          <option value={4}>4 pax</option>
-                          <option value={5}>5 pax</option>
-                        </CustomInput>
-                      </Col>
-                      <Col xs={2}>
-                        <Button onClick={this.toggleModal}>
-                          Book now
-                        </Button>
-                      </Col>
-                    </>
-                  : <Col xs="auto" md="5" className="align-items-center mb-3" style={{display: 'flex'}}>
-                      <CardText>Sorry! No available slots left. Please try another date.</CardText>
-                    </Col>
-                }
-                
+                <Col xs="auto">
+                  <BookmarkButton
+                    bookmarked={this.state.bookmarked}
+                    bookmark={this.bookmarkRestaurant}
+                    rusername={this.state.restaurant.username}
+                  />
+                </Col>
               </Row>
-            )
-          }
-          <hr/>
-          <Row>
-            <Col>
-              <CardTitle>Reviews</CardTitle>
+              <p></p>
               {
-                this.state.reviews.length === 0 &&
-                <div>
-                  <p>No reviews yet.</p>
-                </div>
+                this.state.timeslots.length > 0
+                && (
+                  <Row className="mt-4">
+                    <Col xs="auto">
+                      <FormGroup>
+                        <InputGroup className="input-group-alternative">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="ni ni-calendar-grid-58" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <ReactDatetime
+                            value={this.state.date}
+                            timeFormat={false}
+                            isValidDate={this.valid}
+                            onChange={e => this.setState({ date: e })}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </Col>
+                    {
+                      this.getTimeSlots().length > 0
+                      ? <>
+                          <Col xs="auto" md="3">
+                            <Input type="select" name="select" id="booktime"
+                              value={this.state.selectedSlot} onChange={(e) => this.handleChange('selectedSlot', e)}>
+                              {
+                                this.getTimeSlots().map((ts, index) => (
+                                  <option key={index} value={index}>{ts.startTime} to {ts.endTime}</option>
+                                ))
+                              }
+                            </Input>
+                          </Col>
+                          <Col xs="auto" md="3">
+                            <CustomInput type="select" id="pax" name="customSelect"
+                              value={this.state.pax} onChange={(e) => this.handleChange('pax', e)}>
+                              <option value={1}>1 pax</option>
+                              <option value={2}>2 pax</option>
+                              <option value={3}>3 pax</option>
+                              <option value={4}>4 pax</option>
+                              <option value={5}>5 pax</option>
+                            </CustomInput>
+                          </Col>
+                          <Col xs={2}>
+                            <Button onClick={this.toggleModal}>
+                              Book now
+                            </Button>
+                          </Col>
+                        </>
+                      : <Col xs="auto" md="5" className="align-items-center mb-3" style={{display: 'flex'}}>
+                          <CardText>Sorry! No available slots left. Please try another date.</CardText>
+                        </Col>
+                    }
+                    
+                  </Row>
+                )
               }
-              {
-                this.state.reviews.map((r) => (
-                  <div key={r.dusername}>
-                    <p>* "{r.comment}" ({r.rating}/5 stars)</p>
-                    <p className="ml-4"><i>by <b>@{r.dusername}</b> on {new Date(r.updatedAt).toDateString()}</i></p>
-                  </div>
-                ))
-              }
-            </Col>
-          </Row>
+              <hr/>
+              <Nav
+                className="flex-column flex-md-row mb-4"
+                id="tabs-icons-text"
+                pills
+                role="tablist"
+              >
+                <NavItem>
+                  <NavLink
+                    aria-selected={this.state.tabs === 1}
+                    className={classnames("mb-sm-3 mb-md-0", {
+                      active: this.state.tabs === 1
+                    })}
+                    onClick={e => this.toggleNavs(e, "tabs", 1)}
+                    href="#reviews"
+                    role="tab"
+                  >
+                    <i className="fa fa-star mr-2" />
+                    Reviews
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    aria-selected={this.state.tabs === 2}
+                    className={classnames("mb-sm-3 mb-md-0", {
+                      active: this.state.tabs === 2
+                    })}
+                    onClick={e => this.toggleNavs(e, "tabs", 2)}
+                    href="#menu"
+                    role="tab"
+                  >
+                    <i className="fa fa-th-list mr-2" />
+                    Menu
+                  </NavLink>
+                </NavItem>
+              </Nav>
+              <TabContent activeTab={"tabs" + this.state.tabs}>
+                <TabPane tabId="tabs1">
+                  <CardTitle>Reviews</CardTitle>
+                  {
+                    this.state.reviews.length === 0 &&
+                    <div>
+                      <p>No reviews yet.</p>
+                    </div>
+                  }
+                  {
+                    this.state.reviews.map((r) => (
+                      <div key={r.dusername}>
+                        <p>* "{r.comment}" ({r.rating}/5 stars)</p>
+                        <p className="ml-4"><i>by <b>@{r.dusername}</b> on {new Date(r.updatedAt).toDateString()}</i></p>
+                      </div>
+                    ))
+                  }
+                </TabPane>
+                <TabPane tabId="tabs2">
+                  <CardTitle>Menu</CardTitle>
+                  {
+                    this.state.menuitems.length === 0 &&
+                    <div>
+                      <p>No items listed.</p>
+                    </div>
+                  }
+                  {
+                    this.state.menuitems.map((mi, index) => (
+                      <Row className="mb-1" key={index}>
+                        <Col xs="auto">
+                          <img alt="restaurant" src={mi.image}/>
+                        </Col>
+                        <Col>
+                          <span>{mi.name}</span><br/>
+                          <span style={{fontWeight: 300}}><i>{mi.description}</i></span><br/>
+                          <span style={{fontWeight: 300}}>${mi.price}</span><br/>
+                          <span style={{fontWeight: 300}}>{menuItemTypes[mi.type]}</span>
+                        </Col>
+                      </Row>
+                    ))
+                  }
+                </TabPane>
+              </TabContent>
         </CardBody>
       </Card>
     )

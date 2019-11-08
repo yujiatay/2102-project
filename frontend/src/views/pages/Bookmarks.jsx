@@ -1,22 +1,12 @@
 import React from 'react';
 
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
   Row,
   Col,
   Container,
-  Label,
-  Button,
 } from "reactstrap";
-import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
-import { cuisineTypesList } from "constants.js";
 import http from "http.js";
 import SearchCard from 'components/SearchCard';
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
