@@ -13,7 +13,8 @@ const router = new Router();
  * [Params] prev?.
  */
 router.get('/articles', async (ctx) => {
-  const articles = await db.articles.getRecentArticles(ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const articles = await db.articles.getRecentArticles(prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -45,7 +46,8 @@ router.post('/articles', requireDiner, async (ctx) => {
  * [Params] prev?.
  */
 router.get('/diners/:dusername/articles', loadDinerFromUsername, async (ctx) => {
-  const articles = await db.articles.getRecentArticlesByDiner(ctx.state.diner.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const articles = await db.articles.getRecentArticlesByDiner(ctx.state.diner.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -58,7 +60,8 @@ router.get('/diners/:dusername/articles', loadDinerFromUsername, async (ctx) => 
  * [Params] prev?.
  */
 router.get('/diners/:dusername/comments', loadDinerFromUsername, async (ctx) => {
-  const comments = await db.articles.getRecentCommentsByDiner(ctx.state.diner.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const comments = await db.articles.getRecentCommentsByDiner(ctx.state.diner.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -130,7 +133,8 @@ router.delete('/diners/:ausername/articles/:acreated', requireDiner, loadArticle
  */
 router.get('/diners/:ausername/articles/:acreated/comments', loadArticleFromParams, async (ctx) => {
   const article: Article = ctx.state.article;
-  const comments = await db.articles.getRecentCommentsOnArticle(article, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const comments = await db.articles.getRecentCommentsOnArticle(article, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,

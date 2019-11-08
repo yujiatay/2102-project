@@ -15,8 +15,9 @@ const router = new Router();
 router.get('/restaurants', async (ctx) => {
   const cuisineTypes = ctx.query.cuisineTypes ? JSON.parse(ctx.query.cuisineTypes) : null;
   const tags = ctx.query.tags ? JSON.parse(ctx.query.tags) : null;
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
   const restaurants = await db.restaurants.getNewestRestaurants(ctx.query.name, cuisineTypes,
-    tags, parseFloat(ctx.query.budget || 0), ctx.query.prev);
+    tags, parseFloat(ctx.query.budget || 0), prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -108,6 +109,21 @@ router.delete('/restaurants/:rusername/menuitems/:name', requireRestaurant, load
   ctx.body = {
     code: HttpStatus.Ok,
     msg: `You have deleted ${ctx.query.name}.`
+  };
+});
+
+/**
+ * [GET: /bookmarks] Get bookmarked restaurants.
+ * [Params] prev?.
+ */
+router.get('/bookmarks', requireDiner, async (ctx) => {
+  const username = ctx.state.user.username;
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookmarks = await db.diners.getBookmarkedRestaurants(username, prev);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: bookmarks
   };
 });
 

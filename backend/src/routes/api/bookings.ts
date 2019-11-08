@@ -88,7 +88,8 @@ router.get('/restaurants/:rusername/bookings', requireRestaurant, loadRestaurant
     };
   }
 
-  const bookings = await db.bookings.getUpcomingBookingsOnRestaurant(restaurant.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getUpcomingBookingsOnRestaurant(restaurant.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -110,7 +111,8 @@ router.get('/diners/:dusername/bookings', requireDiner, loadDinerFromUsername, a
     };
   }
 
-  const bookings = await db.bookings.getUpcomingBookingsByDiner(diner.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getUpcomingBookingsByDiner(diner.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -132,7 +134,8 @@ router.get('/restaurants/:rusername/bookings/history', requireRestaurant, loadRe
     };
   }
 
-  const bookings = await db.bookings.getPastBookingsOnRestaurant(restaurant.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getPastBookingsOnRestaurant(restaurant.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -154,7 +157,8 @@ router.get('/diners/:dusername/bookings/history', requireDiner, loadDinerFromUse
     };
   }
 
-  const bookings = await db.bookings.getPastBookingsByDiner(diner.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getPastBookingsByDiner(diner.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
