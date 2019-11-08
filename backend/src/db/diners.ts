@@ -21,11 +21,11 @@ export async function addDiner(username: string, password: string, email: string
   const passwordHash = await bcrypt.hash(password, PASSWORD_SALT_ROUNDS);
   const referralCode = generateCode(12);
   const referrer = code ? await getDinerByReferralCode(code) : null;
-
+  const rusername = referrer == null ? null : referrer.username;
   return db.getOne<DinerPrivate>(`
     INSERT INTO Diners (username, password, email, referral_code, referrer)
     VALUES ($1, $2, $3, $4, $5) RETURNING username, email, created_at, points, referral_code, referrer
-  `, [username, passwordHash, email, referralCode, referrer]);
+  `, [username, passwordHash, email, referralCode, rusername]);
 }
 
 /**

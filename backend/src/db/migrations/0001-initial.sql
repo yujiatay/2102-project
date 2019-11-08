@@ -16,7 +16,7 @@ CREATE TABLE Diners (
   email varchar(255) UNIQUE NOT NULL CHECK (email ~ '^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'),
   points integer NOT NULL DEFAULT 0,
   referral_code varchar(25) UNIQUE NOT NULL,
-  referrer varchar(255) REFERENCES Diners (email),
+  referrer varchar(255) REFERENCES Diners (username),
   created_at timestamp NOT NULL DEFAULT NOW()
 );
 

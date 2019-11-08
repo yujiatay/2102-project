@@ -38,6 +38,7 @@ class Register extends React.Component {
         username: '',
         email: '',
         password: '',
+        referral: '',
         name: '',
         branchLocation: '',
         openingHours: '',
@@ -80,6 +81,9 @@ class Register extends React.Component {
       email: this.state.form.email,
       password: this.state.form.password,
       username: this.state.form.username
+    }
+    if (this.state.form.referral) {
+      body.referralCode = this.state.form.referral
     }
     http.post("/diners", body)
       .then((res) => {
