@@ -17,7 +17,7 @@ const BookmarkButton = (props) => {
         id={`bookmark-${props.rusername}`}
       >
         <span className="btn-inner--icon">
-          <i className="fa fa-heart"/>
+          <i className="fa fa-bookmark"/>
         </span>
       </Button>
       <UncontrolledTooltip
