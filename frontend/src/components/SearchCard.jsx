@@ -15,7 +15,6 @@ class SearchCard extends React.Component {
   componentDidMount() {
     http.get(`/restaurants/${this.props.restaurant.username}/slots`)
       .then((res) => {
-        console.log(res.data.data)
         this.setState({ timeslots: res.data.data })
       })
   }

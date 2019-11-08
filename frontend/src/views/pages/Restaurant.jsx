@@ -34,6 +34,7 @@ class Restaurant extends React.Component {
       restaurant: undefined,
       tags: [],
       timeslots: [],
+      reviews: [],
       pax: 1,
       selectedSlot: 0,
       message: '',
@@ -53,16 +54,18 @@ class Restaurant extends React.Component {
     let username = this.props.match.params.username;
     http.get(`/restaurants/${username}`)
       .then((res) => {
-        console.log("restaurant", res.data.data)
         this.setState({ 
           restaurant: res.data.data.restaurant,
           tags: res.data.data.tags
         });
         http.get(`/restaurants/${username}/slots`)
-        .then((res) => {
-          console.log("avail slots", res.data.data)
-          this.setState({ timeslots: res.data.data });
-        })
+          .then((res) => {
+            this.setState({ timeslots: res.data.data });
+          })
+        http.get(`/restaurants/${username}/reviews`)
+          .then((res) => {
+            this.setState({ reviews: res.data.data });            
+          })
       })
       .catch((err) => {
         // console.log(err)
@@ -130,14 +133,14 @@ class Restaurant extends React.Component {
     return (
       <Card className="mt-4" style={{
         border: '1px solid #cad1d7'
-      }}>
+      }}>       
         <CardBody>
+          <CardTitle>{name}</CardTitle>
           <Row>
             {/* <Col xs={4}>
               <img src="https://via.placeholder.com/150"/>
             </Col> */}
             <Col className="ml-4">
-              <CardTitle>{name}</CardTitle>
                 <Row>
                   <CardText>Cuisine: {cuisineTypes[cuisineType]}</CardText>
                 </Row>
@@ -156,7 +159,6 @@ class Restaurant extends React.Component {
             </Col>
           </Row>
           <p></p>
-          <Button>Reviews</Button>
           {
             this.state.timeslots.length > 0
             && (
@@ -208,14 +210,27 @@ class Restaurant extends React.Component {
                       </Col>
                     </>
                   : <Col xs="auto" md="5" className="align-items-center mb-3" style={{display: 'flex'}}>
-                      Sorry! No available slots left for this date.
+                      <CardText>Sorry! No available slots left. Please try another date.</CardText>
                     </Col>
                 }
                 
               </Row>
             )
           }
-          
+          <hr/>
+          <Row>
+            <Col>
+              <CardTitle>Reviews</CardTitle>
+              {
+                this.state.reviews.map((r) => (
+                  <div key={r.dusername}>
+                    <p>* "{r.comment}" ({r.rating}/5 stars)</p>
+                    <p className="ml-4"><i>by {r.dusername} on {new Date(r.updatedAt).toDateString()}</i></p>
+                  </div>
+                ))
+              }
+            </Col>
+          </Row>
         </CardBody>
       </Card>
     )
@@ -289,7 +304,7 @@ class Restaurant extends React.Component {
         </Alert>
         <Navbar user={user} history={this.props.history} />
         <main ref="main">
-          <section className="section h-100vh">
+          <section className="section">
             <Container className="my-lg">
               {this.renderRestaurant()}
             </Container>
