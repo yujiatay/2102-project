@@ -85,13 +85,8 @@ class Register extends React.Component {
       .then((res) => {
         // console.log(res.data)
         this.setAlertVisible(true, "success", res.data.msg);
-        const type = res.data.data.type;
         setTimeout(() => {
-          if (type === 1) {
-            this.props.history.push("/search");
-          } else if (type === 2) {
-            this.props.history.push("/dashboard");
-          }
+          this.props.history.push("/search");
         }, 500);
       })
       .catch((err) => {
