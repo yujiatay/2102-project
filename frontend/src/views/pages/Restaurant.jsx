@@ -29,7 +29,7 @@ class Restaurant extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: ReactDatetime.moment().startOf('day'),
+      date: ReactDatetime.moment().add(1, 'day').startOf('day'),
       modal: false,
       restaurant: undefined,
       tags: [],
@@ -83,8 +83,8 @@ class Restaurant extends React.Component {
   }
 
   valid = (current) => {
-    const yesterday = ReactDatetime.moment().subtract(1, 'day');
-    return current.isAfter(yesterday);
+    const today = ReactDatetime.moment();
+    return current.isAfter(today);
   }
 
   toggleModal = () => {
