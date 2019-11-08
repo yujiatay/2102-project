@@ -93,7 +93,6 @@ class Restaurant extends React.Component {
   }
 
   getTimeSlots = () => {
-    console.log(this.state.date)
     return this.state.timeslots.filter(ts => ts.dayOfWeek === this.state.date.day());
   }
 
@@ -107,18 +106,15 @@ class Restaurant extends React.Component {
       pax: parseInt(this.state.pax),
       message: this.state.message
     }
-    console.log(this.state.date)
-    console.log(body)
+    
     http.post(`/restaurants/${this.state.restaurant.username}/bookings`, body)
       .then((res) => {
-        console.log(res)
         this.setAlertVisible(true, "success", `Your reservation is pending confirmation from ${this.state.restaurant.name}. :)`);
         setTimeout(() => {
           this.props.history.push("/myBookings")
         }, 1000);
       })
       .catch((err) => {
-        console.log(err)
         this.setAlertVisible(true, "danger", err.response.data.msg)
       })
   }
@@ -182,31 +178,40 @@ class Restaurant extends React.Component {
                     </InputGroup>
                   </FormGroup>
                 </Col>
-                <Col xs="auto" md="3">
-                  <Input type="select" name="select" id="booktime"
-                    value={this.state.selectedSlot} onChange={(e) => this.handleChange('selectedSlot', e)}>
-                    {
-                      this.getTimeSlots().map((ts, index) => (
-                        <option key={index} value={index}>{ts.startTime} to {ts.endTime}</option>
-                      ))
-                    }
-                  </Input>
-                </Col>
-                <Col xs="auto" md="3">
-                  <CustomInput type="select" id="pax" name="customSelect"
-                    value={this.state.pax} onChange={(e) => this.handleChange('pax', e)}>
-                    <option value={1}>1 pax</option>
-                    <option value={2}>2 pax</option>
-                    <option value={3}>3 pax</option>
-                    <option value={4}>4 pax</option>
-                    <option value={5}>5 pax</option>
-                  </CustomInput>
-                </Col>
-                <Col xs={2}>
-                  <Button onClick={this.toggleModal}>
-                    Book now
-                  </Button>
-                </Col>
+                {
+                  this.getTimeSlots().length > 0
+                  ? <>
+                      <Col xs="auto" md="3">
+                        <Input type="select" name="select" id="booktime"
+                          value={this.state.selectedSlot} onChange={(e) => this.handleChange('selectedSlot', e)}>
+                          {
+                            this.getTimeSlots().map((ts, index) => (
+                              <option key={index} value={index}>{ts.startTime} to {ts.endTime}</option>
+                            ))
+                          }
+                        </Input>
+                      </Col>
+                      <Col xs="auto" md="3">
+                        <CustomInput type="select" id="pax" name="customSelect"
+                          value={this.state.pax} onChange={(e) => this.handleChange('pax', e)}>
+                          <option value={1}>1 pax</option>
+                          <option value={2}>2 pax</option>
+                          <option value={3}>3 pax</option>
+                          <option value={4}>4 pax</option>
+                          <option value={5}>5 pax</option>
+                        </CustomInput>
+                      </Col>
+                      <Col xs={2}>
+                        <Button onClick={this.toggleModal}>
+                          Book now
+                        </Button>
+                      </Col>
+                    </>
+                  : <Col xs="auto" md="5" className="align-items-center mb-3" style={{display: 'flex'}}>
+                      Sorry! No available slots left for this date.
+                    </Col>
+                }
+                
               </Row>
             )
           }
