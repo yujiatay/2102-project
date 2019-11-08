@@ -21,3 +21,13 @@ export const cuisineTypes = {
 export const cuisineTypesList = Object.keys(cuisineTypes).map(function(key) {
   return [cuisineTypes[key], key];
 });
+
+export const menuItemTypes = {
+  '1': 'Main',
+  '2': 'Side',
+  '3': 'Appetiser',
+};
+
+export const menuItemTypesList = Object.keys(menuItemTypes).map(function(key) {
+  return [menuItemTypes[key], key];
+});
