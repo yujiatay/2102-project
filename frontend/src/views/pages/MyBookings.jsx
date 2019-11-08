@@ -14,7 +14,6 @@ import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import BookingCard from "components/BookingCard.jsx";
-import ReviewModal from 'components/ReviewModal.jsx'
 import classnames from 'classnames';
 import { requireAuthentication } from "components/AuthenticatedComponent";
 import http from "http.js";
@@ -24,7 +23,6 @@ class MyBookings extends React.Component {
     super(props);
     this.state = {
       date: null,
-      modal: false,
       activeTab: '1',
       unconfirmedRes: [],
       confirmedRes: [],
@@ -45,7 +43,6 @@ class MyBookings extends React.Component {
     http.get(`/diners/${this.props.user.username}/bookings`)
       .then((res) => {
         let reservations = res.data.data;
-        console.log(reservations)
         let unconfirmed = reservations.filter(x => !x.isConfirmed);
         let confirmed = reservations.filter(x => x.isConfirmed);
         this.setState({
@@ -61,16 +58,18 @@ class MyBookings extends React.Component {
   }
 
   cancelBooking = (rusername, data) => {
-    console.log(data)
     http.delete(`/restaurants/${rusername}/bookings/`, { params: data })
       .then((res) => {
-        console.log(res)
-
+        this.props.history.go(0);
       })
   }
 
-  toggleModal = () => {
-    this.setState({ modal: !this.state.modal});
+  reviewBooking = (rusername, body, isEdit) => {
+    if (!isEdit) {
+      http.post(`/restaurants/${rusername}/reviews`, body)
+    } else {
+      http.patch(`/restaurants/${rusername}/reviews/${this.props.user.username}`, body)
+    }
   }
 
   render() {
@@ -81,7 +80,7 @@ class MyBookings extends React.Component {
         <main ref="main">
           <section className="section">
             <Container className="my-lg">
-                <h2>Bookings</h2>
+                <h2>Upcoming Bookings</h2>
                 <div>
                   <Nav tabs>
                     <NavItem>
@@ -111,9 +110,14 @@ class MyBookings extends React.Component {
                       }
                       {
                         this.state.unconfirmedRes.map((res) => (
-                          <Row key={`${res.createdAt}${res.restaurant}`}>
+                          <Row key={`${res.createdAt}${res.restaurant}`} className="mb-4">
                             <Col sm="12">
-                              <BookingCard booking={res} onCancel={this.cancelBooking}/>
+                              <BookingCard
+                                booking={res} 
+                                onCancel={this.cancelBooking}
+                                username={this.props.user.username}
+                                history={this.props.history}
+                              />
                             </Col>
                           </Row>
                         ))
@@ -129,9 +133,15 @@ class MyBookings extends React.Component {
                       }
                       {
                         this.state.confirmedRes.map((res) => (
-                          <Row key={`${res.createdAt}${res.restaurant}`}>
+                          <Row key={`${res.createdAt}${res.restaurant}`} className="mb-4">
                             <Col sm="12">
-                              <BookingCard booking={res} onReviewClick={this.toggleModal}/>
+                              <BookingCard 
+                                booking={res}
+                                onCancel={this.cancelBooking} 
+                                onReview={this.reviewBooking}
+                                username={this.props.user.username}
+                                history={this.props.history}
+                              />
                             </Col>
                           </Row>
                         ))
@@ -139,7 +149,6 @@ class MyBookings extends React.Component {
                     </TabPane>
                   </TabContent>
                 </div>
-                <ReviewModal isOpen={this.state.modal} toggleModal={this.toggleModal}/>
             </Container>
           </section>
         </main>
