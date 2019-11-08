@@ -71,7 +71,6 @@ class DetailsForm extends React.Component {
       })
       .catch((err) => {
         if (err.response) {
-          // console.log(err.response.data)
           this.setAlertVisible(true, "danger", err.response.data.msg);
         }
       })

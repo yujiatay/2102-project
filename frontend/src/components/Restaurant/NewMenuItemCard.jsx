@@ -1,7 +1,16 @@
 import React from 'react';
 import {
-  Card, CardBody,
-  CardTitle, Button, FormGroup, Label, Input, Form, Alert
+  Button,
+  Card,
+  CardBody,
+  CardTitle,
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Label
 } from 'reactstrap';
 import { menuItemTypesList } from "../../constants";
 import http from "../../http";
@@ -15,12 +24,6 @@ class NewMenuItemCard extends React.Component {
       itemPrice: 0.0,
       itemDescription: "",
       image: "",
-
-      alert: {
-        visible: false,
-        color: "primary",
-        msg: ""
-      }
     }
   }
 
@@ -32,12 +35,6 @@ class NewMenuItemCard extends React.Component {
       })
     }
   }
-
-  setAlertVisible = (visible, color, msg) => {
-    this.setState({
-      alert: { visible, color, msg }
-    });
-  };
 
   submitNewItem = () => {
     const { itemName, itemType, itemPrice, itemDescription, image } = this.state;
@@ -55,14 +52,6 @@ class NewMenuItemCard extends React.Component {
     const { itemName, itemType, itemPrice, itemDescription, image } = this.state;
     return (
       <>
-        <Alert isOpen={this.state.alert.visible} color={this.state.alert.color}
-               toggle={() => this.setState({ alert: { visible: false } })}
-               style={{ zIndex: 1001, marginBottom: 0 }}
-        >
-          <span className="alert-inner--text">
-            {this.state.alert.msg}
-          </span>
-        </Alert>
         <Card>
           <CardBody>
             <CardTitle>New Menu Item Details</CardTitle>
@@ -94,12 +83,18 @@ class NewMenuItemCard extends React.Component {
               </FormGroup>
               <FormGroup row>
                 <Label for="itemPrice">Price</Label>
-                <Input
+                <InputGroup
                   id="itemPrice"
-                  type="number"
-                  value={itemPrice}
-                  onChange={this.onValueChange("itemPrice")}
-                />
+                >
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>$</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    type="number"
+                    value={itemPrice}
+                    onChange={this.onValueChange("itemPrice")}
+                  />
+                </InputGroup>
               </FormGroup>
               <FormGroup row>
                 <Label for="itemDescription">Description</Label>
