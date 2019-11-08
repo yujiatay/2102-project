@@ -85,7 +85,7 @@ export function getRestaurantSlots(rusername: string): Promise<AvailableSlot[]> 
  */
 export function getUpcomingBookingsByDiner(dusername: string, prev?: number): Promise<Booking[]> {
   return db.getAll(`
-    SELECT * FROM Bookings WHERE dusername = $1 AND created_at > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
+    SELECT * FROM Bookings WHERE dusername = $1 AND booking_date > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
   `, [dusername, new Date(prev || Date.now() - UPCOMING_LIST_TIME_BUFFER)]);
 }
 
@@ -94,6 +94,6 @@ export function getUpcomingBookingsByDiner(dusername: string, prev?: number): Pr
  */
 export function getUpcomingBookingsOnRestaurant(rusername: string, prev?: number): Promise<Booking[]> {
   return db.getAll(`
-    SELECT * FROM Bookings WHERE rusername = $1 AND created_at > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
+    SELECT * FROM Bookings WHERE rusername = $1 AND booking_date > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
   `, [rusername, new Date(prev || Date.now() - UPCOMING_LIST_TIME_BUFFER)]);
 }

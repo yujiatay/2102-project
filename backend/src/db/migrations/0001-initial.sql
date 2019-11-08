@@ -81,7 +81,8 @@ CREATE TABLE Reviews (
   comment text,
   rating integer NOT NULL CHECK (rating >= 0 AND rating <= 5),
   created_at timestamp NOT NULL DEFAULT NOW(),
-  updated_at timestamp NOT NULL DEFAULT NOW()
+  updated_at timestamp NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (rusername, dusername)
 );
 
 CREATE TABLE Articles (
