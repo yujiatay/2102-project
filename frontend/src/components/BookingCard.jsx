@@ -26,7 +26,6 @@ class BookingCard extends React.Component {
       })
     http.get(`/restaurants/${this.props.booking.rusername}/reviews/${this.props.username}`)
       .then((res) => {
-        console.log(res.data.data)
         this.setState({ review: res.data.data })
       })
       .catch((err) => {})
@@ -73,7 +72,7 @@ class BookingCard extends React.Component {
 
   render() {
     const {rusername, bookingDate, pax, message, startTime, endTime} = this.props.booking;
-    console.log(this.props)
+
     return (
       <>
         <div>

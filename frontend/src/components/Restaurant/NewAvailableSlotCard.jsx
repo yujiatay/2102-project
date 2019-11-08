@@ -31,7 +31,6 @@ class NewAvailableSlotCard extends React.Component {
 
   onTimeChange(key) {
     return (date) => {
-      console.log(date.format('HH:mm'));
       this.setState({
         [key]: date.format('HH:mm')
       })
