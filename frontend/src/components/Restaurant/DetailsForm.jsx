@@ -82,85 +82,85 @@ class DetailsForm extends React.Component {
     return (
       <>
         <Alert isOpen={this.state.alert.visible} color={this.state.alert.color}
-               toggle={() => this.setState({ alert: { visible: false }})}
+               toggle={() => this.setState({ alert: { visible: false } })}
                style={{ zIndex: 1001, marginBottom: 0 }}
         >
           <span className="alert-inner--text">
             {this.state.alert.msg}
           </span>
         </Alert>
-          <Form>
-            <FormGroup row>
-              <Label for="name">Restaurant Name</Label>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={this.onValueChange("name")}
-                disabled={!editing}
-              />
-            </FormGroup>
-            <FormGroup row>
-              <Label for="cuisine">Cuisine Type</Label>
-              <Input
-                type="select"
-                name="select"
-                id="cuisine"
-                onChange={this.onValueChange("cuisineType")}
-                value={cuisineType}
-                disabled={!editing}>
-                {
-                  cuisineTypesList.map(entry => {
-                    const [name, value] = entry;
-                    return <option value={value} key={value}>{name}</option>
-                  })
-                }
-              </Input>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="address">Address</Label>
-              <Input
-                id="address"
-                type="text"
-                value={branchLocation}
-                onChange={this.onValueChange("branchLocation")}
-                disabled={!editing}
-              />
-            </FormGroup>
-            <FormGroup row>
-              <Label for="opening">Opening Hours</Label>
-              <Input
-                id="opening"
-                type="textarea"
-                value={openingHours}
-                onChange={this.onValueChange("openingHours")}
-                disabled={!editing}
-              />
-            </FormGroup>
-            <FormGroup row>
-              <Label for="capacity">Maximum Capacity</Label>
-              <Input
-                id="capacity"
-                type="number"
-                value={capacity}
-                onChange={this.onValueChange("capacity")}
-                disabled={!editing}
-              />
-            </FormGroup>
-            {
-              editing
-                ? (
-                  <>
-                    <Button>Cancel</Button>
-                    <Button onClick={this.submitEdit}>Submit</Button>
-                  </>
-                )
-                : <Button onClick={this.startEdit} block>Edit</Button>
-            }
-          </Form>
-        </>
-        );
-        }
-        }
+        <Form>
+          <FormGroup row>
+            <Label for="name">Restaurant Name</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={this.onValueChange("name")}
+              disabled={!editing}
+            />
+          </FormGroup>
+          <FormGroup row>
+            <Label for="cuisine">Cuisine Type</Label>
+            <Input
+              type="select"
+              name="select"
+              id="cuisine"
+              onChange={this.onValueChange("cuisineType")}
+              value={cuisineType}
+              disabled={!editing}>
+              {
+                cuisineTypesList.map(entry => {
+                  const [name, value] = entry;
+                  return <option value={value} key={value}>{name}</option>
+                })
+              }
+            </Input>
+          </FormGroup>
+          <FormGroup row>
+            <Label for="address">Address</Label>
+            <Input
+              id="address"
+              type="text"
+              value={branchLocation}
+              onChange={this.onValueChange("branchLocation")}
+              disabled={!editing}
+            />
+          </FormGroup>
+          <FormGroup row>
+            <Label for="opening">Opening Hours</Label>
+            <Input
+              id="opening"
+              type="textarea"
+              value={openingHours}
+              onChange={this.onValueChange("openingHours")}
+              disabled={!editing}
+            />
+          </FormGroup>
+          <FormGroup row>
+            <Label for="capacity">Maximum Capacity</Label>
+            <Input
+              id="capacity"
+              type="number"
+              value={capacity}
+              onChange={this.onValueChange("capacity")}
+              disabled={!editing}
+            />
+          </FormGroup>
+          {
+            editing
+              ? (
+                <>
+                  <Button>Cancel</Button>
+                  <Button onClick={this.submitEdit}>Submit</Button>
+                </>
+              )
+              : <Button onClick={this.startEdit} block>Edit</Button>
+          }
+        </Form>
+      </>
+    );
+  }
+}
 
-        export default DetailsForm;
+export default DetailsForm;
