@@ -84,7 +84,7 @@ class MyBookings extends React.Component {
         <Navbar user={user} history={this.props.history}/>
         <main ref="main">
           <section className="section">
-            <Container className="my-lg">
+            <Container className="pt-md">
                 <h2>Upcoming Bookings</h2>
                 <div>
                   <Nav tabs>

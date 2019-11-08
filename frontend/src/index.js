@@ -32,6 +32,7 @@ import Register from "views/pages/Register.jsx";
 import Search from "views/pages/Search";
 import Restaurant from "views/pages/Restaurant";
 import MyBookings from "views/pages/MyBookings";
+import Bookmarks from "views/pages/Bookmarks";
 import ArticlesList from "views/pages/ArticlesList";
 import ArticleView from "views/pages/ArticleView";
 import Dashboard from "views/pages/Restaurant/Dashboard";
@@ -66,8 +67,12 @@ ReactDOM.render(
           render={props => <Restaurant {...props}/>}
         />
         <Route 
-          path="/myBookings"
+          path="/bookings"
           render={props => <MyBookings {...props}/>}
+        />
+        <Route 
+          path="/bookmarks"
+          render={props => <Bookmarks {...props}/>}
         />
         <Route 
           path="/articles"

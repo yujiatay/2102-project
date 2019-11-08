@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from "classnames";
 
 import {
   Card,
@@ -25,6 +24,7 @@ import Navbar from "components/Navbars/DarkNavbar.jsx";
 import http from "http.js";
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
 import { cuisineTypes } from "constants.js";
+import BookmarkButton from 'components/BookmarkButton';
 
 class Restaurant extends React.Component {
   constructor(props) {
@@ -125,7 +125,7 @@ class Restaurant extends React.Component {
       .then((res) => {
         this.setAlertVisible(true, "success", `Your reservation is pending confirmation from ${this.state.restaurant.name}. :)`);
         setTimeout(() => {
-          this.props.history.push("/myBookings")
+          this.props.history.push("/bookings")
         }, 1000);
       })
       .catch((err) => {
@@ -138,22 +138,17 @@ class Restaurant extends React.Component {
       http.post(`/restaurants/${this.state.restaurant.username}/bookmarks`)
         .then((res) => {
           this.setState({ bookmarked: true });
-          this.setAlertVisible(true, "success", res.data.msg);
         })
         .catch((err) => {
-          this.setAlertVisible(true, "danger", err.response.data.msg);
         })
     } else {
       http.delete(`/restaurants/${this.state.restaurant.username}/bookmarks`)
         .then((res) => {
           this.setState({ bookmarked: false });
-          this.setAlertVisible(true, "success", res.data.msg);
         })
         .catch((err) => {
-          this.setAlertVisible(true, "danger", err.response.data.msg);
         })
     }
-    
   }
 
   renderRestaurant = () => {
@@ -192,19 +187,11 @@ class Restaurant extends React.Component {
                 </Row>
             </Col>
             <Col xs="auto">
-              <Button
-                aria-pressed={this.state.bookmarked}
-                className={classnames("btn-icon btn-2", {
-                  active: this.state.bookmarked
-                })}
-                type="button"
-                color="danger"
-                outline
-                onClick={this.bookmarkRestaurant}>
-                <span className="btn-inner--icon">
-                  <i className="fa fa-heart"/>
-                </span>
-              </Button>
+              <BookmarkButton
+                bookmarked={this.state.bookmarked}
+                bookmark={this.bookmarkRestaurant}
+                rusername={this.state.restaurant.username}
+              />
             </Col>
           </Row>
           <p></p>

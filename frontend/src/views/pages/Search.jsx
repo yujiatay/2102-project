@@ -30,7 +30,8 @@ class Search extends React.Component {
       searchName: '',
       searchCuisines: [0],
       searchBudget: undefined,
-      restaurants: []
+      restaurants: [],
+      bookmarks: []
     }
   }
 
@@ -43,6 +44,10 @@ class Search extends React.Component {
         .then((res) => {
           // console.log(res.data.data)
           this.setState({ restaurants: res.data.data });
+        })
+      http.get(`/bookmarks`)
+        .then((res) => {
+          this.setState({ bookmarks: res.data.data });
         })
     }
   }
@@ -82,6 +87,38 @@ class Search extends React.Component {
         // console.log(res.data.data)
         this.setState({ restaurants: res.data.data });
       })
+  }
+
+  isBookmarked = (r) => {
+    let found = this.state.bookmarks.find(b => b.username === r.username);
+    if (found !== undefined) {
+      return true;
+    }
+    return false;
+  }
+
+  bookmarkRestaurant = (restaurant) => {
+    if (!this.isBookmarked(restaurant)) {
+      http.post(`/restaurants/${restaurant.username}/bookmarks`)
+        .then((res) => {
+          http.get(`/bookmarks`)
+            .then((res) => {
+              this.setState({ bookmarks: res.data.data });
+            })
+        })
+        .catch((err) => {
+        })
+    } else {
+      http.delete(`/restaurants/${restaurant.username}/bookmarks`)
+        .then((res) => {
+          http.get(`/bookmarks`)
+            .then((res) => {
+              this.setState({ bookmarks: res.data.data });
+            })
+        })
+        .catch((err) => {
+        })
+    }
   }
 
   render() {
@@ -190,7 +227,12 @@ class Search extends React.Component {
                 <Col>
                   {
                     this.state.restaurants.map((r) => (
-                      <SearchCard key={r.username} restaurant={r} toggleModal={this.toggleModal}/>
+                      <SearchCard
+                        key={r.username} 
+                        restaurant={r} 
+                        bookmarked={this.isBookmarked(r)}
+                        bookmark={() => this.bookmarkRestaurant(r)}
+                      />
                     ))
                   }
                 </Col>
