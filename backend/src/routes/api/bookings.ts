@@ -3,7 +3,7 @@ import * as Router from '@koa/router';
 
 import db from '../../db';
 import { requireDiner, requireRestaurant } from '../../middleware/auth';
-import { loadBookingFromParams, loadDinerFromUsername, loadRestaurantFromUsername } from '../../middleware/helpers';
+import { loadBookingFromBody, loadBookingFromParams, loadDinerFromUsername, loadRestaurantFromUsername } from '../../middleware/helpers';
 import { Booking } from '../../types/booking';
 import { Diner } from '../../types/diner';
 import { HttpStatus } from '../../types/http';
@@ -209,7 +209,7 @@ router.delete('/restaurants/:rusername/bookings', requireDiner, loadBookingFromP
  * [POST: /restaurants/:rusername/bookings/:data/confirm] Confirm a booking (restaurant only).
  * [Note] Format of 'data': dusername,dayOfWeek,startTime,endTime,date
  */
-router.post('/restaurants/:rusername/bookings/:data/confirm', requireRestaurant, loadBookingFromParams, async (ctx) => {
+router.post('/restaurants/:rusername/bookings/confirm', requireRestaurant, loadBookingFromBody, async (ctx) => {
   const booking: Booking = ctx.state.booking;
 
   if (ctx.state.user.username !== booking.rusername) {
