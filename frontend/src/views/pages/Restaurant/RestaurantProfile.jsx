@@ -18,6 +18,8 @@ class RestaurantProfile extends React.Component {
       newSlot: false,
       slots: [],
       menuItems: [],
+      tags: [],
+      allTags: [],
 
       menuAlert: {
         visible: false,
@@ -106,10 +108,14 @@ class RestaurantProfile extends React.Component {
   async fetchDetails() {
     const slotResponse = await http.get(`/restaurants/${this.props.user.username}/slots`);
     const menuResponse = await http.get(`/restaurants/${this.props.user.username}/menuitems`);
+    const restaurantResponse = await http.get(`restaurants/${this.props.user.username}`);
+    const tagResponse = await http.get(`/tags`);
 
     this.setState({
       slots: slotResponse.data.data,
-      menuItems: menuResponse.data.data
+      menuItems: menuResponse.data.data,
+      tags: restaurantResponse.data.data.tags.map((tag) => tag.tag),
+      allTags: tagResponse.data.data.map((tag) => tag.name)
     })
   }
 
@@ -130,7 +136,7 @@ class RestaurantProfile extends React.Component {
   }
 
   render() {
-    const { newItem, newSlot, slots, menuItems } = this.state;
+    const { newItem, newSlot, slots, menuItems, tags, allTags } = this.state;
     const { user } = this.props;
     return (
       <>
@@ -141,7 +147,7 @@ class RestaurantProfile extends React.Component {
               <Row className="justify-content-md-center">
                 <Col xs="10">
                   <p className="h1">Restaurant Details</p>
-                  <DetailsForm details={user}/>
+                  <DetailsForm details={{tags: tags, ...user}} allTags={allTags}/>
                 </Col>
               </Row>
             </Container>

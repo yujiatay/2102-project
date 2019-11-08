@@ -44,6 +44,7 @@ class Register extends React.Component {
         openingHours: '',
         capacity: undefined,
         cuisineType: 1,
+        tags: []
       },
       alert: {
         visible: false,

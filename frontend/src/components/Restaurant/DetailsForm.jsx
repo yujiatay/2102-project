@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { cuisineTypesList } from "constants.js";
 import http from "http.js";
+import TagMultiSelect from "components/TagMultiSelect";
 
 class DetailsForm extends React.Component {
   constructor(props) {
@@ -13,6 +14,8 @@ class DetailsForm extends React.Component {
       branchLocation: "",
       openingHours: "",
       capacity: "",
+      tags: [],
+      allTags: [],
 
       alert: {
         visible: false,
@@ -22,15 +25,20 @@ class DetailsForm extends React.Component {
     }
   }
 
-  componentDidMount() {
-    const { name, cuisineType, branchLocation, openingHours, capacity } = this.props.details;
-    this.setState({
-      name,
-      cuisineType,
-      branchLocation,
-      openingHours,
-      capacity
-    });
+  componentDidUpdate(prevProps) {
+    const { name, cuisineType, branchLocation, openingHours, capacity, tags } = this.props.details;
+    const { allTags } = this.props;
+    if (prevProps.allTags.length !== this.props.allTags.length || prevProps.details !== this.props.details) {
+      this.setState({
+        name,
+        cuisineType,
+        branchLocation,
+        openingHours,
+        capacity,
+        tags,
+        allTags
+      });
+    }
   }
 
   onValueChange(key) {
@@ -53,14 +61,14 @@ class DetailsForm extends React.Component {
   };
 
   submitEdit = () => {
-    const { name, cuisineType, branchLocation, openingHours, capacity } = this.state;
+    const { name, cuisineType, branchLocation, openingHours, capacity, tags } = this.state;
     const body = {
       name,
       cuisineType,
       branchLocation,
       openingHours,
       capacity,
-      tags: []
+      tags
     };
     http.patch(`/restaurants/${this.props.details.username}`, body)
       .then((res) => {
@@ -77,7 +85,8 @@ class DetailsForm extends React.Component {
   };
 
   render() {
-    const { editing, name, cuisineType, branchLocation, openingHours, capacity } = this.state;
+    const { editing, name, cuisineType, branchLocation, openingHours, capacity, tags, allTags } = this.state;
+
     return (
       <>
         <Alert isOpen={this.state.alert.visible} color={this.state.alert.color}
@@ -89,7 +98,7 @@ class DetailsForm extends React.Component {
           </span>
         </Alert>
         <Form>
-          <FormGroup row>
+          <FormGroup>
             <Label for="name">Restaurant Name</Label>
             <Input
               id="name"
@@ -99,7 +108,7 @@ class DetailsForm extends React.Component {
               disabled={!editing}
             />
           </FormGroup>
-          <FormGroup row>
+          <FormGroup>
             <Label for="cuisine">Cuisine Type</Label>
             <Input
               type="select"
@@ -116,7 +125,7 @@ class DetailsForm extends React.Component {
               }
             </Input>
           </FormGroup>
-          <FormGroup row>
+          <FormGroup>
             <Label for="address">Address</Label>
             <Input
               id="address"
@@ -126,7 +135,7 @@ class DetailsForm extends React.Component {
               disabled={!editing}
             />
           </FormGroup>
-          <FormGroup row>
+          <FormGroup>
             <Label for="opening">Opening Hours</Label>
             <Input
               id="opening"
@@ -136,7 +145,7 @@ class DetailsForm extends React.Component {
               disabled={!editing}
             />
           </FormGroup>
-          <FormGroup row>
+          <FormGroup>
             <Label for="capacity">Maximum Capacity</Label>
             <Input
               id="capacity"
@@ -145,6 +154,16 @@ class DetailsForm extends React.Component {
               onChange={this.onValueChange("capacity")}
               disabled={!editing}
             />
+          </FormGroup>
+          <FormGroup>
+            <Label for="tags">Tags</Label>
+              <TagMultiSelect
+                id="tags"
+                tags={allTags}
+                selectedTags={tags}
+                onSelectChange={this.onValueChange("tags")}
+                disabled={!editing}
+              />
           </FormGroup>
           {
             editing
