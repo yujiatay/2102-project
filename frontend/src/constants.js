@@ -31,3 +31,5 @@ export const menuItemTypes = {
 export const menuItemTypesList = Object.keys(menuItemTypes).map(function(key) {
   return [menuItemTypes[key], key];
 });
+
+export const dayOfWeekList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];

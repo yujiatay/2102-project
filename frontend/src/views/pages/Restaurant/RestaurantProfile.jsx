@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Col, Container, Row,
-  FormGroup, Label,
-  Input, Form, Button, Alert,
-} from 'reactstrap';
+import { Alert, Button, Col, Container, Row, } from 'reactstrap';
 
 import Navbar from "components/Navbars/DarkNavBarRestaurant";
 import MenuItemCard from "components/Restaurant/MenuItemCard";
@@ -23,7 +19,12 @@ class RestaurantProfile extends React.Component {
       slots: [],
       menuItems: [],
 
-      alert: {
+      menuAlert: {
+        visible: false,
+        color: "primary",
+        msg: ""
+      },
+      slotAlert: {
         visible: false,
         color: "primary",
         msg: ""
@@ -33,7 +34,13 @@ class RestaurantProfile extends React.Component {
 
   setMenuItemAlertVisible = (visible, color, msg) => {
     this.setState({
-      alert: { visible, color, msg }
+      menuAlert: { visible, color, msg }
+    });
+  };
+
+  setSlotAlertVisible = (visible, color, msg) => {
+    this.setState({
+      slotAlert: { visible, color, msg }
     });
   };
 
@@ -50,6 +57,35 @@ class RestaurantProfile extends React.Component {
       .catch((err) => {
         if (err.response) {
           this.setMenuItemAlertVisible(true, "danger", err.response.data.msg);
+        }
+      })
+  }
+
+  newSlotCallback(promise) {
+    promise
+      .then((res) => {
+        this.setState({
+          newSlot: false
+        });
+        this.setSlotAlertVisible(true, "success", res.data.msg);
+        this.fetchDetails();
+      })
+      .catch((err) => {
+        if (err.response) {
+          this.setSlotAlertVisible(true, "danger", err.response.data.msg);
+        }
+      })
+  }
+
+  modifySlotCallback(promise) {
+    promise
+      .then((res) => {
+        this.setSlotAlertVisible(true, "success", res.data.msg);
+        this.fetchDetails();
+      })
+      .catch((err) => {
+        if (err.response) {
+          this.setSlotAlertVisible(true, "danger", err.response.data.msg);
         }
       })
   }
@@ -113,6 +149,14 @@ class RestaurantProfile extends React.Component {
               <Row className="justify-content-md-center">
                 <Col xs="10">
                   <p className="h1">Available Slots for Booking</p>
+                  <Alert isOpen={this.state.slotAlert.visible} color={this.state.slotAlert.color}
+                         toggle={() => this.setState({ slotAlert: { visible: false } })}
+                         style={{ zIndex: 1001, marginBottom: 0 }}
+                  >
+                    <span className="alert-inner--text">
+                      {this.state.slotAlert.msg}
+                    </span>
+                  </Alert>
                   {
                     newSlot
                       ? null
@@ -120,9 +164,9 @@ class RestaurantProfile extends React.Component {
                   }
                   {
                     newSlot &&
-                    <NewAvailableSlot/>
+                    <NewAvailableSlot restaurant={user} onCallback={this.newSlotCallback.bind(this)}/>
                   }
-                  <AvailableSlotList slots={slots}/>
+                  <AvailableSlotList restaurant={user} slots={slots} onCallback={this.modifySlotCallback.bind(this)}/>
                 </Col>
               </Row>
             </Container>
@@ -130,12 +174,12 @@ class RestaurantProfile extends React.Component {
               <Row className="justify-content-md-center">
                 <Col xs="10">
                   <p className="h1">Menu Items</p>
-                  <Alert isOpen={this.state.alert.visible} color={this.state.alert.color}
-                         toggle={() => this.setState({ alert: { visible: false } })}
+                  <Alert isOpen={this.state.menuAlert.visible} color={this.state.menuAlert.color}
+                         toggle={() => this.setState({ menuAlert: { visible: false } })}
                          style={{ zIndex: 1001, marginBottom: 0 }}
                   >
                     <span className="alert-inner--text">
-                      {this.state.alert.msg}
+                      {this.state.menuAlert.msg}
                     </span>
                   </Alert>
                   {
@@ -148,7 +192,8 @@ class RestaurantProfile extends React.Component {
                     <NewMenuItemCard restaurant={user} onCallback={this.newItemCallback.bind(this)}/>
                   }
                   {menuItems.map(menuItem => {
-                    return <MenuItemCard item={menuItem} restaurant={user} key={menuItem.name} onCallback={this.modifyItemCallback.bind(this)}/>
+                    return <MenuItemCard item={menuItem} restaurant={user} key={menuItem.name}
+                                         onCallback={this.modifyItemCallback.bind(this)}/>
                   })}
                 </Col>
               </Row>
