@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from "classnames";
 
 import {
   Card,
@@ -35,6 +36,7 @@ class Restaurant extends React.Component {
       tags: [],
       timeslots: [],
       reviews: [],
+      bookmarked: false,
       pax: 1,
       selectedSlot: 0,
       message: '',
@@ -66,10 +68,19 @@ class Restaurant extends React.Component {
           .then((res) => {
             this.setState({ reviews: res.data.data });            
           })
+        http.get(`/bookmarks`)
+          .then((res) => {
+            let bookmarks = res.data.data;
+            let found = bookmarks.find(b => b.username === username);
+            if (found !== undefined) {
+              this.setState({ bookmarked: true });
+            }
+          })
       })
       .catch((err) => {
         // console.log(err)
       })
+
   }
 
   handleChange = (value, event) => {
@@ -122,6 +133,29 @@ class Restaurant extends React.Component {
       })
   }
 
+  bookmarkRestaurant = () => {
+    if (!this.state.bookmarked) {
+      http.post(`/restaurants/${this.state.restaurant.username}/bookmarks`)
+        .then((res) => {
+          this.setState({ bookmarked: true });
+          this.setAlertVisible(true, "success", res.data.msg);
+        })
+        .catch((err) => {
+          this.setAlertVisible(true, "danger", err.response.data.msg);
+        })
+    } else {
+      http.delete(`/restaurants/${this.state.restaurant.username}/bookmarks`)
+        .then((res) => {
+          this.setState({ bookmarked: false });
+          this.setAlertVisible(true, "success", res.data.msg);
+        })
+        .catch((err) => {
+          this.setAlertVisible(true, "danger", err.response.data.msg);
+        })
+    }
+    
+  }
+
   renderRestaurant = () => {
     if (!this.state.restaurant) {
       return (
@@ -156,6 +190,21 @@ class Restaurant extends React.Component {
                 <Row>
                   <CardText>Tags: {this.getTags(this.state.tags)}</CardText>
                 </Row>
+            </Col>
+            <Col xs="auto">
+              <Button
+                aria-pressed={this.state.bookmarked}
+                className={classnames("btn-icon btn-2", {
+                  active: this.state.bookmarked
+                })}
+                type="button"
+                color="danger"
+                outline
+                onClick={this.bookmarkRestaurant}>
+                <span className="btn-inner--icon">
+                  <i className="fa fa-heart"/>
+                </span>
+              </Button>
             </Col>
           </Row>
           <p></p>
