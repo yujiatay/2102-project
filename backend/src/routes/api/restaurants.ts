@@ -103,7 +103,7 @@ router.delete('/restaurants/:rusername/menuitems/:name', requireRestaurant, load
     };
   }
 
-  await db.restaurants.deleteMenuItem(restaurant.username, ctx.query.name);
+  await db.restaurants.deleteMenuItem(restaurant.username, ctx.params.name);
 
   ctx.body = {
     code: HttpStatus.Ok,
