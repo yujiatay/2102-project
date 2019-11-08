@@ -119,6 +119,50 @@ router.get('/diners/:dusername/bookings', requireDiner, loadDinerFromUsername, a
 });
 
 /**
+ * [GET: /restaurants/:rusername/bookings/history] Get past bookings on a restaurant (self only).
+ * [Params] prev?.
+ */
+router.get('/restaurants/:rusername/bookings/history', requireRestaurant, loadRestaurantFromUsername, async (ctx) => {
+  const restaurant: Restaurant = ctx.state.restaurant;
+
+  if (ctx.state.user.username !== restaurant.username) {
+    return ctx.body = {
+      code: HttpStatus.Forbidden,
+      msg: 'You do not have permission to do that.'
+    };
+  }
+
+  const bookings = await db.bookings.getPastBookingsOnRestaurant(restaurant.username, ctx.query.prev);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: bookings
+  };
+});
+
+/**
+ * [GET: /diners/:dusername/bookings/history] Get past bookings made by a diner (self only).
+ * [Params] prev?.
+ */
+router.get('/diners/:dusername/bookings/history', requireDiner, loadDinerFromUsername, async (ctx) => {
+  const diner: Diner = ctx.state.diner;
+
+  if (ctx.state.user.username !== diner.username) {
+    return ctx.body = {
+      code: HttpStatus.Forbidden,
+      msg: 'You do not have permission to do that.'
+    };
+  }
+
+  const bookings = await db.bookings.getPastBookingsByDiner(diner.username, ctx.query.prev);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: bookings
+  };
+});
+
+/**
  * [POST: /restaurants/:rusername/bookings] Create a new booking on a restaurant.
  * [Params] dayOfWeek, startTime, endTime, date, pax, message.
  */

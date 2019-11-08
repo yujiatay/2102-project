@@ -39,6 +39,21 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER t_check_pax_count BEFORE INSERT OR UPDATE ON Bookings
 FOR EACH ROW EXECUTE FUNCTION f_check_pax_count();
 
+-- [Bookings] Ensure that booking date for new bookings is after the current date.
+CREATE OR REPLACE FUNCTION f_check_booking_date() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.booking_date <= NOW() THEN
+    RAISE NOTICE 'Booking date cannot be in the past.';
+    RETURN NULL;
+  ELSE
+    RETURN NEW;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER t_check_booking_date BEFORE INSERT ON Bookings
+FOR EACH ROW EXECUTE FUNCTION f_check_booking_date();
+
 -- [Reviews] Prevent diners from reviewing a restaurant if he has not dined at the restaurant before.
 CREATE OR REPLACE FUNCTION f_check_reviewable() RETURNS TRIGGER AS $$
 BEGIN

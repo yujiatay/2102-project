@@ -81,6 +81,24 @@ export function getRestaurantSlots(rusername: string): Promise<AvailableSlot[]> 
 }
 
 /**
+ * Gets past bookings made by the given diner.
+ */
+export function getPastBookingsByDiner(dusername: string, prev?: number): Promise<Booking[]> {
+  return db.getAll(`
+    SELECT * FROM Bookings WHERE dusername = $1 AND booking_date < $2 ORDER BY booking_date DESC LIMIT ${BOOKING_LIST_LIMIT}
+  `, [dusername, new Date(prev || Date.now())]);
+}
+
+/**
+ * Gets past bookings on the given restaurant.
+ */
+export function getPastBookingsOnRestaurant(rusername: string, prev?: number): Promise<Booking[]> {
+  return db.getAll(`
+    SELECT * FROM Bookings WHERE rusername = $1 AND booking_date < $2 ORDER BY booking_date DESC LIMIT ${BOOKING_LIST_LIMIT}
+  `, [rusername, new Date(prev || Date.now())]);
+}
+
+/**
  * Gets upcoming bookings made by the given diner.
  */
 export function getUpcomingBookingsByDiner(dusername: string, prev?: number): Promise<Booking[]> {
