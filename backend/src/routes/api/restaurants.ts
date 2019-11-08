@@ -171,7 +171,7 @@ router.delete('/restaurants/:rusername/bookmarks', requireDiner, loadRestaurantF
   if (!await db.diners.isRestaurantBookmarked(username, restaurant.username)) {
     return ctx.body = {
       code: HttpStatus.BadRequest,
-      msg: `${restaurant.name} is already bookmarked.`
+      msg: `${restaurant.name} is not bookmarked.`
     };
   }
 
@@ -179,7 +179,7 @@ router.delete('/restaurants/:rusername/bookmarks', requireDiner, loadRestaurantF
 
   ctx.body = {
     code: HttpStatus.Ok,
-    msg: `You have remove ${restaurant.name} from your bookmarks.`
+    msg: `You have removed ${restaurant.name} from your bookmarks.`
   };
 });
 

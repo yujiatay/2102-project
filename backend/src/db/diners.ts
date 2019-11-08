@@ -39,7 +39,7 @@ export function getBookmarkedRestaurants(username: string, prev?: number): Promi
   return db.getAll(`
     SELECT R.username, R.name, R.cuisine_type, R.branch_location, R.opening_hours, R.capacity, R.created_at
     FROM Bookmarks B JOIN Restaurants R ON B.rusername = R.username
-    WHERE B.dusername = $1 AND B.created_at < $9
+    WHERE B.dusername = $1 AND B.created_at < $2
     ORDER BY B.created_at DESC
     LIMIT ${BOOKMARK_LIST_LIMIT}
   `, [username, new Date(prev || Date.now())]);
