@@ -222,6 +222,12 @@ class Restaurant extends React.Component {
             <Col>
               <CardTitle>Reviews</CardTitle>
               {
+                this.state.reviews.length === 0 &&
+                <div>
+                  <p>No reviews yet.</p>
+                </div>
+              }
+              {
                 this.state.reviews.map((r) => (
                   <div key={r.dusername}>
                     <p>* "{r.comment}" ({r.rating}/5 stars)</p>
