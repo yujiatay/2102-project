@@ -87,27 +87,41 @@ class MyBookings extends React.Component {
             <Container className="pt-md">
                 <h2>Upcoming Bookings</h2>
                 <div>
-                  <Nav tabs>
+                  <Nav
+                    className="flex-column flex-sm-row"
+                    id="tabs-text"
+                    pills
+                    role="tablist"
+                  >
                     <NavItem>
                       <NavLink
-                        className={classnames({ active: this.state.activeTab === '1' })}
+                        className={classnames("mb-sm-3 mb-md-0", { active: this.state.activeTab === '1' })}
                         onClick={() => this.switchTab('1')}
+                        role="tab"
+                        aria-selected={this.state.activeTab === '1'}
+                        href="#"
                       >
                         Requested
                       </NavLink>
                     </NavItem>
                     <NavItem>
                       <NavLink
-                        className={classnames({ active: this.state.activeTab === '2' })}
+                        className={classnames("mb-sm-3 mb-md-0", { active: this.state.activeTab === '2' })}
                         onClick={() => this.switchTab('2')}
+                        role="tab"
+                        aria-selected={this.state.activeTab === '2'}
+                        href="#"
                       >
                         Confirmed
                       </NavLink>
                     </NavItem>
                     <NavItem>
                       <NavLink
-                        className={classnames({ active: this.state.activeTab === '3' })}
+                        className={classnames("mb-sm-3 mb-md-0", { active: this.state.activeTab === '3' })}
                         onClick={() => this.switchTab('3')}
+                        role="tab"
+                        aria-selected={this.state.activeTab === '3'}
+                        href="#"
                       >
                         Past history
                       </NavLink>
