@@ -26,6 +26,18 @@ router.get('/restaurants', async (ctx) => {
 });
 
 /**
+ * [GET: /tags] Get all tags.
+ */
+router.get('/tags', async (ctx) => {
+  const tags = await db.restaurants.getTags();
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: tags
+  };
+});
+
+/**
  * [GET: /restaurants/recommended] Get the top 5 recommended restaurants for the diner.
  */
 router.get('/restaurants/recommended', requireDiner, async (ctx) => {
