@@ -26,6 +26,7 @@ class MyBookings extends React.Component {
       activeTab: '1',
       unconfirmedRes: [],
       confirmedRes: [],
+      pastRes: [],
     }
   }
 
@@ -49,6 +50,10 @@ class MyBookings extends React.Component {
           unconfirmedRes: unconfirmed,
           confirmedRes: confirmed
         })
+      })
+    http.get(`/diners/${this.props.user.username}/bookings/history`)
+      .then((res) => {
+        this.setState({ pastRes: res.data.data })
       })
   }
 
@@ -99,6 +104,14 @@ class MyBookings extends React.Component {
                         Confirmed
                       </NavLink>
                     </NavItem>
+                    <NavItem>
+                      <NavLink
+                        className={classnames({ active: this.state.activeTab === '3' })}
+                        onClick={() => this.switchTab('3')}
+                      >
+                        Past history
+                      </NavLink>
+                    </NavItem>
                   </Nav>
                   <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
@@ -114,6 +127,7 @@ class MyBookings extends React.Component {
                             <Col sm="12">
                               <BookingCard
                                 booking={res} 
+                                cancellable={true}
                                 onCancel={this.cancelBooking}
                                 username={this.props.user.username}
                                 history={this.props.history}
@@ -137,6 +151,31 @@ class MyBookings extends React.Component {
                             <Col sm="12">
                               <BookingCard 
                                 booking={res}
+                                cancellable={true}
+                                onCancel={this.cancelBooking} 
+                                onReview={this.reviewBooking}
+                                username={this.props.user.username}
+                                history={this.props.history}
+                              />
+                            </Col>
+                          </Row>
+                        ))
+                      }
+                    </TabPane>
+                    <TabPane tabId="3">
+                      <p></p>
+                      {
+                        this.state.pastRes.length > 0
+                        ? <p>These are your past reservations:</p>
+                        : <p>You have no past reservations.</p>
+                      }
+                      {
+                        this.state.pastRes.map((res) => (
+                          <Row key={`${res.createdAt}${res.restaurant}`} className="mb-4">
+                            <Col sm="12">
+                              <BookingCard 
+                                booking={res}
+                                cancellable={false}
                                 onCancel={this.cancelBooking} 
                                 onReview={this.reviewBooking}
                                 username={this.props.user.username}

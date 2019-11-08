@@ -3,6 +3,7 @@ import {
   Card, CardText, CardBody,
   CardTitle, CardSubtitle, Button
 } from 'reactstrap';
+import { Link } from "react-router-dom";
 import http from "http.js";
 import ReviewModal from 'components/ReviewModal.jsx'
 import CancelModal from 'components/CancelModal.jsx';
@@ -72,13 +73,16 @@ class BookingCard extends React.Component {
 
   render() {
     const {rusername, bookingDate, pax, message, startTime, endTime} = this.props.booking;
+    console.log(this.props)
     return (
       <>
         <div>
           <Card>
             <CardBody>
               <CardTitle>
-                Restaurant: {this.state.restaurant ? this.state.restaurant.name : rusername}
+                <Link to={`/restaurants/${rusername}`}>
+                  Restaurant: {this.state.restaurant ? this.state.restaurant.name : rusername}
+                </Link>
               </CardTitle>
               <CardSubtitle>
                 <p>Date: {new Date(bookingDate).toDateString()}</p>
@@ -87,8 +91,13 @@ class BookingCard extends React.Component {
                 <p>Additional requests: {message}</p>
               </CardSubtitle>
               <hr/>
-              <CardText>Press the button below to withdraw or cancel your booking.</CardText>
-              <Button onClick={() => this.toggleModal(true)}>Cancel</Button>
+              { 
+                this.props.cancellable &&
+                <>
+                  <CardText>Press the button below to withdraw or cancel your booking.</CardText>
+                  <Button onClick={() => this.toggleModal(true)}>Cancel</Button>
+                </>
+              }
               {this.renderReviewButton()}
             </CardBody>
           </Card>

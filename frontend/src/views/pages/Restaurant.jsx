@@ -231,7 +231,7 @@ class Restaurant extends React.Component {
                 this.state.reviews.map((r) => (
                   <div key={r.dusername}>
                     <p>* "{r.comment}" ({r.rating}/5 stars)</p>
-                    <p className="ml-4"><i>by {r.dusername} on {new Date(r.updatedAt).toDateString()}</i></p>
+                    <p className="ml-4"><i>by <b>@{r.dusername}</b> on {new Date(r.updatedAt).toDateString()}</i></p>
                   </div>
                 ))
               }
