@@ -75,6 +75,10 @@ class Bookmarks extends React.Component {
               <Row>
                 <Col>
                   {
+                    this.state.bookmarks.length === 0 &&
+                    <p>No bookmarks made.</p>
+                  }
+                  {
                     this.state.bookmarks.map((r) => (
                       <SearchCard 
                         key={r.username} 
