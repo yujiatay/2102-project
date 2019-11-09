@@ -175,7 +175,7 @@ router.post('/restaurants/:rusername/bookings', requireDiner, loadRestaurantFrom
   const restaurant: Restaurant = ctx.state.restaurant;
 
   const booking = await db.bookings.addBooking(ctx.state.user.username, restaurant.username, body.dayOfWeek,
-    body.startTime, body.endTime, body.date, body.pax, body.message);
+    body.startTime, body.endTime, parseInt(body.date, 10), body.pax, body.message);
 
   ctx.body = {
     code: HttpStatus.Ok,

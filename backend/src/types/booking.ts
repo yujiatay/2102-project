@@ -4,7 +4,7 @@ export interface Booking {
   dayOfWeek: number;
   startTime: string;
   endTime: string;
-  bookingDate: string;
+  bookingDate: number;
   pax: number;
   message: string;
   isConfirmed: boolean;
