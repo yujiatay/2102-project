@@ -78,7 +78,8 @@ class Bookmarks extends React.Component {
                     this.state.bookmarks.map((r) => (
                       <SearchCard 
                         key={r.username} 
-                        restaurant={r} 
+                        restaurant={r}
+                        displayBookmark={user !== null}
                         bookmarked={this.isBookmarked(r)}
                         bookmark={() => this.bookmarkRestaurant(r)}
                       />

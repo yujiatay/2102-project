@@ -250,6 +250,7 @@ class Search extends React.Component {
                       <SearchCard
                         key={r.username} 
                         restaurant={r} 
+                        displayBookmark={user !== null}
                         bookmarked={this.isBookmarked(r)}
                         bookmark={() => this.bookmarkRestaurant(r)}
                       />

@@ -22,7 +22,7 @@ class SearchCard extends React.Component {
 
   render() {
     const {name, cuisineType, branchLocation, username} = this.props.restaurant;
-    
+    const {displayBookmark} = this.props;
     return (
       <Card className="mt-4" style={{
         border: '1px solid #cad1d7'
@@ -46,11 +46,14 @@ class SearchCard extends React.Component {
               </Row>
             </Col>
             <Col xs="auto">
-              <BookmarkButton
-                bookmarked={this.props.bookmarked}
-                bookmark={this.props.bookmark}
-                rusername={username}
-              />
+              {
+                displayBookmark && 
+                <BookmarkButton
+                  bookmarked={this.props.bookmarked}
+                  bookmark={this.props.bookmark}
+                  rusername={username}
+                />
+              }
             </Col>
           </Row>
         </CardBody>

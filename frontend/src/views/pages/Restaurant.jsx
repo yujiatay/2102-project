@@ -185,11 +185,14 @@ class Restaurant extends React.Component {
                     </Row>
                 </Col>
                 <Col xs="auto">
-                  <BookmarkButton
-                    bookmarked={this.state.bookmarked}
-                    bookmark={this.bookmarkRestaurant}
-                    rusername={this.state.restaurant.username}
-                  />
+                  {
+                    this.props.user && 
+                    <BookmarkButton
+                      bookmarked={this.state.bookmarked}
+                      bookmark={this.bookmarkRestaurant}
+                      rusername={this.state.restaurant.username}
+                    />
+                  }
                 </Col>
               </Row>
               <p></p>
