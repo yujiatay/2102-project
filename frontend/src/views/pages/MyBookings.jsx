@@ -137,7 +137,7 @@ class MyBookings extends React.Component {
                       }
                       {
                         this.state.unconfirmedRes.map((res) => (
-                          <Row key={`${res.createdAt}${res.restaurant}`} className="mb-4">
+                          <Row key={`${res.bookingDate}${res.rusername}${res.startTime}`} className="mb-4">
                             <Col sm="12">
                               <BookingCard
                                 booking={res} 
@@ -161,7 +161,7 @@ class MyBookings extends React.Component {
                       }
                       {
                         this.state.confirmedRes.map((res) => (
-                          <Row key={`${res.createdAt}${res.restaurant}`} className="mb-4">
+                          <Row key={`${res.bookingDate}${res.rusername}${res.startTime}`} className="mb-4">
                             <Col sm="12">
                               <BookingCard 
                                 booking={res}
@@ -185,7 +185,7 @@ class MyBookings extends React.Component {
                       }
                       {
                         this.state.pastRes.map((res) => (
-                          <Row key={`${res.createdAt}${res.restaurant}`} className="mb-4">
+                          <Row key={`${res.bookingDate}${res.rusername}${res.startTime}`} className="mb-4">
                             <Col sm="12">
                               <BookingCard 
                                 booking={res}
