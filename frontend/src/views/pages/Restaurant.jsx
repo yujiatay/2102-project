@@ -320,7 +320,7 @@ class Restaurant extends React.Component {
                     this.state.menuitems.map((mi, index) => (
                       <Row className="mb-1" key={index}>
                         <Col xs="auto">
-                          <img alt="restaurant" src={mi.image}/>
+                          <img alt="restaurant" src={mi.image} width={150}/>
                         </Col>
                         <Col>
                           <span>{mi.name}</span><br/>
