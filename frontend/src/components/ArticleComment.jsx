@@ -23,7 +23,10 @@ class ArticleComment extends React.Component {
   }
 
   handleCommentDelete() {
-    http.delete(`/diners/${this.state.ausername}/articles/${this.state.acreatedAt}/comments/${this.state.username}/${this.state.createdAt}`);
+    http.delete(`/diners/${this.state.ausername}/articles/${this.state.acreatedAt}/comments/${this.state.username}/${this.state.createdAt}`)
+      .then(() => {
+        this.props.onDelete();
+      })
   }
 
   render() {
@@ -46,7 +49,7 @@ class ArticleComment extends React.Component {
               <div>
               {isOwner ? (
                 <div>
-                  <Button onClick={this.props.toggleCommentEditModal}>Edit</Button>
+                  {/*<Button onClick={() => this.props.toggleCommentEditModal(this.state.username, this.state.createdAt)}>Edit</Button>*/}
                   <Button onClick={this.handleCommentDelete}>Delete</Button>
                 </div>
               ) : <p></p>}

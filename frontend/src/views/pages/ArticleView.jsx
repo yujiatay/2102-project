@@ -32,7 +32,7 @@ class ArticleView extends React.Component {
     }
 
     this.handleArticleDelete = this.handleArticleDelete.bind(this);
-    this.handleArticleEdit = this.handleArticleEdit.bind(this);
+    // this.handleArticleEdit = this.handleArticleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -183,7 +183,7 @@ class ArticleView extends React.Component {
                     <div key={createdAt}>
                       <ArticleComment ausername={this.state.username} acreatedAt={this.state.createdAt}
                                       username={username} createdAt={createdAt} updatedAt={createdAt} content={content}
-                                      toggleCommentEditModal={this.toggleCommentEditModal}/>
+                                      onDelete={() => this.fetchArticleComments(this.state.username, this.state.createdAt)} />
                     </div>
                   );
                 })
