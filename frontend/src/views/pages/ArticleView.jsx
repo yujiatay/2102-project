@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import {
   Container,
+  Form,
   FormGroup,
   Label,
   Input,
@@ -13,6 +14,7 @@ import ReactDatetime from "react-datetime";
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleComment from "components/ArticleComment";
 import EditArticleModal from "components/EditArticleModal";
+import EditCommentModal from "components/EditCommentModal";
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class ArticleView extends React.Component {
@@ -26,6 +28,7 @@ class ArticleView extends React.Component {
       comments: [],
       postIsLoading: true,
       commentsIsLoading: true,
+      commentEditModal: false,
       editModal: false
     }
 
@@ -109,6 +112,12 @@ class ArticleView extends React.Component {
 
   toggleEditModal = () => {
     this.setState({ editModal: !this.state.editModal});
+    console.log("TOGGLED!");
+  }
+
+  toggleCommentEditModal = () => {
+    console.log("TOGGLED!");
+    this.setState({ commentEditModal: !this.state.commentEditModal});
   }
 
   handleArticleDelete() {
@@ -122,6 +131,22 @@ class ArticleView extends React.Component {
   handleArticleEdit() {
     this.toggleEditModal();
     // REFRESH THIS PAGE
+  }
+
+  handleCommentPost(e) {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const body = {}
+    formData.forEach((value, property) => body[property] = value)
+    console.table(body)
+    // Request goes here.
+    axios.post(`http://localhost:8000/api/v1.0/diners/:username/articles/:created/comments`, null, { params: body })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        alert("Error posting new article: " + error);
+      });
   }
 
   render() {
@@ -152,19 +177,21 @@ class ArticleView extends React.Component {
               )}
             </div>
             <h3>Comments:</h3>
-            <FormGroup>
-              <Label for="exampleText">Add your comment here:</Label>
-              <Input type="textarea" name="text" id="exampleText" />
-              <p></p>
-              <Button>Submit</Button>
-            </FormGroup>
+            <Form onSubmit={e => this.handleCommentPost(e)}>
+              <FormGroup>
+                <Label for="exampleText">Add your comment here:</Label>
+                <Input type="textarea" name="text" id="exampleText" />
+                <p></p>
+                <Button>Submit</Button>
+              </FormGroup>
+            </Form>
             <div>
               {!commentsIsLoading ? (
                 comments.map(comment => {
                   const { username, content, createdAt, updatedAt } = comment;
                   return (
                     <div key={createdAt}>
-                      <ArticleComment username = {username} createdAt={createdAt} updatedAt={createdAt} content={content} />
+                      <ArticleComment username = {username} createdAt={createdAt} updatedAt={createdAt} content={content} toggleCommentEditModal={this.toggleCommentEditModal}/>
                     </div>
                   );
                 })
@@ -174,6 +201,7 @@ class ArticleView extends React.Component {
             </div>
           </Container>
           <EditArticleModal isOpen={this.state.editModal} toggleModal={this.toggleEditModal} username={this.state.username} createdAt={this.state.createdAt}/>
+          <EditCommentModal isOpen={this.state.commentEditModal} toggleModal={this.toggleCommentEditModal} username={this.state.username} createdAt={this.state.createdAt}/>
         </main>
       </>
     );

@@ -1,8 +1,11 @@
 import React from 'react';
+import axios from 'axios';
 import {
   Card, CardImg, CardText, CardBody,
   CardTitle, CardSubtitle, Button
 } from 'reactstrap';
+
+import { requireAuthentication } from "../components/AuthenticatedComponent";
 
 class ArticleComment extends React.Component {
   constructor(props) {
@@ -11,13 +14,25 @@ class ArticleComment extends React.Component {
       username: props.username,
       content: props.content,
       createdAt: props.createdAt,
-      updatedAt: props.updatedAt
+      updatedAt: props.updatedAt,
     }
+
+    this.handleCommentDelete = this.handleCommentDelete.bind(this);
+  }
+
+  handleCommentDelete() {
+    // AXIOS DELETE TO BE CONFIGURED
+    const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
+    axios.delete(url);
+
+    // REDIRECT TO ARTICLES LIST PAGE
   }
 
   render() {
     const createdTimestamp = new Date(this.state.createdAt).toString();
     const updatedTimestamp = new Date(this.state.updatedAt).toString();
+    const { user } = this.props;
+    const isOwner = user == this.state.username;
 
     return (
       <>
@@ -29,7 +44,15 @@ class ArticleComment extends React.Component {
               <CardSubtitle>Posted On: {createdTimestamp}</CardSubtitle>
               <p></p>
               <CardSubtitle>Last Edited: {updatedTimestamp}</CardSubtitle>
-
+              <p></p>
+              <div>
+              {isOwner ? (
+                <div>
+                  <Button onClick={this.props.toggleCommentEditModal}>Edit</Button>
+                  <Button onClick={this.handleCommentDelete}>Delete</Button>
+                </div>
+              ) : <p></p>}
+            </div>
             </CardBody>
           </Card>
         </div>
@@ -38,4 +61,8 @@ class ArticleComment extends React.Component {
   }
 }
 
-export default ArticleComment;
+function checkAuth() {
+  return true;
+}
+
+export default requireAuthentication(ArticleComment, checkAuth);
