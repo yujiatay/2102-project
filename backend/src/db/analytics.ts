@@ -10,11 +10,11 @@ export function getDatePopularity(username: string, min: string, max: string): P
     SELECT B.date, B.bookings, B2.confirmedBookings,
       B.totalPax, B2.totalConfirmedPax, B.meanPax, B2.meanConfirmedPax
     FROM (
-      SELECT date, COUNT(*) AS bookings,
+      SELECT booking_date AS date, COUNT(*) AS bookings,
         SUM(pax) AS totalPax, AVG(pax) AS meanPax
       FROM bk GROUP BY date
     ) B NATURAL JOIN (
-      SELECT date, COUNT(*) AS confirmedBookings,
+      SELECT booking_date AS date, COUNT(*) AS confirmedBookings,
         SUM(pax) AS totalConfirmedPax, AVG(pax) AS meanConfirmedPax
       FROM bk WHERE is_confirmed = TRUE GROUP BY date
     ) B2
