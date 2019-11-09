@@ -3,7 +3,7 @@ import * as Router from '@koa/router';
 
 import db from '../../db';
 import { requireDiner, requireRestaurant } from '../../middleware/auth';
-import { loadBookingFromParams, loadDinerFromUsername, loadRestaurantFromUsername } from '../../middleware/helpers';
+import { loadBookingFromBody, loadBookingFromParams, loadDinerFromUsername, loadRestaurantFromUsername } from '../../middleware/helpers';
 import { Booking } from '../../types/booking';
 import { Diner } from '../../types/diner';
 import { HttpStatus } from '../../types/http';
@@ -88,7 +88,8 @@ router.get('/restaurants/:rusername/bookings', requireRestaurant, loadRestaurant
     };
   }
 
-  const bookings = await db.bookings.getUpcomingBookingsOnRestaurant(restaurant.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getUpcomingBookingsOnRestaurant(restaurant.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -110,7 +111,54 @@ router.get('/diners/:dusername/bookings', requireDiner, loadDinerFromUsername, a
     };
   }
 
-  const bookings = await db.bookings.getUpcomingBookingsByDiner(diner.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getUpcomingBookingsByDiner(diner.username, prev);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: bookings
+  };
+});
+
+/**
+ * [GET: /restaurants/:rusername/bookings/history] Get past bookings on a restaurant (self only).
+ * [Params] prev?.
+ */
+router.get('/restaurants/:rusername/bookings/history', requireRestaurant, loadRestaurantFromUsername, async (ctx) => {
+  const restaurant: Restaurant = ctx.state.restaurant;
+
+  if (ctx.state.user.username !== restaurant.username) {
+    return ctx.body = {
+      code: HttpStatus.Forbidden,
+      msg: 'You do not have permission to do that.'
+    };
+  }
+
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getPastBookingsOnRestaurant(restaurant.username, prev);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: bookings
+  };
+});
+
+/**
+ * [GET: /diners/:dusername/bookings/history] Get past bookings made by a diner (self only).
+ * [Params] prev?.
+ */
+router.get('/diners/:dusername/bookings/history', requireDiner, loadDinerFromUsername, async (ctx) => {
+  const diner: Diner = ctx.state.diner;
+
+  if (ctx.state.user.username !== diner.username) {
+    return ctx.body = {
+      code: HttpStatus.Forbidden,
+      msg: 'You do not have permission to do that.'
+    };
+  }
+
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookings = await db.bookings.getPastBookingsByDiner(diner.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -139,7 +187,7 @@ router.post('/restaurants/:rusername/bookings', requireDiner, loadRestaurantFrom
  * [DELETE: /restaurants/:rusername/bookings/:data] Delete a booking (creator only).
  * [Note] Format of 'data': dusername,dayOfWeek,startTime,endTime,date
  */
-router.delete('/restaurants/:rusername/bookings/:data', requireDiner, loadBookingFromParams, async (ctx) => {
+router.delete('/restaurants/:rusername/bookings', requireDiner, loadBookingFromParams, async (ctx) => {
   const booking: Booking = ctx.state.booking;
 
   if (ctx.state.user.username !== booking.dusername) {
@@ -161,7 +209,7 @@ router.delete('/restaurants/:rusername/bookings/:data', requireDiner, loadBookin
  * [POST: /restaurants/:rusername/bookings/:data/confirm] Confirm a booking (restaurant only).
  * [Note] Format of 'data': dusername,dayOfWeek,startTime,endTime,date
  */
-router.post('/restaurants/:rusername/bookings/:data/confirm', requireRestaurant, loadBookingFromParams, async (ctx) => {
+router.post('/restaurants/:rusername/bookings/confirm', requireRestaurant, loadBookingFromBody, async (ctx) => {
   const booking: Booking = ctx.state.booking;
 
   if (ctx.state.user.username !== booking.rusername) {

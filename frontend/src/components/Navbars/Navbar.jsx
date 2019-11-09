@@ -27,6 +27,7 @@ import {
   DropdownItem,
   DropdownToggle,
   UncontrolledDropdown,
+  Nav,
   NavbarBrand,
   Navbar,
   NavItem,
@@ -53,43 +54,8 @@ class LightNavbar extends React.Component {
       })
   };
 
-  renderAuth = () => {
-    if (this.props.user) {
-      return (
-        <UncontrolledDropdown nav>
-          <DropdownToggle nav>
-            <i className="ni ni-collection d-lg-none mr-1" />
-            <span className="nav-link-inner--text">{this.props.user.username}</span>
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem to="/myBookings" tag={Link}>
-              Bookings
-            </DropdownItem>
-            <DropdownItem onClick={this.logOut}>
-              Logout
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      )
-    } else {
-      return (
-        <Button
-          className="btn-neutral btn-icon"
-          color="default"
-          href="/login"
-        >
-          <span className="btn-inner--icon">
-            <i className="fa fa-sign-in mr-2" />
-          </span>
-          <span className="nav-link-inner--text ml-1">
-            Sign In
-          </span>
-        </Button>
-      )
-    }
-  }
-
   render() {
+    const {user} = this.props;
     return (
       <>
         <header className="header-global">
@@ -121,14 +87,49 @@ class LightNavbar extends React.Component {
                     </Col>
                   </Row>
                 </div>
-                <div className="align-items-lg-center ml-lg-auto">
-                  <NavItem className="d-none d-lg-block ml-lg-4">
-                    {this.renderAuth()}
-                  </NavItem>
-                  <NavItem className="d-none d-sm-block d-md-block d-lg-none">
-                    {this.renderAuth()}
-                  </NavItem>
-                </div>
+                <Nav className="align-items-lg-center ml-lg-auto">
+                  {
+                    user
+                      ? (
+                        <>
+                          <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                            <UncontrolledDropdown nav>
+                              <DropdownToggle nav>
+                                <i className="ni ni-collection d-lg-none mr-1"/>
+                                <span className="nav-link-inner--text">{user.username}</span>
+                              </DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem to="/invite" tag={Link}>
+                                  Invite friends
+                                </DropdownItem>
+                                <DropdownItem onClick={this.logOut}>
+                                  Logout
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </Nav>
+                        </>
+                      )
+                      : (
+                        <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
+                          <NavItem>
+                            <Button
+                              className="btn-neutral btn-icon"
+                              color="default"
+                              href="/login"
+                            >
+                              <span className="btn-inner--icon">
+                                <i className="fa fa-sign-in mr-2"/>
+                              </span>
+                              <span className="nav-link-inner--text ml-1">
+                                Sign In
+                              </span>
+                            </Button>
+                          </NavItem>
+                        </Nav>
+                      )
+                  }
+                </Nav>
               </UncontrolledCollapse>
             </Container>
           </Navbar>

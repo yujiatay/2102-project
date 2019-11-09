@@ -34,7 +34,6 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip
 } from "reactstrap";
 import http from "http.js";
 
@@ -109,10 +108,18 @@ class DarkNavbar extends React.Component {
                         <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
                           <NavItem>
                             <NavLink
-                              href="/myBookings"
+                              href="/bookings"
                             >
                               <i className="ni ni-ui-04 d-lg-none mr-1"/>
                               <span className="nav-link-inner--text">My Bookings</span>
+                            </NavLink>
+                          </NavItem>
+                          <NavItem>
+                            <NavLink
+                              href="/bookmarks"
+                            >
+                              <i className="ni ni-ui-04 d-lg-none mr-1"/>
+                              <span className="nav-link-inner--text">My Bookmarks</span>
                             </NavLink>
                           </NavItem>
                         </Nav>
@@ -123,6 +130,9 @@ class DarkNavbar extends React.Component {
                               <span className="nav-link-inner--text">{user.username}</span>
                             </DropdownToggle>
                             <DropdownMenu>
+                              <DropdownItem to="/invite" tag={Link}>
+                                Invite friends
+                              </DropdownItem>
                               <DropdownItem onClick={this.logOut}>
                                 Logout
                               </DropdownItem>

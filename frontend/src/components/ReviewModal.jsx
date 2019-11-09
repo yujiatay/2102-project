@@ -1,45 +1,71 @@
-import React from 'react';
+ import React from 'react';
 
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody,
-  CardText,
-  CardImg,
   FormGroup,
-  Form,
   Input,
-  CustomInput,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Row,
-  Col,
-  Container,
   Label,
   Button,
   Modal,
 } from "reactstrap";
+import http from "http.js";
 
 class ReviewModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: null,
+      rating: 1,
+      comment: ''
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.review !== undefined && prevProps.review === undefined) {
+      this.setState({
+        rating: this.props.review.rating,
+        comment: this.props.review.comment
+      })
+    }
+  }
+
+  handleChange = (value, event) => {
+    this.setState({[value]: event.target.value});
+  }
+
+  submitForm = () => {
+    const body = {
+      rating: parseInt(this.state.rating),
+      comment: this.state.comment
+    }
+    if (this.props.review !== undefined) {
+      // boolean flag is for indicating that this is an edit on a review
+      this.props.handleSubmit(body, true)
+      this.props.toggleModal()
+    } else {
+      this.props.handleSubmit(body, false)
+      this.props.toggleModal()
+    }
+  }
+
+  deleteReview = () => {
+    const {rusername, dusername} = this.props.review;
+    http.delete(`/restaurants/${rusername}/reviews/${dusername}`)
+      .then((res) => {
+        this.props.toggleModal()
+        setTimeout(this.props.refresh, 200);
+      })
+  }
+
   render() {
+    const review = this.props.review;
     return (
       <div>
         <Modal
           isOpen={this.props.isOpen}
-          onClose={this.props.toggleModal}
+          toggle={this.props.toggleModal}
           >
           <div className="modal-header">
             <h5 className="modal-title" id="modalLabel">
-              Leave a Review
+              {review !== undefined ? "Edit your review" : "Leave a review"}
             </h5>
             <button
               aria-label="Close"
@@ -53,8 +79,9 @@ class ReviewModal extends React.Component {
           </div>
           <div className="modal-body">
             <FormGroup>
-              <Label for="exampleSelect">Select Rating:</Label>
-              <Input type="select" name="select" id="exampleSelect">
+              <Label for="rating">Select Rating:</Label>
+              <Input type="select" name="select" id="rating"
+                value={this.state.rating} onChange={(e) => this.handleChange('rating', e)}>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -63,11 +90,23 @@ class ReviewModal extends React.Component {
               </Input>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleText">Add an optional comment here:</Label>
-              <Input type="textarea" name="text" id="exampleText" />
+              <Label for="comment">Add an optional comment here:</Label>
+              <Input type="textarea" name="text" id="comment"
+                value={this.state.comment} onChange={(e) => this.handleChange('comment', e)}/>
               <p></p>
-              <Button>Submit</Button>
-            </FormGroup>          
+              
+            </FormGroup>
+          </div>
+          <div className="modal-footer">
+              <Button onClick={this.submitForm}>
+                {review !== undefined ? "Save" : "Submit"}
+              </Button>
+              {
+                review !== undefined &&
+                <Button color="danger" onClick={this.deleteReview}>
+                  Delete review
+                </Button>
+              }
           </div>
         </Modal>
       </div>

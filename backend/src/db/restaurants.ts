@@ -193,5 +193,6 @@ export async function updateRestaurant(username: string, name: string, cuisineTy
   return db.getOne(`
     UPDATE Restaurants SET (name, cuisine_type, branch_location, opening_hours, capacity) = ($1, $2, $3, $4, $5)
     WHERE username = $6
+    RETURNING username, name, email, cuisine_type, branch_location, opening_hours, capacity, created_at
   `, [name, cuisineType, branchLocation, openingHours, capacity, username]);
 }

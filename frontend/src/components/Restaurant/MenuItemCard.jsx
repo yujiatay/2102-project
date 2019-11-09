@@ -2,31 +2,83 @@ import React from 'react';
 import {
   Card, CardText, CardBody,
   CardTitle, CardSubtitle,
-  Col, Row, Button
+  Col, Row, Button, Modal
 } from 'reactstrap';
 
-const MenuItemCard = (props) => {
-  return (
-    <div>
-      <Card>
-        <CardBody>
-          <Row>
-            <Col xs="4">
-              <img src="https://via.placeholder.com/150" alt="Item Image"/>
-            </Col>
-            <Col>
-              <CardTitle>Chicken and Waffles</CardTitle>
-              <CardSubtitle>Main</CardSubtitle>
-              <CardText>Price: $20</CardText>
-              <CardText>If you know, you know.</CardText>
-              <Button color="primary">Edit</Button>
-              <Button color="warning">Remove</Button>
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-    </div>
-  );
-};
+import { menuItemTypes } from "../../constants";
+import http from "../../http";
 
+class MenuItemCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteModal: false
+    }
+  }
+
+  submitDelete(name) {
+    return () => {
+      this.toggleModal();
+      this.props.onCallback(http.delete(`/restaurants/${this.props.restaurant.username}/menuitems/${name}`));
+    }
+  }
+
+  toggleModal() {
+    this.setState({
+      deleteModal: !this.state.deleteModal
+    })
+  }
+
+  render() {
+    const { name, description, type, price, image } = this.props.item;
+    const { deleteModal } = this.state;
+    return (
+      <>
+        <Modal
+          isOpen={deleteModal}
+          onClose={this.toggleModal}
+        >
+          <div className="modal-header">
+            <h5 className="modal-title" id="modalLabel">
+              Are you sure?
+            </h5>
+            <button
+              aria-label="Close"
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              onClick={this.toggleModal}
+            >
+              <span aria-hidden={true}>×</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            You are deleting {name}
+          </div>
+          <div className="modal-footer">
+            <Button color="danger" type="button" onClick={this.submitDelete(name)}>
+              Confirm
+            </Button>
+          </div>
+        </Modal>
+        <Card>
+          <CardBody>
+            <Row>
+              <Col xs="4">
+                <img src={image} alt="Item"/>
+              </Col>
+              <Col>
+                <CardTitle>{name}</CardTitle>
+                <CardSubtitle>{menuItemTypes[type]}</CardSubtitle>
+                <CardText>Price: ${price}</CardText>
+                <CardText>{description}</CardText>
+                <Button color="warning" onClick={this.toggleModal.bind(this)}>Remove</Button>
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
+      </>
+    );
+  };
+}
 export default MenuItemCard;

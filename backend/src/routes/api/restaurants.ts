@@ -15,12 +15,25 @@ const router = new Router();
 router.get('/restaurants', async (ctx) => {
   const cuisineTypes = ctx.query.cuisineTypes ? JSON.parse(ctx.query.cuisineTypes) : null;
   const tags = ctx.query.tags ? JSON.parse(ctx.query.tags) : null;
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
   const restaurants = await db.restaurants.getNewestRestaurants(ctx.query.name, cuisineTypes,
-    tags, parseFloat(ctx.query.budget || 0), ctx.query.prev);
+    tags, parseFloat(ctx.query.budget || 0), prev);
 
   ctx.body = {
     code: HttpStatus.Ok,
     data: restaurants
+  };
+});
+
+/**
+ * [GET: /tags] Get all tags.
+ */
+router.get('/tags', async (ctx) => {
+  const tags = await db.restaurants.getTags();
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: tags
   };
 });
 
@@ -103,11 +116,26 @@ router.delete('/restaurants/:rusername/menuitems/:name', requireRestaurant, load
     };
   }
 
-  await db.restaurants.deleteMenuItem(restaurant.username, ctx.query.name);
+  await db.restaurants.deleteMenuItem(restaurant.username, ctx.params.name);
 
   ctx.body = {
     code: HttpStatus.Ok,
     msg: `You have deleted ${ctx.query.name}.`
+  };
+});
+
+/**
+ * [GET: /bookmarks] Get bookmarked restaurants.
+ * [Params] prev?.
+ */
+router.get('/bookmarks', requireDiner, async (ctx) => {
+  const username = ctx.state.user.username;
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const bookmarks = await db.diners.getBookmarkedRestaurants(username, prev);
+
+  ctx.body = {
+    code: HttpStatus.Ok,
+    data: bookmarks
   };
 });
 
@@ -143,7 +171,7 @@ router.delete('/restaurants/:rusername/bookmarks', requireDiner, loadRestaurantF
   if (!await db.diners.isRestaurantBookmarked(username, restaurant.username)) {
     return ctx.body = {
       code: HttpStatus.BadRequest,
-      msg: `${restaurant.name} is already bookmarked.`
+      msg: `${restaurant.name} is not bookmarked.`
     };
   }
 
@@ -151,7 +179,7 @@ router.delete('/restaurants/:rusername/bookmarks', requireDiner, loadRestaurantF
 
   ctx.body = {
     code: HttpStatus.Ok,
-    msg: `You have remove ${restaurant.name} from your bookmarks.`
+    msg: `You have removed ${restaurant.name} from your bookmarks.`
   };
 });
 

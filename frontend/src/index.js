@@ -27,15 +27,16 @@ import "assets/scss/argon-design-system-react.scss";
 
 import Landing from "views/pages/Landing.jsx";
 import Login from "views/pages/Login.jsx";
-import Profile from "views/pages/Profile.jsx";
 import Register from "views/pages/Register.jsx";
 import Search from "views/pages/Search";
 import Restaurant from "views/pages/Restaurant";
 import MyBookings from "views/pages/MyBookings";
+import Bookmarks from "views/pages/Bookmarks";
 import ArticlesList from "views/pages/ArticlesList";
 import ArticleView from "views/pages/ArticleView";
 import Dashboard from "views/pages/Restaurant/Dashboard";
 import RestaurantProfile from "views/pages/Restaurant/RestaurantProfile";
+import InviteFriends from "views/pages/InviteFriends";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -48,9 +49,9 @@ ReactDOM.render(
         />
         <Route path="/login" exact render={props => <Login {...props} />} />
         <Route
-          path="/profile"
+          path="/invite"
           exact
-          render={props => <Profile {...props} />}
+          render={props => <InviteFriends {...props} />}
         />
         <Route
           path="/register"
@@ -66,11 +67,19 @@ ReactDOM.render(
           render={props => <Restaurant {...props}/>}
         />
         <Route 
-          path="/myBookings"
+          path="/bookings"
           render={props => <MyBookings {...props}/>}
         />
         <Route 
+<<<<<<< HEAD
           exact path="/articles"
+=======
+          path="/bookmarks"
+          render={props => <Bookmarks {...props}/>}
+        />
+        <Route 
+          path="/articles"
+>>>>>>> 8208efce7a3af8bed5823456ad3a5f5a810275b7
           render={props => <ArticlesList {...props}/>}
         />
         <Route 

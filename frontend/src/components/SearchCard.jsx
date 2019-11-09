@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-import { Button, Card, CardBody, CardText, CardTitle, Col, Input, Row } from "reactstrap";
+import { Card, CardBody, CardText, CardTitle, Col, Row } from "reactstrap";
 import { cuisineTypes } from "constants.js";
 import http from "http.js";
+import BookmarkButton from './BookmarkButton';
 
 class SearchCard extends React.Component {
   constructor(props) {
@@ -15,7 +16,6 @@ class SearchCard extends React.Component {
   componentDidMount() {
     http.get(`/restaurants/${this.props.restaurant.username}/slots`)
       .then((res) => {
-        console.log(res.data.data)
         this.setState({ timeslots: res.data.data })
       })
   }
@@ -28,36 +28,29 @@ class SearchCard extends React.Component {
         border: '1px solid #cad1d7'
       }}>
         <CardBody>
-          <Row>
-            <Col xs={4}>
-              <img src="https://via.placeholder.com/150"/>
-            </Col>
+          <CardTitle>
+            <Link to={`/restaurants/${username}`}>
+              {name}
+            </Link>
+          </CardTitle>
+          <Row className="px-2">
+            {/* <Col xs={4}>
+              <img alt="restaurant" src="https://via.placeholder.com/150"/>
+            </Col> */}
             <Col>
-              <CardTitle>
-                <Link to={`/restaurants/${username}`}>
-                  {name}
-                </Link>
-              </CardTitle>
-                <Row>
-                  <CardText>Cuisine: {cuisineTypes[cuisineType]}</CardText>
-                </Row>
-                <Row>
-                  <CardText>Location: {branchLocation}</CardText>
-                </Row>
-              {/* <Row>
-                <Col>
-                  <Input type="select" name="select" id="booktime">
-                    {
-                      this.state.timeslots.map((ts) => (
-                        <option value={ts}>{ts.startTime} to {ts.endTime}</option>
-                      ))
-                    }
-                  </Input>
-                </Col>
-                <Col>
-                  <Button onClick={this.props.toggleModal}>Book now</Button>
-                </Col>
-              </Row> */}
+              <Row>
+                <CardText>Cuisine: {cuisineTypes[cuisineType]}</CardText>
+              </Row>
+              <Row>
+                <CardText>Location: {branchLocation}</CardText>
+              </Row>
+            </Col>
+            <Col xs="auto">
+              <BookmarkButton
+                bookmarked={this.props.bookmarked}
+                bookmark={this.props.bookmark}
+                rusername={username}
+              />
             </Col>
           </Row>
         </CardBody>

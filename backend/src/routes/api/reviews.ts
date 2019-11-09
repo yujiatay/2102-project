@@ -15,7 +15,8 @@ const router = new Router();
  */
 router.get('/restaurants/:rusername/reviews', loadRestaurantFromUsername, async (ctx) => {
   const restaurant: Restaurant = ctx.state.restaurant;
-  const reviews = await db.reviews.getRecentReviewsByRestaurant(restaurant.username, ctx.query.prev);
+  const prev = ctx.query.prev ? parseInt(ctx.query.prev, 10) : undefined;
+  const reviews = await db.reviews.getRecentReviewsByRestaurant(restaurant.username, prev);
 
   ctx.body = {
     code: HttpStatus.Ok,

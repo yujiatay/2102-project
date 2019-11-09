@@ -1,8 +1,12 @@
 import * as bcrypt from 'bcrypt';
+
 import { PASSWORD_SALT_ROUNDS } from '../constants';
 import { Bookmark, Diner, DinerPrivate, DinerWithPassword } from '../types/diner';
+import { Restaurant } from '../types/restaurant';
 import { generateCode } from '../utils/strings';
 import db from './db';
+
+const BOOKMARK_LIST_LIMIT = 20;
 
 /**
  * Adds a bookmark for the given diner and restaurant.
@@ -21,11 +25,24 @@ export async function addDiner(username: string, password: string, email: string
   const passwordHash = await bcrypt.hash(password, PASSWORD_SALT_ROUNDS);
   const referralCode = generateCode(12);
   const referrer = code ? await getDinerByReferralCode(code) : null;
-
+  const rusername = referrer == null ? null : referrer.username;
   return db.getOne<DinerPrivate>(`
     INSERT INTO Diners (username, password, email, referral_code, referrer)
     VALUES ($1, $2, $3, $4, $5) RETURNING username, email, created_at, points, referral_code, referrer
-  `, [username, passwordHash, email, referralCode, referrer]);
+  `, [username, passwordHash, email, referralCode, rusername]);
+}
+
+/**
+ * Gets all bookmarked restaurants of the given diner.
+ */
+export function getBookmarkedRestaurants(username: string, prev?: number): Promise<Restaurant[]> {
+  return db.getAll(`
+    SELECT R.username, R.name, R.cuisine_type, R.branch_location, R.opening_hours, R.capacity, R.created_at
+    FROM Bookmarks B JOIN Restaurants R ON B.rusername = R.username
+    WHERE B.dusername = $1 AND B.created_at < $2
+    ORDER BY B.created_at DESC
+    LIMIT ${BOOKMARK_LIST_LIMIT}
+  `, [username, new Date(prev || Date.now())]);
 }
 
 /**

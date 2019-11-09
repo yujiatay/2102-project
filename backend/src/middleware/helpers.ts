@@ -65,15 +65,39 @@ export const loadArticleFromParams: Middleware = async (ctx, next) => {
  * the loaded Booking object is attached to `ctx.state`.
  */
 export const loadBookingFromParams: Middleware = async (ctx, next) => {
-  const data = ctx.params.data.split(',');
-  const dusername = data[0];
-  const dayOfWeek = parseInt(data[1], 10);
-  const startTime = data[2];
-  const endTime = data[3];
-  const date = parseInt(data[4], 10);
+  const data = ctx.request.query;
+  const dusername = data['dusername'];
+  const dayOfWeek = parseInt(data['dayOfWeek'], 10);
+  const startTime = data['startTime'];
+  const endTime = data['endTime'];
+  const date = parseInt(data['date'], 10);
 
-  const booking = await db.bookings.getBooking(ctx.params.rusername, dusername, dayOfWeek, startTime, endTime, date);
+  const booking = await db.bookings.getBooking(dusername, ctx.params.rusername, dayOfWeek, startTime, endTime, date);
+  if (!booking) {
+    return ctx.body = {
+      code: HttpStatus.NotFound,
+      msg: 'Unable to find or access the requested content.'
+    };
+  }
 
+  ctx.state.booking = booking;
+  await next();
+};
+
+/**
+ * Loads the booking identified by the rusername and data on `ctx.body`.
+ * Returns an error message if there is no such booking, otherwise,
+ * the loaded Booking object is attached to `ctx.state`.
+ */
+export const loadBookingFromBody: Middleware = async (ctx, next) => {
+  const data = ctx.request.body;
+  const dusername = data['dusername'];
+  const dayOfWeek = parseInt(data['dayOfWeek'], 10);
+  const startTime = data['startTime'];
+  const endTime = data['endTime'];
+  const date = parseInt(data['date'], 10);
+
+  const booking = await db.bookings.getBooking(dusername, ctx.params.rusername, dayOfWeek, startTime, endTime, date);
   if (!booking) {
     return ctx.body = {
       code: HttpStatus.NotFound,

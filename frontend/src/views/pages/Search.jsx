@@ -12,7 +12,6 @@ import {
   Container,
   Label,
   Button,
-  Modal
 } from "reactstrap";
 import ReactDatetime from "react-datetime";
 
@@ -21,6 +20,7 @@ import { cuisineTypesList } from "constants.js";
 import http from "http.js";
 import SearchCard from 'components/SearchCard';
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
+import TagMultiSelect from "../../components/TagMultiSelect";
 
 class Search extends React.Component {
   constructor(props) {
@@ -29,9 +29,12 @@ class Search extends React.Component {
       date: undefined,
       modal: false,
       searchName: '',
-      searchCuisines: [0],
+      searchCuisines: [],
       searchBudget: undefined,
-      restaurants: []
+      searchTags: [],
+      restaurants: [],
+      bookmarks: [],
+      allTags: []
     }
   }
 
@@ -44,6 +47,14 @@ class Search extends React.Component {
         .then((res) => {
           // console.log(res.data.data)
           this.setState({ restaurants: res.data.data });
+        })
+      http.get(`/bookmarks`)
+        .then((res) => {
+          this.setState({ bookmarks: res.data.data });
+        })
+      http.get(`/tags`)
+        .then((res) => {
+          this.setState({ allTags: res.data.data.map((tag) => tag.name) });
         })
     }
   }
@@ -77,12 +88,48 @@ class Search extends React.Component {
     if (this.state.searchCuisines.length > 0) {
       params.cuisineTypes = this.state.searchCuisines.map(x => parseInt(x));
     }
+
+    if (this.state.searchTags.length > 0) {
+      params.tags = this.state.searchTags;
+    }
     // console.log(params)
     http.get("/restaurants", {params})
       .then((res) => {
         // console.log(res.data.data)
         this.setState({ restaurants: res.data.data });
       })
+  }
+
+  isBookmarked = (r) => {
+    let found = this.state.bookmarks.find(b => b.username === r.username);
+    if (found !== undefined) {
+      return true;
+    }
+    return false;
+  }
+
+  bookmarkRestaurant = (restaurant) => {
+    if (!this.isBookmarked(restaurant)) {
+      http.post(`/restaurants/${restaurant.username}/bookmarks`)
+        .then((res) => {
+          http.get(`/bookmarks`)
+            .then((res) => {
+              this.setState({ bookmarks: res.data.data });
+            })
+        })
+        .catch((err) => {
+        })
+    } else {
+      http.delete(`/restaurants/${restaurant.username}/bookmarks`)
+        .then((res) => {
+          http.get(`/bookmarks`)
+            .then((res) => {
+              this.setState({ bookmarks: res.data.data });
+            })
+        })
+        .catch((err) => {
+        })
+    }
   }
 
   render() {
@@ -171,6 +218,15 @@ class Search extends React.Component {
                             <option value={100}>$$$</option>
                           </Input>
                         </FormGroup>
+                        <FormGroup>
+                          <Label for="tag">Tags</Label>
+                          <TagMultiSelect
+                            id="tags"
+                            tags={this.state.allTags}
+                            selectedTags={this.state.searchTags}
+                            onSelectChange={(e) => this.handleChange('searchTags', e)}
+                          />
+                        </FormGroup>
                         {/* <FormGroup>
                           <Label for="location">Location</Label>
                           <Input type="select" name="select" id="location">
@@ -191,7 +247,12 @@ class Search extends React.Component {
                 <Col>
                   {
                     this.state.restaurants.map((r) => (
-                      <SearchCard key={r.username} restaurant={r} toggleModal={this.toggleModal}/>
+                      <SearchCard
+                        key={r.username} 
+                        restaurant={r} 
+                        bookmarked={this.isBookmarked(r)}
+                        bookmark={() => this.bookmarkRestaurant(r)}
+                      />
                     ))
                   }
                 </Col>

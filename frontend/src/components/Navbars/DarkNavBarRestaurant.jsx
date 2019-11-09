@@ -36,7 +36,6 @@ class DemoNavbar extends React.Component {
   logOut = () => {
     http.delete("/session")
       .then((res) => {
-        // console.log(res)
         setTimeout(() => {
           this.props.history.push("/")
         }, 500);

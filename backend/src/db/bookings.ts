@@ -54,9 +54,10 @@ export function deleteAvailableSlot(rusername: string, dayOfWeek: number,
 export function deleteBooking(booking: Booking): Promise<{}> {
   return db.query(`
     DELETE FROM Bookings
-    WHERE rusername = $1 AND dusername = $2 AND day_of_week = $3 AND start_time = $4 AND end_time = $5 AND booking_date = $6
-  `,
-    [booking.rusername, booking.dusername, booking.dayOfWeek, booking.startTime, booking.endTime, booking.bookingDate]);
+    WHERE rusername = $1 AND dusername = $2 AND day_of_week = $3
+    AND start_time = $4 AND end_time = $5 AND booking_date = $6
+  `, [booking.rusername, booking.dusername, booking.dayOfWeek, booking.startTime,
+    booking.endTime, new Date(booking.bookingDate)]);
 }
 
 /**
@@ -80,11 +81,29 @@ export function getRestaurantSlots(rusername: string): Promise<AvailableSlot[]> 
 }
 
 /**
+ * Gets past bookings made by the given diner.
+ */
+export function getPastBookingsByDiner(dusername: string, prev?: number): Promise<Booking[]> {
+  return db.getAll(`
+    SELECT * FROM Bookings WHERE dusername = $1 AND booking_date < $2 ORDER BY booking_date DESC LIMIT ${BOOKING_LIST_LIMIT}
+  `, [dusername, new Date(prev || Date.now())]);
+}
+
+/**
+ * Gets past bookings on the given restaurant.
+ */
+export function getPastBookingsOnRestaurant(rusername: string, prev?: number): Promise<Booking[]> {
+  return db.getAll(`
+    SELECT * FROM Bookings WHERE rusername = $1 AND booking_date < $2 ORDER BY booking_date DESC LIMIT ${BOOKING_LIST_LIMIT}
+  `, [rusername, new Date(prev || Date.now())]);
+}
+
+/**
  * Gets upcoming bookings made by the given diner.
  */
 export function getUpcomingBookingsByDiner(dusername: string, prev?: number): Promise<Booking[]> {
   return db.getAll(`
-    SELECT * FROM Bookings WHERE dusername = $1 AND created_at > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
+    SELECT * FROM Bookings WHERE dusername = $1 AND booking_date > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
   `, [dusername, new Date(prev || Date.now() - UPCOMING_LIST_TIME_BUFFER)]);
 }
 
@@ -93,6 +112,6 @@ export function getUpcomingBookingsByDiner(dusername: string, prev?: number): Pr
  */
 export function getUpcomingBookingsOnRestaurant(rusername: string, prev?: number): Promise<Booking[]> {
   return db.getAll(`
-    SELECT * FROM Bookings WHERE rusername = $1 AND created_at > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
+    SELECT * FROM Bookings WHERE rusername = $1 AND booking_date > $2 ORDER BY created_at ASC LIMIT ${BOOKING_LIST_LIMIT}
   `, [rusername, new Date(prev || Date.now() - UPCOMING_LIST_TIME_BUFFER)]);
 }

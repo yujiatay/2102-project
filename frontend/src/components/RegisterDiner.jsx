@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroup
 
 const RegisterDinerForm = (props) => {
   const {handleChange, submitForm} = props;
-  const {username, email, password} = props.form;
+  const {username, email, password, referral} = props.form;
   return (
     <Form role="form">
       <FormGroup>
@@ -41,6 +41,21 @@ const RegisterDinerForm = (props) => {
             autoComplete="off"
             value={password}
             onChange={(e) => handleChange('password', e)}
+          />
+        </InputGroup>
+      </FormGroup>
+      <FormGroup>
+        <InputGroup className="input-group-alternative">
+          <InputGroupAddon addonType="prepend">
+            <InputGroupText>
+              <i className="fa fa-users" />
+            </InputGroupText>
+          </InputGroupAddon>
+          <Input
+            placeholder="Referral code (if any)"
+            type="text"
+            value={referral}
+            onChange={(e) => handleChange('referral', e)}
           />
         </InputGroup>
       </FormGroup>

@@ -38,11 +38,13 @@ class Register extends React.Component {
         username: '',
         email: '',
         password: '',
+        referral: '',
         name: '',
         branchLocation: '',
         openingHours: '',
         capacity: undefined,
         cuisineType: 1,
+        tags: []
       },
       alert: {
         visible: false,
@@ -81,17 +83,15 @@ class Register extends React.Component {
       password: this.state.form.password,
       username: this.state.form.username
     }
+    if (this.state.form.referral) {
+      body.referralCode = this.state.form.referral
+    }
     http.post("/diners", body)
       .then((res) => {
         // console.log(res.data)
         this.setAlertVisible(true, "success", res.data.msg);
-        const type = res.data.data.type;
         setTimeout(() => {
-          if (type === 1) {
-            this.props.history.push("/search");
-          } else if (type === 2) {
-            this.props.history.push("/dashboard");
-          }
+          this.props.history.push("/search");
         }, 500);
       })
       .catch((err) => {
