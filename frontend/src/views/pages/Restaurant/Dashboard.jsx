@@ -154,7 +154,7 @@ class Dashboard extends React.Component {
         </Alert>
         <Navbar user={user} history={this.props.history}/>
         <main ref="main">
-          <section className="section h-100vh">
+          <section className="section">
             <Container className="pt-md">
               <Row className="justify-content-md-center">
                 <Col>

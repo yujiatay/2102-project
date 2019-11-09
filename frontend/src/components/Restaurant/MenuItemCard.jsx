@@ -64,8 +64,8 @@ class MenuItemCard extends React.Component {
         <Card>
           <CardBody>
             <Row>
-              <Col xs="4">
-                <img src={image} alt="Item"/>
+              <Col xs="auto">
+                <img src={image} alt="Item" width={150}/>
               </Col>
               <Col>
                 <CardTitle>{name}</CardTitle>
