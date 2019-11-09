@@ -12,6 +12,7 @@ import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleComment from "components/ArticleComment";
+import EditArticleModal from "components/EditArticleModal";
 import { requireAuthentication } from "../../components/AuthenticatedComponent";
 
 class ArticleView extends React.Component {
@@ -24,8 +25,12 @@ class ArticleView extends React.Component {
       body: "Loading",
       comments: [],
       postIsLoading: true,
-      commentsIsLoading: true
+      commentsIsLoading: true,
+      editModal: false
     }
+
+    this.handleArticleDelete = this.handleArticleDelete.bind(this);
+    this.handleArticleEdit = this.handleArticleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -102,10 +107,28 @@ class ArticleView extends React.Component {
       });
   }
 
+  toggleEditModal = () => {
+    this.setState({ editModal: !this.state.editModal});
+  }
+
+  handleArticleDelete() {
+    // AXIOS DELETE TO BE CONFIGURED
+    const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
+    axios.delete(url);
+
+    // REDIRECT TO ARTICLES LIST PAGE
+  }
+
+  handleArticleEdit() {
+    this.toggleEditModal();
+    // REFRESH THIS PAGE
+  }
+
   render() {
     const createdTimestamp = new Date(this.state.createdAt).toString();
     const { postIsLoading, commentsIsLoading, comments } = this.state;
     const { user } = this.props;
+    const isOwner = user == this.state.username;
     return (
       <>
         <Navbar user={user} history={this.props.history} />
@@ -114,6 +137,14 @@ class ArticleView extends React.Component {
             <h2>{this.state.title}</h2>
             <h6>Posted By: {this.state.username}</h6>
             <h6>Posted On: {createdTimestamp}</h6>
+            <div>
+              {isOwner ? (
+                <div>
+                  <Button onClick={this.handleArticleEdit}>Edit</Button>
+                  <Button onClick={this.handleArticleDelete}>Delete</Button>
+                </div>
+              ) : <p></p>}
+            </div>
             <p></p>
             <div>
               {!postIsLoading ? <p>{this.state.body}</p> : (
@@ -142,6 +173,7 @@ class ArticleView extends React.Component {
               )}
             </div>
           </Container>
+          <EditArticleModal isOpen={this.state.editModal} toggleModal={this.toggleEditModal} username={this.state.username} createdAt={this.state.createdAt}/>
         </main>
       </>
     );

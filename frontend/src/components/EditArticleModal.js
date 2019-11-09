@@ -13,11 +13,12 @@ import {
   Modal,
 } from "reactstrap";
 
-class NewArticleModal extends React.Component {
+class EditArticleModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: null,
+      username: props.username,
+      createdAt: props.createdAt
     }
   }
 
@@ -28,12 +29,12 @@ class NewArticleModal extends React.Component {
     formData.forEach((value, property) => body[property] = value)
     console.table(body)
     // Request goes here.
-    axios.post(`http://localhost:8000/api/v1.0/articles`, null, { params: body })
+    axios.patch(`http://localhost:8000/api/v1.0/diners`, null, { params: body })
       .then(res => {
         console.log(res);
       })
       .catch(error => {
-        alert("Error posting new article: " + error);
+        alert("Error editing article: " + error);
       });
   }
 
@@ -46,7 +47,7 @@ class NewArticleModal extends React.Component {
           >
           <div className="modal-header">
             <h5 className="modal-title" id="modalLabel">
-              Add an Article!
+              Edit this Article!
             </h5>
             <button
               aria-label="Close"
@@ -78,4 +79,4 @@ class NewArticleModal extends React.Component {
   }
 }
 
-export default NewArticleModal;
+export default EditArticleModal;
