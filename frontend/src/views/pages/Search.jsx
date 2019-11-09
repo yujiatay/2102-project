@@ -86,11 +86,11 @@ class Search extends React.Component {
       params.budget = parseFloat(this.state.searchBudget);
     }
     if (this.state.searchCuisines.length > 0) {
-      params.cuisineTypes = this.state.searchCuisines.map(x => parseInt(x));
+      params.cuisineTypes = JSON.stringify(this.state.searchCuisines.map(x => parseInt(x)));
     }
 
     if (this.state.searchTags.length > 0) {
-      params.tags = this.state.searchTags;
+      params.tags = JSON.stringify(this.state.searchTags);
     }
     // console.log(params)
     http.get("/restaurants", {params})
