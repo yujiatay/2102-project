@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import http from "http.js";
 
 import {
   Container,
@@ -64,7 +64,7 @@ class ArticleView extends React.Component {
     const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt;
     console.log(url.toString());
     // The API where we're fetching data from
-    axios.get(url)     // We get a response and receive the data in JSON format...
+    http.get(url)     // We get a response and receive the data in JSON format...
       .then(response => response.data.data)
       // ...then we update the state of our application
       .then(
@@ -89,7 +89,7 @@ class ArticleView extends React.Component {
   fetchArticleComments(username, createdAt) {
     const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt + '/comments';
     // The API where we're fetching data from
-    axios.get(url)     // We get a response and receive the data in JSON format...
+    http.get(url)     // We get a response and receive the data in JSON format...
       .then(response => response.data.data)
       // ...then we update the state of our application
       .then(
@@ -123,7 +123,7 @@ class ArticleView extends React.Component {
   handleArticleDelete() {
     // AXIOS DELETE TO BE CONFIGURED
     const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
-    axios.delete(url);
+    http.delete(url);
 
     // REDIRECT TO ARTICLES LIST PAGE
   }
@@ -140,7 +140,7 @@ class ArticleView extends React.Component {
     formData.forEach((value, property) => body[property] = value)
     console.table(body)
     // Request goes here.
-    axios.post(`http://localhost:8000/api/v1.0/diners/:username/articles/:created/comments`, null, { params: body })
+    http.post(`http://localhost:8000/api/v1.0/diners/:username/articles/:created/comments`, null, { params: body })
       .then(res => {
         console.log(res);
       })

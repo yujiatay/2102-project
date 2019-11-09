@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import http from "http.js";
 
 import {
   FormGroup,
@@ -29,7 +29,7 @@ class EditCommentModal extends React.Component {
     formData.forEach((value, property) => body[property] = value)
     console.table(body)
     // Request goes here.
-    axios.patch(`http://localhost:8000/api/v1.0/diners/:username/articles/:created/comments/:username/:created`, null, { params: body })
+    http.patch(`http://localhost:8000/api/v1.0/diners/:username/articles/:created/comments/:username/:created`, null, { params: body })
       .then(res => {
         console.log(res);
       })

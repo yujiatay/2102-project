@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import http from "http.js";
 
 import {
   FormGroup,
@@ -26,11 +26,12 @@ class NewArticleModal extends React.Component {
     const formData = new FormData(e.target)
     const body = {}
     formData.forEach((value, property) => body[property] = value)
-    console.table(body)
+    console.log(body)
     // Request goes here.
-    axios.post(`http://localhost:8000/api/v1.0/articles`, null, { params: body })
+    http.post(`http://localhost:8000/api/v1.0/articles`, body)
       .then(res => {
-        console.log(res);
+        // console.log(res);
+        this.props.history.go(0);
       })
       .catch(error => {
         alert("Error posting new article: " + error);

@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from "axios";
+import http from "http.js";
 
 import {
   Container,
@@ -33,7 +33,7 @@ class ArticlesList extends React.Component {
 
   fetchArticles() {
     // The API where we're fetching data from
-    axios.get(`http://localhost:8000/api/v1.0/articles`)
+    http.get(`http://localhost:8000/api/v1.0/articles`)
       // We get a response and receive the data in JSON format...
       .then(response => response.data.data)
       // ...then we update the state of our application
@@ -60,7 +60,7 @@ class ArticlesList extends React.Component {
   render() {
     const { isLoading, articles } = this.state;
     const { user } = this.props;
-    console.log("User is " + user);
+
     return (
       <>
         <Navbar user={user} history={this.props.history} />
@@ -85,7 +85,7 @@ class ArticlesList extends React.Component {
               )}
             </div>
           </Container>
-          <NewArticleModal isOpen={this.state.modalVisibility} toggleModal={this.toggleModal}/>
+          <NewArticleModal isOpen={this.state.modalVisibility} toggleModal={this.toggleModal} history={this.props.history}/>
         </main>
       </>
     );
