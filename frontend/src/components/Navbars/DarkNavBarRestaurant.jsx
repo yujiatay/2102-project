@@ -95,6 +95,16 @@ class DemoNavbar extends React.Component {
                     </NavLink>
                   </NavItem>
                 </Nav>
+                <Nav className="align-items-lg-center" navbar>
+                  <NavItem>
+                    <NavLink href="/analytics">
+                      <i className="ni ni-spaceship" />
+                      <span className="nav-link-inner--text">
+                        Analytics
+                      </span>
+                    </NavLink>
+                  </NavItem>
+                </Nav>
                 <Nav className="navbar-nav-hover align-items-lg-center ml-lg-auto" navbar>
                   <UncontrolledDropdown nav>
                     <DropdownToggle nav>

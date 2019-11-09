@@ -37,6 +37,7 @@ import ArticleView from "views/pages/ArticleView";
 import Dashboard from "views/pages/Restaurant/Dashboard";
 import RestaurantProfile from "views/pages/Restaurant/RestaurantProfile";
 import InviteFriends from "views/pages/InviteFriends";
+import Analytics from "views/pages/Restaurant/Analytics";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -89,6 +90,10 @@ ReactDOM.render(
         <Route
           path="/restaurant-details"
           render={props => <RestaurantProfile {...props}/>}
+        />
+        <Route
+          path="/analytics"
+          render={props => <Analytics {...props}/>}
         />
         <Redirect to="/" />
       </Switch>
