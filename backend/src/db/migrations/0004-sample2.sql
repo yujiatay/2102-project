@@ -141,6 +141,9 @@ VALUES ('burntends', 'superman', 4, '20:00', '21:00', 1574334000000, 2, 'Allergi
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
 VALUES ('burntends', 'superman', 5, '20:00', '21:00', 1574420400000, 2, 'Allergic to kryptonite');
 
+INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
+VALUES ('burntends', 'batman', 5, '12:00', '13:00', 1574420400000, 1, 'I am batman');
+
 -- Add reviews
 INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES ('burntends', 'batman', 'Sanger burger is to die for. Really yummy. The meat is succulent and well-seasoned. Bread is soft and melts in your mouth. The steak is pretty good as well.', 5);
 INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES ('burntends', 'superman', 'Finally got to try this place after a Long wait of 3 months. Tried a number of highly recommended dishes by many reviewers, including leek, beef marmalade, pulled pork sanger, hanger steak etc. Good and unique flavours, but frankly speaking most dishes were quite heavy, including this onglet steak, especially when it comes all the other goodies. How much I wish the salad is just dressed with simple light vinaigrette. Nothing particularly great compared to steaks elsewhere, so I guess if you have a regular stomach capacity, go sample more appetisers rattler than commuting yourself to this!', 5);
