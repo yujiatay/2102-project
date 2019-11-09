@@ -4,7 +4,7 @@ BEGIN
   IF EXISTS (
     SELECT 1 FROM AvailableSlots A
     WHERE A.username = NEW.username AND A.day_of_week = NEW.day_of_week
-      AND A.start_time <= NEW.end_time AND A.end_time >= NEW.start_time
+      AND A.start_time < NEW.end_time AND A.end_time > NEW.start_time
   ) THEN
     RAISE NOTICE 'Available slot overlaps with another slot.';
     RETURN NULL;
