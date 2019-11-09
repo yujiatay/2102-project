@@ -42,7 +42,7 @@ export function getBookmarkedRestaurants(username: string, prev?: number): Promi
     WHERE B.dusername = $1 AND B.created_at < $2
     ORDER BY B.created_at DESC
     LIMIT ${BOOKMARK_LIST_LIMIT}
-  `, [username, new Date(prev || Date.now())]);
+  `, [username, prev || Date.now()]);
 }
 
 /**

@@ -28,7 +28,7 @@ class NewArticleModal extends React.Component {
     formData.forEach((value, property) => body[property] = value)
     console.log(body)
     // Request goes here.
-    http.post(`http://localhost:8000/api/v1.0/articles`, body)
+    http.post(`/articles`, body)
       .then(res => {
         // console.log(res);
         this.props.history.go(0);

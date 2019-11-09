@@ -52,19 +52,19 @@ INSERT INTO MenuItems (username, name, type, price, description, image) VALUES (
 
 -- Add bookings
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('testrestaurant1', 'testdiner1', 2, '10:00', '11:00', '2019-10-18', 4, 'Window seats please', true);
+VALUES ('testrestaurant1', 'testdiner1', 2, '10:00', '11:00', 1571364000000, 4, 'Window seats please', true);
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('testrestaurant1', 'testdiner1', 2, '10:00', '11:00', '2019-11-18', 4, 'Window seats please');
+VALUES ('testrestaurant1', 'testdiner1', 2, '10:00', '11:00', 1574042400000, 4, 'Window seats please');
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('testrestaurant1', 'testdiner2', 2, '10:00', '11:00', '2019-11-18', 4, '');
+VALUES ('testrestaurant1', 'testdiner2', 2, '10:00', '11:00', 1574042400000, 4, '');
 
 -- Add reviews
 INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES ('testrestaurant1', 'testdiner1', 'Good food. 10/5 would recommend for premium breads.', 5);
 
 -- Add articles
-INSERT INTO Articles (username, title, content, created_at) VALUES ('testdiner1', 'Food is Good.', 'I love food. Food is good. Good food.', '2019-03-01 00:00:00');
-INSERT INTO Articles (username, title, content, created_at) VALUES ('testdiner1', 'Food is Always Good.', 'I always love food. Food is always good. Always good food.', '2019-03-02 00:00:00');
+INSERT INTO Articles (username, title, content, created_at) VALUES ('testdiner1', 'Food is Good.', 'I love food. Food is good. Good food.', 1551369600000);
+INSERT INTO Articles (username, title, content, created_at) VALUES ('testdiner1', 'Food is Always Good.', 'I always love food. Food is always good. Always good food.', 1551456000000);
 
 -- Add comments
-INSERT INTO Comments (ausername, acreated_at, username, content) VALUES ('testdiner1', '2019-03-01 00:00:00', 'testdiner2', 'But food is also not so good.');
-INSERT INTO Comments (ausername, acreated_at, username, content) VALUES ('testdiner1', '2019-03-02 00:00:00', 'testdiner1', 'Fooooooooooooooooooooood.');
+INSERT INTO Comments (ausername, acreated_at, username, content) VALUES ('testdiner1', 1551369600000, 'testdiner2', 'But food is also not so good.');
+INSERT INTO Comments (ausername, acreated_at, username, content) VALUES ('testdiner1', 1551456000000, 'testdiner1', 'Fooooooooooooooooooooood.');

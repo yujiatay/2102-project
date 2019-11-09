@@ -8,7 +8,7 @@ const parseDate = require('postgres-date');
 import { toCamelCase } from '../utils/strings';
 
 pg.types.setTypeParser(20, 'text', parseInt); // bigint
-pg.types.setTypeParser(1114, (val) => parseDate(val).getTime()); // timestamp without timezone
+pg.types.setTypeParser(1114, (val) => new Date(val + 'Z').getTime()); // timestamp without timezone
 pg.types.setTypeParser(1184, (val) => parseDate(val).getTime()); // timestamp
 pg.types.setTypeParser(1700, 'text', parseFloat); // numeric/decimal
 

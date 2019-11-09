@@ -29,7 +29,7 @@ class EditArticleModal extends React.Component {
     formData.forEach((value, property) => body[property] = value)
     console.table(body)
     // Request goes here.
-    http.patch(`http://localhost:8000/api/v1.0/diners`, body)
+    http.patch(`/diners`, body)
       .then(res => {
         console.log(res);
       })

@@ -27,7 +27,7 @@ export function deleteReview(review: Review): Promise<{}> {
 export function getRecentReviewsByRestaurant(username: string, prev?: number): Promise<Review[]> {
   return db.getAll(`
     SELECT * FROM Reviews WHERE rusername = $1 AND created_at < $2 ORDER BY created_at DESC LIMIT ${REVIEW_LIST_LIMIT}
-  `, [username, new Date(prev || Date.now())]);
+  `, [username, prev || Date.now()]);
 }
 
 /**

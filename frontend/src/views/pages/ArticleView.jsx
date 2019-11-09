@@ -9,7 +9,6 @@ import {
   Input,
   Button
 } from "reactstrap";
-import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleComment from "components/ArticleComment";
@@ -61,12 +60,8 @@ class ArticleView extends React.Component {
   }
 
   fetchArticleBody(username, createdAt) {
-    const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt;
-    console.log(url.toString());
-    // The API where we're fetching data from
-    http.get(url)     // We get a response and receive the data in JSON format...
+    http.get(`/diners/${username}/articles/${createdAt}`)
       .then(response => response.data.data)
-      // ...then we update the state of our application
       .then(
         data => {
           this.setState({
@@ -77,7 +72,6 @@ class ArticleView extends React.Component {
           console.log(data.toString());
         }
       )
-      // If we catch errors instead of a response, let's update the app
       .catch(error => {
         alert("Error fetching article body :( " + error);
         this.setState({
@@ -87,11 +81,8 @@ class ArticleView extends React.Component {
   }
 
   fetchArticleComments(username, createdAt) {
-    const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt + '/comments';
-    // The API where we're fetching data from
-    http.get(url)     // We get a response and receive the data in JSON format...
+    http.get(`/diners/${username}/articles/${createdAt}/comments`)
       .then(response => response.data.data)
-      // ...then we update the state of our application
       .then(
         data => {
           this.setState({
@@ -101,7 +92,6 @@ class ArticleView extends React.Component {
           console.log("Comments: " + data.toString());
         }
       )
-      // If we catch errors instead of a response, let's update the app
       .catch(error => {
         alert("Error fetching comments :( " + error);
         this.setState({
@@ -122,8 +112,7 @@ class ArticleView extends React.Component {
 
   handleArticleDelete() {
     // AXIOS DELETE TO BE CONFIGURED
-    const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
-    http.delete(url);
+    http.delete(`/diners/${this.state.username}/articles/${this.state.createdAt}`);
 
     // REDIRECT TO ARTICLES LIST PAGE
   }
@@ -140,7 +129,7 @@ class ArticleView extends React.Component {
     formData.forEach((value, property) => body[property] = value)
     console.table(body)
     // Request goes here.
-    http.post(`http://localhost:8000/api/v1.0/diners/:username/articles/:created/comments`, null, { params: body })
+    http.post(`/diners/:username/articles/:created/comments`, null, { params: body })
       .then(res => {
         console.log(res);
       })

@@ -33,7 +33,7 @@ class ArticlesList extends React.Component {
 
   fetchArticles() {
     // The API where we're fetching data from
-    http.get(`http://localhost:8000/api/v1.0/articles`)
+    http.get(`/articles`)
       // We get a response and receive the data in JSON format...
       .then(response => response.data.data)
       // ...then we update the state of our application

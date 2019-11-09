@@ -81,7 +81,7 @@ export function getNewestRestaurants(name?: string, cuisineTypes?: number[], tag
     ) <= $8) AND created_at < $9
     ORDER BY created_at DESC
     LIMIT ${RESTAURANT_LIST_LIMIT}
-  `, [noName, name, noCuisineTypes, cuisineTypes, noTags, tags, noBudget, budget, new Date(prev || Date.now())]);
+  `, [noName, `%${name}%`, noCuisineTypes, cuisineTypes, noTags, tags, noBudget, budget, prev || Date.now()]);
 }
 
 /**

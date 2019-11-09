@@ -22,7 +22,7 @@ class ArticleComment extends React.Component {
 
   handleCommentDelete() {
     // AXIOS DELETE TO BE CONFIGURED
-    const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
+    const url = '/diners/' + this.state.username + '/articles/' + this.state.createdAt;
     axios.delete(url);
   }
 

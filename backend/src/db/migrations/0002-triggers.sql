@@ -42,7 +42,7 @@ FOR EACH ROW EXECUTE FUNCTION f_check_pax_count();
 -- [Bookings] Ensure that booking date for new bookings is after the current date.
 CREATE OR REPLACE FUNCTION f_check_booking_date() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.booking_date <= NOW() THEN
+  IF NEW.booking_date <= EXTRACT(EPOCH FROM NOW()) * 1000 THEN
     RAISE NOTICE 'Booking date cannot be in the past.';
     RETURN NULL;
   ELSE
