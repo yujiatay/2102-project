@@ -31,7 +31,7 @@ class Dashboard extends React.Component {
       filterDate: null,
       filterConfirm: 0,
 
-      pastBookings:[],
+      pastBookings: [],
       pastFilterDate: null,
 
       alert: {
@@ -42,11 +42,14 @@ class Dashboard extends React.Component {
     }
   }
 
-  fetchBookings() {
-    http.get(`/restaurants/${this.props.user.username}/bookings`)
-      .then((res) => {
-        this.setState({ bookings: res.data.data })
-      });
+  async fetchBookings() {
+    const bookingResponse = await http.get(`/restaurants/${this.props.user.username}/bookings`);
+    const pastBookingResponse = await http.get(`/restaurants/${this.props.user.username}/bookings/history`);
+
+    this.setState({
+      bookings: bookingResponse.data.data,
+      pastBookings: pastBookingResponse.data.data
+    })
   }
 
   componentDidMount() {
@@ -174,9 +177,9 @@ class Dashboard extends React.Component {
                           onChange={this.onTimeChange("filterDate")}
                         />
                         {filterDate &&
-                          <InputGroupAddon addonType="append">
-                            <Button onClick={() => this.setState({filterDate: null})}>Cancel Filter</Button>
-                          </InputGroupAddon>
+                        <InputGroupAddon addonType="append">
+                          <Button onClick={() => this.setState({ filterDate: null })}>Cancel Filter</Button>
+                        </InputGroupAddon>
                         }
                       </InputGroup>
                     </FormGroup>
@@ -220,7 +223,7 @@ class Dashboard extends React.Component {
                         />
                         {pastFilterDate &&
                         <InputGroupAddon addonType="append">
-                          <Button onClick={() => this.setState({pastFilterDate: null})}>Cancel Filter</Button>
+                          <Button onClick={() => this.setState({ pastFilterDate: null })}>Cancel Filter</Button>
                         </InputGroupAddon>
                         }
                       </InputGroup>
@@ -230,7 +233,7 @@ class Dashboard extends React.Component {
               </Row>
               <Row className="justify-content-md-center">
                 <Col>
-                  <PastBookingList bookings={pastBookings} />
+                  <PastBookingList bookings={pastBookings}/>
                 </Col>
               </Row>
             </Container>
