@@ -17,6 +17,7 @@ import {
 import Navbar from "components/Navbars/DarkNavBarRestaurant";
 import BookingList from "../../../components/Restaurant/BookingList";
 import ReactDatetime from "react-datetime";
+import PastBookingList from "components/Restaurant/PastBookingList";
 import { requireAuthentication } from "components/AuthenticatedComponent";
 import http from "http.js";
 
@@ -29,6 +30,9 @@ class Dashboard extends React.Component {
       bookings: [],
       filterDate: null,
       filterConfirm: 0,
+
+      pastBookings:[],
+      pastFilterDate: null,
 
       alert: {
         visible: false,
@@ -114,10 +118,26 @@ class Dashboard extends React.Component {
     })
   }
 
+  applyPastBookingFilters() {
+    const { pastBookings, pastFilterDate } = this.state;
+
+    function isSameDate(firstDate, secondDate) {
+      return firstDate.getDate() === secondDate.getDate()
+        && firstDate.getMonth() === secondDate.getMonth()
+        && firstDate.getFullYear() === secondDate.getFullYear()
+    }
+
+    return pastBookings.filter((booking) => {
+      const date = new Date(booking.bookingDate);
+      return isSameDate(date, pastFilterDate ? pastFilterDate : date);
+    })
+  }
+
   render() {
     const { user } = this.props;
-    const { filterDate, filterConfirm } = this.state;
+    const { filterDate, filterConfirm, pastFilterDate } = this.state;
     const bookings = this.applyBookingFilters();
+    const pastBookings = this.applyPastBookingFilters();
 
     return (
       <>
@@ -135,6 +155,7 @@ class Dashboard extends React.Component {
             <Container className="pt-md">
               <Row className="justify-content-md-center">
                 <Col>
+                  <p className="h1">Upcoming Bookings</p>
                   <Form>
                     <FormGroup>
                       <Label for="date">Date</Label>
@@ -175,6 +196,41 @@ class Dashboard extends React.Component {
               <Row className="justify-content-md-center">
                 <Col>
                   <BookingList bookings={bookings} restaurant={user} onCallback={this.onBookingConfirm.bind(this)}/>
+                </Col>
+              </Row>
+              <Row className="justify-content-md-center">
+                <Col>
+                  <p className="h1">Past Bookings</p>
+                  <Form>
+                    <FormGroup>
+                      <Label for="date">Date</Label>
+                      <InputGroup className="input-group-alternative">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="ni ni-calendar-grid-58"/>
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <ReactDatetime
+                          inputProps={{
+                            placeholder: "Choose a date"
+                          }}
+                          timeFormat={false}
+                          value={pastFilterDate}
+                          onChange={this.onTimeChange("pastFilterDate")}
+                        />
+                        {pastFilterDate &&
+                        <InputGroupAddon addonType="append">
+                          <Button onClick={() => this.setState({pastFilterDate: null})}>Cancel Filter</Button>
+                        </InputGroupAddon>
+                        }
+                      </InputGroup>
+                    </FormGroup>
+                  </Form>
+                </Col>
+              </Row>
+              <Row className="justify-content-md-center">
+                <Col>
+                  <PastBookingList bookings={pastBookings} />
                 </Col>
               </Row>
             </Container>
