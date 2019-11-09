@@ -123,6 +123,13 @@ VALUES ('burntends', 'batman', 5, '19:00', '20:00', 1574420400000, 1, 'I am batm
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
 VALUES ('burntends', 'superman', 5, '19:00', '20:00', 1574420400000, 1, 'Allergic to kryptonite', true);
 
+INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
+VALUES ('burntends', 'batman', 3, '20:00', '21:00', 1574247600000, 1, 'I am batman', true);
+INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
+VALUES ('burntends', 'batman', 4, '21:00', '22:00', 1574334000000, 1, 'I am batman', true);
+INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
+VALUES ('burntends', 'batman', 5, '16:00', '17:00', 1574420400000, 1, 'I am batman', true);
+
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
 VALUES ('burntends', 'superman', 1, '20:00', '21:00', 1574074800000, 2, 'Allergic to kryptonite');
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
