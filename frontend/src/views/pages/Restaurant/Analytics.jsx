@@ -15,11 +15,10 @@ import {
 } from 'reactstrap';
 
 import Navbar from "components/Navbars/DarkNavBarRestaurant";
-import BookingList from "../../../components/Restaurant/BookingList";
 import ReactDatetime from "react-datetime";
-import PastBookingList from "components/Restaurant/PastBookingList";
 import { requireAuthentication } from "components/AuthenticatedComponent";
 import http from "http.js";
+import { getCurrentUnixTimestamp, getUnixTimestamp } from "utils.js";
 
 class Analytics extends React.Component {
   constructor(props) {
@@ -41,8 +40,8 @@ class Analytics extends React.Component {
   async fetchAnalytics() {
     const { startDate, endDate } = this.state;
     const dateQuery = {
-      min: startDate ? startDate : new Date(Date.now()),
-      max: endDate ? endDate : new Date(Date.now()),
+      min: startDate ? getUnixTimestamp(startDate) : getCurrentUnixTimestamp(),
+      max: endDate ?  getUnixTimestamp(endDate) : getCurrentUnixTimestamp(),
     };
 
     const timeslotResponse = await http.get(`/analytics/popularity/timeslot`, {params: dateQuery});

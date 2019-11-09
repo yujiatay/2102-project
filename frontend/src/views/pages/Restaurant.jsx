@@ -114,7 +114,7 @@ class Restaurant extends React.Component {
       dayOfWeek: this.state.date.day(),
       startTime: slot.startTime,
       endTime: slot.endTime,
-      date: this.state.date.startOf('day'),
+      date: this.state.date.startOf('day').unix(),
       pax: parseInt(this.state.pax),
       message: this.state.message
     }
@@ -369,8 +369,7 @@ class Restaurant extends React.Component {
           <InputGroup>
             <Input
               placeholder="Include any food allergies or special arrangements.." 
-              type="textarea" 
-              rows
+              type="textarea"
               value={this.state.message}
               onChange={(e) => this.handleChange('message', e)}/>
           </InputGroup>
