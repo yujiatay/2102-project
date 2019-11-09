@@ -24,8 +24,6 @@ class ArticleComment extends React.Component {
     // AXIOS DELETE TO BE CONFIGURED
     const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
     axios.delete(url);
-
-    // REDIRECT TO ARTICLES LIST PAGE
   }
 
   render() {
