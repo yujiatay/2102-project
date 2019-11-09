@@ -39,3 +39,13 @@ This section is not necessary if you're using the source code provided in the .z
 2. Run `npm install` or `yarn` to install the dependencies.
 3. Run `npm start` or `yarn start` to run a development server that serves the front-end code.
 4. Navigate to http://localhost:3000 to view the application.
+
+To test our application, you may choose to create a new account (Diner / Restaurant) or you could use our provided sample accounts.
+
+**Diner**
+username: batman
+password: password
+
+**Restaurant**
+username: burntends
+password: password
