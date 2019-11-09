@@ -114,7 +114,7 @@ class Restaurant extends React.Component {
       dayOfWeek: this.state.date.day(),
       startTime: slot.startTime,
       endTime: slot.endTime,
-      date: this.state.date.startOf('day').unix(),
+      date: this.state.date.startOf('day').unix() * 1000,
       pax: parseInt(this.state.pax),
       message: this.state.message
     }
