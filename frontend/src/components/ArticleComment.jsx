@@ -15,20 +15,22 @@ class ArticleComment extends React.Component {
       content: props.content,
       createdAt: props.createdAt,
       updatedAt: props.updatedAt,
+      ausername: props.ausername,
+      acreatedAt: props.acreatedAt,
     }
 
     this.handleCommentDelete = this.handleCommentDelete.bind(this);
   }
 
   handleCommentDelete() {
-    http.delete(`/diners/${this.state.username}/articles/${this.state.createdAt}`);
+    http.delete(`/diners/${this.state.ausername}/articles/${this.state.acreatedAt}/comments/${this.state.username}/${this.state.createdAt}`);
   }
 
   render() {
     const createdTimestamp = new Date(this.state.createdAt).toString();
     const updatedTimestamp = new Date(this.state.updatedAt).toString();
     const { user } = this.props;
-    const isOwner = user == this.state.username;
+    const isOwner = user.username === this.state.username;
 
     return (
       <>

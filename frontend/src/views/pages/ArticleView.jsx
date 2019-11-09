@@ -101,13 +101,13 @@ class ArticleView extends React.Component {
   }
 
   toggleEditModal = () => {
-    this.setState({ editModal: !this.state.editModal});
+    this.setState({ editModal: !this.state.editModal });
     console.log("TOGGLED!");
   }
 
   toggleCommentEditModal = () => {
     console.log("TOGGLED!");
-    this.setState({ commentEditModal: !this.state.commentEditModal});
+    this.setState({ commentEditModal: !this.state.commentEditModal });
   }
 
   handleArticleDelete() {
@@ -122,16 +122,17 @@ class ArticleView extends React.Component {
     // REFRESH THIS PAGE
   }
 
-  handleCommentPost(e) {
+  handleCommentPost(e, username, createdAt) {
     e.preventDefault()
     const formData = new FormData(e.target)
     const body = {}
     formData.forEach((value, property) => body[property] = value)
     console.table(body)
     // Request goes here.
-    http.post(`/diners/:username/articles/:created/comments`, null, { params: body })
+    http.post(`/diners/${username}/articles/${createdAt}/comments`, { content: body.text })
       .then(res => {
         console.log(res);
+        this.fetchArticleComments(username, createdAt);
       })
       .catch(error => {
         alert("Error posting new article: " + error);
@@ -145,7 +146,7 @@ class ArticleView extends React.Component {
     const isOwner = user == this.state.username;
     return (
       <>
-        <Navbar user={user} history={this.props.history} />
+        <Navbar user={user} history={this.props.history}/>
         <main ref="main">
           <Container className="my-lg">
             <h2>{this.state.title}</h2>
@@ -166,10 +167,10 @@ class ArticleView extends React.Component {
               )}
             </div>
             <h3>Comments:</h3>
-            <Form onSubmit={e => this.handleCommentPost(e)}>
+            <Form onSubmit={e => this.handleCommentPost(e, this.state.username, this.state.createdAt)}>
               <FormGroup>
                 <Label for="exampleText">Add your comment here:</Label>
-                <Input type="textarea" name="text" id="exampleText" />
+                <Input type="textarea" name="text" id="exampleText"/>
                 <p></p>
                 <Button>Submit</Button>
               </FormGroup>
@@ -180,7 +181,9 @@ class ArticleView extends React.Component {
                   const { username, content, createdAt, updatedAt } = comment;
                   return (
                     <div key={createdAt}>
-                      <ArticleComment username = {username} createdAt={createdAt} updatedAt={createdAt} content={content} toggleCommentEditModal={this.toggleCommentEditModal}/>
+                      <ArticleComment ausername={this.state.username} acreatedAt={this.state.createdAt}
+                                      username={username} createdAt={createdAt} updatedAt={createdAt} content={content}
+                                      toggleCommentEditModal={this.toggleCommentEditModal}/>
                     </div>
                   );
                 })
@@ -189,16 +192,18 @@ class ArticleView extends React.Component {
               )}
             </div>
           </Container>
-          <EditArticleModal isOpen={this.state.editModal} toggleModal={this.toggleEditModal} username={this.state.username} createdAt={this.state.createdAt}/>
-          <EditCommentModal isOpen={this.state.commentEditModal} toggleModal={this.toggleCommentEditModal} username={this.state.username} createdAt={this.state.createdAt}/>
+          <EditArticleModal isOpen={this.state.editModal} toggleModal={this.toggleEditModal}
+                            username={this.state.username} createdAt={this.state.createdAt}/>
+          <EditCommentModal isOpen={this.state.commentEditModal} toggleModal={this.toggleCommentEditModal}
+                            username={this.state.username} createdAt={this.state.createdAt}/>
         </main>
       </>
     );
   }
 }
 
-function checkAuth() {
-  return true;
+function checkAuth(user, userType) {
+  return !!(user && userType === 1);
 }
 
 export default requireAuthentication(ArticleView, checkAuth);

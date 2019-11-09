@@ -116,7 +116,7 @@ export const loadBookingFromBody: Middleware = async (ctx, next) => {
  */
 export const loadCommentFromParams: Middleware = async (ctx, next) => {
   const comment = await db.articles.getComment(ctx.params.ausername, parseInt(ctx.params.acreated, 10),
-    ctx.params.username, parseInt(ctx.params.createdAt, 10));
+    ctx.params.username, parseInt(ctx.params.created, 10));
 
   if (!comment) {
     return ctx.body = {
