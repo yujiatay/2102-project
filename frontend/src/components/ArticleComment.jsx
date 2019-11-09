@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import http from "http.js";
 import {
   Card, CardImg, CardText, CardBody,
   CardTitle, CardSubtitle, Button
@@ -23,7 +23,7 @@ class ArticleComment extends React.Component {
   handleCommentDelete() {
     // AXIOS DELETE TO BE CONFIGURED
     const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
-    axios.delete(url);
+    http.delete(url);
   }
 
   render() {

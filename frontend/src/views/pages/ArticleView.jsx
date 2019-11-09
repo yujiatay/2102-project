@@ -9,7 +9,6 @@ import {
   Input,
   Button
 } from "reactstrap";
-import ReactDatetime from "react-datetime";
 
 import Navbar from "components/Navbars/DarkNavbar.jsx";
 import ArticleComment from "components/ArticleComment";
@@ -62,7 +61,6 @@ class ArticleView extends React.Component {
 
   fetchArticleBody(username, createdAt) {
     const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt;
-    console.log(url.toString());
     // The API where we're fetching data from
     http.get(url)     // We get a response and receive the data in JSON format...
       .then(response => response.data.data)
