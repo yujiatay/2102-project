@@ -60,6 +60,7 @@ class ArticlesList extends React.Component {
   render() {
     const { isLoading, articles } = this.state;
     const { user } = this.props;
+    console.log("User is " + user);
     return (
       <>
         <Navbar user={user} history={this.props.history} />

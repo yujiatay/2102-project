@@ -24,7 +24,6 @@ class ArticleCard extends React.Component {
               <CardTitle><a href={"/articles/" + this.props.username + "/" + this.props.createdAt}>{this.props.title}</a></CardTitle>
               <CardSubtitle>Posted By: {this.props.username}</CardSubtitle>
               <CardText>Posted on: {createdTimestamp}</CardText>
-              <Button onClick={this.goToArticle}>View Article</Button>
             </CardBody>
           </Card>
         </div>

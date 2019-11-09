@@ -4,18 +4,38 @@ import {
   CardTitle, CardSubtitle, Button
 } from 'reactstrap';
 
-const ArticleComment = (props) => {
-  return (
-    <div>
-      <Card>
-        <CardBody>
-          <CardText>Hey there, thanks for sharing!</CardText>
-          <CardTitle>Comment By: Paul</CardTitle>
-          <CardSubtitle>Posted On: 00:00:00 18th Sept 2019 | Last Edited: 01:00:00 18th Sept 2019</CardSubtitle>
-        </CardBody>
-      </Card>
-    </div>
-  );
-};
+class ArticleComment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: props.username,
+      content: props.content,
+      createdAt: props.createdAt,
+      updatedAt: props.updatedAt
+    }
+  }
+
+  render() {
+    const createdTimestamp = new Date(this.state.createdAt).toString();
+    const updatedTimestamp = new Date(this.state.updatedAt).toString();
+
+    return (
+      <>
+        <div>
+          <Card>
+            <CardBody>
+              <CardText>{this.state.content}</CardText>
+              <CardTitle>Comment By: {this.state.username}</CardTitle>
+              <CardSubtitle>Posted On: {createdTimestamp}</CardSubtitle>
+              <p></p>
+              <CardSubtitle>Last Edited: {updatedTimestamp}</CardSubtitle>
+
+            </CardBody>
+          </Card>
+        </div>
+      </>
+    );
+  }
+}
 
 export default ArticleComment;

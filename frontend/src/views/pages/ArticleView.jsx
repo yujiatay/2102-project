@@ -18,17 +18,14 @@ class ArticleView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      title: "Article Title",
       username: "Unknown",
       createdAt: -1,
       body: "Loading",
-      isLoading: true
+      comments: [],
+      postIsLoading: true,
+      commentsIsLoading: true
     }
-  }
-
-  getParams({ match }) {
-    let { username, createdAt } = match.params;
-    this.state.username = username;
-    this.state.createdAt = createdAt;
   }
 
   componentDidMount() {
@@ -41,45 +38,86 @@ class ArticleView extends React.Component {
       username: params.username,
       createdAt: parseInt(params.createdAt)
     })
-    console.log(params);
+
+    // Fetch article info
+    this.fetchArticleBody(params.username, parseInt(params.createdAt));
+
+    // Fetch comments
+    this.fetchArticleComments(params.username, parseInt(params.createdAt));
   }
 
-  fetchArticleBody() {
+  getParams({ match }) {
+    let { username, createdAt } = match.params;
+    this.state.username = username;
+    this.state.createdAt = createdAt;
+  }
+
+  fetchArticleBody(username, createdAt) {
+    const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt;
+    console.log(url.toString());
     // The API where we're fetching data from
-    axios.get('http://localhost:8000/api/v1.0/diners/testdiner1/articles/1551456000000')     // We get a response and receive the data in JSON format...
+    axios.get(url)     // We get a response and receive the data in JSON format...
       .then(response => response.data.data)
       // ...then we update the state of our application
       .then(
-        data =>
+        data => {
           this.setState({
-            body: data,
-          })
+            title: data.title,
+            body: data.content.toString(),
+            postIsLoading: false
+          });
+          console.log(data.toString());
+        }
       )
       // If we catch errors instead of a response, let's update the app
       .catch(error => {
         alert("Error fetching article body :( " + error);
         this.setState({
-          isLoading: false,
+          postIsLoading: false,
+        });
+      });
+  }
+
+  fetchArticleComments(username, createdAt) {
+    const url = 'http://localhost:8000/api/v1.0/diners/' + username + '/articles/' + createdAt + '/comments';
+    // The API where we're fetching data from
+    axios.get(url)     // We get a response and receive the data in JSON format...
+      .then(response => response.data.data)
+      // ...then we update the state of our application
+      .then(
+        data => {
+          this.setState({
+            comments: data,
+            commentsIsLoading: false
+          });
+          console.log("Comments: " + data.toString());
+        }
+      )
+      // If we catch errors instead of a response, let's update the app
+      .catch(error => {
+        alert("Error fetching comments :( " + error);
+        this.setState({
+          commentsIsLoading: false,
         });
       });
   }
 
   render() {
     const createdTimestamp = new Date(this.state.createdAt).toString();
-    const isLoading = this.state.isLoading;
+    const { postIsLoading, commentsIsLoading, comments } = this.state;
     const { user } = this.props;
     return (
       <>
         <Navbar user={user} history={this.props.history} />
         <main ref="main">
           <Container className="my-lg">
-            <h2>Article Title</h2>
+            <h2>{this.state.title}</h2>
             <h6>Posted By: {this.state.username}</h6>
             <h6>Posted On: {createdTimestamp}</h6>
             <p></p>
             <div>
-              {!isLoading ? <p>{this.state.body}</p> : (
-                <p>Loading...</p>
+              {!postIsLoading ? <p>{this.state.body}</p> : (
+                <p>Post Loading...</p>
               )}
             </div>
             <h3>Comments:</h3>
@@ -89,7 +127,20 @@ class ArticleView extends React.Component {
               <p></p>
               <Button>Submit</Button>
             </FormGroup>
-            <ArticleComment />
+            <div>
+              {!commentsIsLoading ? (
+                comments.map(comment => {
+                  const { username, content, createdAt, updatedAt } = comment;
+                  return (
+                    <div key={createdAt}>
+                      <ArticleComment username = {username} createdAt={createdAt} updatedAt={createdAt} content={content} />
+                    </div>
+                  );
+                })
+              ) : (
+                <p>Comments Loading...</p>
+              )}
+            </div>
           </Container>
         </main>
       </>
