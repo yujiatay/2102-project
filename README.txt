@@ -20,10 +20,22 @@ This application provides a platform for the booking of reservations at restaura
   - Can write articles
   - Can comment on articles
   - Can invite friends with their referral code
-  
-## Tools & Frameworks
-| Area     | Tools/Frameworks                                                                                                                                   |
-|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Frontend | React                                                                                                                                              |
-| Backend  | Node.js (Javascript Runtime), TypeScript (static typing in JS), Koa (web framework), node-postgres (PostgreSQL client for node.js) |
-| Database | PostgreSQL 11 
+
+## Running the Code
+
+### Running the Server
+
+1. Navigate to the `/backend` folder.
+2. Copy `.env.example` to `.env` and change the database credentials accordingly.
+3. Run `npm install` or `yarn` to install the dependencies.
+4. Run `npm run dev` or `yarn dev` to run the server.
+  - The database should be automatically created. If the creation of database encounters a timeout, restart the server once.
+
+### Running the Dev Server for Front-end
+
+This section is not necessary if you're using the source code provided in the .zip since the front-end has already been pre-built. You can simply navigate to http://localhost:8000 to view the application.
+
+1. Navigate to the `/frontend` folder.
+2. Run `npm install` or `yarn` to install the dependencies.
+3. Run `npm start` or `yarn start` to run a development server that serves the front-end code.
+4. Navigate to http://localhost:3000 to view the application.
