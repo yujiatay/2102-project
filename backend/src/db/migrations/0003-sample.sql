@@ -5,10 +5,10 @@ DELETE FROM Restaurants WHERE username = 'testrestaurant1';
 DELETE FROM Restaurants WHERE username = 'testrestaurant2';
 
 -- Create sample entities
-INSERT INTO Diners (username, password, email, referral_code) VALUES ('testdiner1', 'password', 'testdiner1@email.com', 'abcdef');
-INSERT INTO Diners (username, password, email, referral_code) VALUES ('testdiner2', 'password', 'testdiner2@email.com', 'ghijkl');
-INSERT INTO Restaurants VALUES ('testrestaurant1', 'password', 'testrestaurant1@email.com', 'French Food Club', 15, '8 Club Street', 'Mon to Wed, 8am - 12pm', 20);
-INSERT INTO Restaurants VALUES ('testrestaurant2', 'password', 'testrestaurant2@email.com', 'Thai Food Club', 21, '8 Club Street', 'Tues to Thurs, 12pm - 5pm', 20);
+INSERT INTO Diners (username, password, email, referral_code) VALUES ('testdiner1', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'testdiner1@email.com', 'abcdef');
+INSERT INTO Diners (username, password, email, referral_code) VALUES ('testdiner2', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'testdiner2@email.com', 'ghijkl');
+INSERT INTO Restaurants VALUES ('testrestaurant1', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'testrestaurant1@email.com', 'French Food Club', 15, '8 Club Street', 'Mon to Wed, 8am - 12pm', 20);
+INSERT INTO Restaurants VALUES ('testrestaurant2', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'testrestaurant2@email.com', 'Thai Food Club', 21, '8 Club Street', 'Tues to Thurs, 12pm - 5pm', 20);
 
 -- Add tags for restaurants
 INSERT INTO Tags (name) VALUES ('Dog-Friendly'), ('Family');

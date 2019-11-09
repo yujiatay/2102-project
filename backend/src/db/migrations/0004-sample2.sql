@@ -5,10 +5,10 @@ DELETE FROM Restaurants WHERE username = 'burntends';
 DELETE FROM Restaurants WHERE username = 'saltedplum';
 
 -- Create sample entities
-INSERT INTO Diners (username, password, email, referral_code) VALUES ('batman', 'password', 'batman@email.com', 'batman');
-INSERT INTO Diners (username, password, email, referral_code) VALUES ('superman', 'password', 'superman@email.com', 'superman');
-INSERT INTO Restaurants VALUES ('burntends', 'password', 'burntends@email.com', 'Burnt Ends', 11, '29 Tanglin Rd, Singapore 247911', 'Mon to Fri, 12pm-10pm', 20);
-INSERT INTO Restaurants VALUES ('saltedplum', 'password', 'saltedplum@email.com', 'The Salted Plum', 12, '10 Circular Road, Singapore 049366', 'Tues to Sat, 6pm - 12am', 20);
+INSERT INTO Diners (username, password, email, referral_code) VALUES ('batman', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'batman@email.com', 'batman');
+INSERT INTO Diners (username, password, email, referral_code) VALUES ('superman', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'superman@email.com', 'superman');
+INSERT INTO Restaurants VALUES ('burntends', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'burntends@email.com', 'Burnt Ends', 11, '29 Tanglin Rd, Singapore 247911', 'Mon to Fri, 12pm-10pm', 20);
+INSERT INTO Restaurants VALUES ('saltedplum', '$2b$12$Q2QKlyOebo/wxI3RDO1pDuMG2eVtt0VWqDOTqUaBhDBxtdA3ZjJn6', 'saltedplum@email.com', 'The Salted Plum', 12, '10 Circular Road, Singapore 049366', 'Tues to Sat, 6pm - 12am', 20);
 
 -- Add tags for restaurants
 INSERT INTO Tags (name) VALUES ('Fine Dining'), ('Chill'), ('Date night'), ('Cozy'), ('Good for groups');
