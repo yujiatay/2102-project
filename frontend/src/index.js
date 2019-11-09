@@ -71,15 +71,11 @@ ReactDOM.render(
           render={props => <MyBookings {...props}/>}
         />
         <Route 
-<<<<<<< HEAD
-          exact path="/articles"
-=======
           path="/bookmarks"
           render={props => <Bookmarks {...props}/>}
         />
         <Route 
-          path="/articles"
->>>>>>> 8208efce7a3af8bed5823456ad3a5f5a810275b7
+          exact path="/articles"
           render={props => <ArticlesList {...props}/>}
         />
         <Route 
