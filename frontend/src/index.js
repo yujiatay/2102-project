@@ -75,11 +75,11 @@ ReactDOM.render(
           render={props => <Bookmarks {...props}/>}
         />
         <Route 
-          path="/articles"
+          exact path="/articles"
           render={props => <ArticlesList {...props}/>}
         />
         <Route 
-          path="/articleView"
+          path="/articles/:username/:createdAt"
           render={props => <ArticleView {...props}/>}
         />
         <Route
