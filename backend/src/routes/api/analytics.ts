@@ -12,7 +12,9 @@ const router = new Router();
  */
 router.get('/analytics/popularity/date', requireRestaurant, async (ctx) => {
   const username = ctx.state.user.username;
-  const data = await db.analytics.getDatePopularity(username, ctx.query.min, ctx.query.max);
+  const min = ctx.query.min ? parseInt(ctx.query.min, 10) : undefined;
+  const max = ctx.query.max ? parseInt(ctx.query.max, 10) : undefined;
+  const data = await db.analytics.getDatePopularity(username, min, max);
 
   ctx.body = {
     code: HttpStatus.Ok,
@@ -26,7 +28,9 @@ router.get('/analytics/popularity/date', requireRestaurant, async (ctx) => {
  */
 router.get('/analytics/popularity/timeslot', requireRestaurant, async (ctx) => {
   const username = ctx.state.user.username;
-  const data = await db.analytics.getTimeslotPopularity(username, ctx.query.min, ctx.query.max);
+  const min = ctx.query.min ? parseInt(ctx.query.min, 10) : undefined;
+  const max = ctx.query.max ? parseInt(ctx.query.max, 10) : undefined;
+  const data = await db.analytics.getTimeslotPopularity(username, min, max);
 
   ctx.body = {
     code: HttpStatus.Ok,

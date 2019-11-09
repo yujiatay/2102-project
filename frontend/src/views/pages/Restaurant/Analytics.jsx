@@ -18,7 +18,6 @@ import Navbar from "components/Navbars/DarkNavBarRestaurant";
 import ReactDatetime from "react-datetime";
 import { requireAuthentication } from "components/AuthenticatedComponent";
 import http from "http.js";
-import { getCurrentUnixTimestamp, getUnixTimestamp } from "utils.js";
 
 class Analytics extends React.Component {
   constructor(props) {
@@ -40,8 +39,8 @@ class Analytics extends React.Component {
   async fetchAnalytics() {
     const { startDate, endDate } = this.state;
     const dateQuery = {
-      min: startDate ? getUnixTimestamp(startDate) : getCurrentUnixTimestamp(),
-      max: endDate ?  getUnixTimestamp(endDate) : getCurrentUnixTimestamp(),
+      min: startDate || ReactDatetime.moment().subtract(1, 'month').valueOf(),
+      max: endDate || Date.now(),
     };
 
     const timeslotResponse = await http.get(`/analytics/popularity/timeslot`, {params: dateQuery});

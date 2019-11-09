@@ -21,8 +21,7 @@ class ArticleComment extends React.Component {
   }
 
   handleCommentDelete() {
-    const url = 'http://localhost:8000/api/v1.0/diners/' + this.state.username + '/articles/' + this.state.createdAt;
-    http.delete(url);
+    http.delete(`/diners/${this.state.username}/articles/${this.state.createdAt}`);
   }
 
   render() {
