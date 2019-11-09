@@ -111,36 +111,36 @@ INSERT INTO MenuItems (username, name, type, price, description, image) VALUES (
 
 -- Add bookings
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('burntends', 'batman', 1, '19:00', '20:00', '2019-11-18', 1, 'I am batman', true);
+VALUES ('burntends', 'batman', 1, '19:00', '20:00', 1574074800000, 1, 'I am batman', true);
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('burntends', 'batman', 2, '19:00', '20:00', '2019-11-19', 1, 'I am batman', true);
+VALUES ('burntends', 'batman', 2, '19:00', '20:00', 1574161200000, 1, 'I am batman', true);
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('burntends', 'batman', 3, '19:00', '20:00', '2019-11-20', 1, 'I am batman', true);
+VALUES ('burntends', 'batman', 3, '19:00', '20:00', 1574247600000, 1, 'I am batman', true);
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('burntends', 'batman', 4, '19:00', '20:00', '2019-11-21', 1, 'I am batman', true);
+VALUES ('burntends', 'batman', 4, '19:00', '20:00', 1574334000000, 1, 'I am batman', true);
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('burntends', 'batman', 5, '19:00', '20:00', '2019-11-22', 1, 'I am batman', true);
+VALUES ('burntends', 'batman', 5, '19:00', '20:00', 1574420400000, 1, 'I am batman', true);
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message, is_confirmed)
-VALUES ('burntends', 'superman', 5, '19:00', '20:00', '2019-11-22', 1, 'Allergic to kryptonite', true);
+VALUES ('burntends', 'superman', 5, '19:00', '20:00', 1574420400000, 1, 'Allergic to kryptonite', true);
 
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('burntends', 'superman', 1, '20:00', '21:00', '2019-11-18', 2, 'Allergic to kryptonite');
+VALUES ('burntends', 'superman', 1, '20:00', '21:00', 1574074800000, 2, 'Allergic to kryptonite');
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('burntends', 'superman', 2, '20:00', '21:00', '2019-11-19', 2, 'Allergic to kryptonite');
+VALUES ('burntends', 'superman', 2, '20:00', '21:00', 1574161200000, 2, 'Allergic to kryptonite');
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('burntends', 'superman', 3, '20:00', '21:00', '2019-11-20', 2, 'Allergic to kryptonite');
+VALUES ('burntends', 'superman', 3, '20:00', '21:00', 1574247600000, 2, 'Allergic to kryptonite');
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('burntends', 'superman', 4, '20:00', '21:00', '2019-11-21', 2, 'Allergic to kryptonite');
+VALUES ('burntends', 'superman', 4, '20:00', '21:00', 1574334000000, 2, 'Allergic to kryptonite');
 INSERT INTO Bookings (rusername, dusername, day_of_week, start_time, end_time, booking_date, pax, message)
-VALUES ('burntends', 'superman', 5, '20:00', '21:00', '2019-11-22', 2, 'Allergic to kryptonite');
+VALUES ('burntends', 'superman', 5, '20:00', '21:00', 1574420400000, 2, 'Allergic to kryptonite');
 
 -- Add reviews
 INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES ('burntends', 'batman', 'Sanger burger is to die for. Really yummy. The meat is succulent and well-seasoned. Bread is soft and melts in your mouth. The steak is pretty good as well.', 5);
 INSERT INTO Reviews (rusername, dusername, comment, rating) VALUES ('burntends', 'superman', 'Finally got to try this place after a Long wait of 3 months. Tried a number of highly recommended dishes by many reviewers, including leek, beef marmalade, pulled pork sanger, hanger steak etc. Good and unique flavours, but frankly speaking most dishes were quite heavy, including this onglet steak, especially when it comes all the other goodies. How much I wish the salad is just dressed with simple light vinaigrette. Nothing particularly great compared to steaks elsewhere, so I guess if you have a regular stomach capacity, go sample more appetisers rattler than commuting yourself to this!', 5);
 
 -- Add articles
-INSERT INTO Articles (username, title, content, created_at) VALUES ('batman', 'I am batman', 'I am batman. I am batman. I am batman. I am batman. I am batman. I am batman.', '2019-03-03 00:00:00');
-INSERT INTO Articles (username, title, content, created_at) VALUES ('superman', 'I love good food.', 'There is a superhero in all of us, we just need the courage to put on the cape..', '2019-03-04 00:00:00');
+INSERT INTO Articles (username, title, content, created_at) VALUES ('batman', 'I am batman', 'I am batman. I am batman. I am batman. I am batman. I am batman. I am batman.', 1551542400000);
+INSERT INTO Articles (username, title, content, created_at) VALUES ('superman', 'I love good food.', 'There is a superhero in all of us, we just need the courage to put on the cape..', 1551628800000);
 
 -- Add comments
-INSERT INTO Comments (ausername, acreated_at, username, content) VALUES ('superman', '2019-03-04 00:00:00', 'batman', 'I am batman.');
+INSERT INTO Comments (ausername, acreated_at, username, content) VALUES ('superman', 1551628800000, 'batman', 'I am batman.');
