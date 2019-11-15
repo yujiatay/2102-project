@@ -28,11 +28,15 @@ class ArticleView extends React.Component {
       postIsLoading: true,
       commentsIsLoading: true,
       commentEditModal: false,
+      commentUsername: '',
+      commentCreated: -2,
       editModal: false
     }
 
     this.handleArticleDelete = this.handleArticleDelete.bind(this);
-    // this.handleArticleEdit = this.handleArticleEdit.bind(this);
+    this.handleArticleEdit = this.handleArticleEdit.bind(this);
+    this.toggleEditModal = this.toggleEditModal.bind(this);
+
   }
 
   componentDidMount() {
@@ -105,9 +109,13 @@ class ArticleView extends React.Component {
     console.log("TOGGLED!");
   }
 
-  toggleCommentEditModal = () => {
-    console.log("TOGGLED!");
-    this.setState({ commentEditModal: !this.state.commentEditModal });
+  toggleCommentEditModal = (commentUser, commentCreatedAt) => {
+
+    this.setState({ 
+      commentUsername: commentUser,
+      commentCreated: commentCreatedAt,
+      commentEditModal: !this.state.commentEditModal 
+    });
   }
 
   handleArticleDelete() {
@@ -143,7 +151,7 @@ class ArticleView extends React.Component {
     const createdTimestamp = new Date(this.state.createdAt).toString();
     const { postIsLoading, commentsIsLoading, comments } = this.state;
     const { user } = this.props;
-    const isOwner = user == this.state.username;
+    const isOwner = user.username == this.state.username;
     return (
       <>
         <Navbar user={user} history={this.props.history}/>
@@ -183,7 +191,8 @@ class ArticleView extends React.Component {
                     <div key={createdAt}>
                       <ArticleComment ausername={this.state.username} acreatedAt={this.state.createdAt}
                                       username={username} createdAt={createdAt} updatedAt={createdAt} content={content}
-                                      onDelete={() => this.fetchArticleComments(this.state.username, this.state.createdAt)} />
+                                      onDelete={() => this.fetchArticleComments(this.state.username, this.state.createdAt)}
+                                      toggleCommentEditModal={this.toggleCommentEditModal} />
                     </div>
                   );
                 })
@@ -195,7 +204,8 @@ class ArticleView extends React.Component {
           <EditArticleModal isOpen={this.state.editModal} toggleModal={this.toggleEditModal}
                             username={this.state.username} createdAt={this.state.createdAt}/>
           <EditCommentModal isOpen={this.state.commentEditModal} toggleModal={this.toggleCommentEditModal}
-                            username={this.state.username} createdAt={this.state.createdAt}/>
+                            ausername={this.state.username} acreatedAt={this.state.createdAt}
+                            commentUsername={this.state.commentUsername} commentCreatedAt={this.state.commentCreated}/>
         </main>
       </>
     );

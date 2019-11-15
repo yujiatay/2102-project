@@ -49,7 +49,7 @@ class ArticleComment extends React.Component {
               <div>
               {isOwner ? (
                 <div>
-                  {/*<Button onClick={() => this.props.toggleCommentEditModal(this.state.username, this.state.createdAt)}>Edit</Button>*/}
+                  <Button onClick={() => this.props.toggleCommentEditModal(this.state.username, this.state.createdAt)}>Edit</Button>
                   <Button onClick={this.handleCommentDelete}>Delete</Button>
                 </div>
               ) : <p></p>}

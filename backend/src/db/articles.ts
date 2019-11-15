@@ -101,7 +101,7 @@ export function getRecentCommentsOnArticle(article: Article, prev?: number): Pro
  */
 export function updateArticle(article: Article, title: string, content: string): Promise<Article | null> {
   return db.getOne(`
-    UPDATE Articles SET (title, content, updated_at) = ($1, $2, (EXTRACT(EPOCH FROM NOW()) * 1000)
+    UPDATE Articles SET (title, content, updated_at) = ($1, $2, EXTRACT(EPOCH FROM NOW()) * 1000)
     WHERE username = $3 AND created_at = $4 RETURNING *
   `, [title, content, article.username, article.createdAt]);
 }
@@ -111,7 +111,7 @@ export function updateArticle(article: Article, title: string, content: string):
  */
 export function updateComment(comment: Comment, content: string): Promise<Comment | null> {
   return db.getOne(`
-    UPDATE Comments SET (content, updated_at) = ($1, (EXTRACT(EPOCH FROM NOW()) * 1000)
+    UPDATE Comments SET (content, updated_at) = ($1, EXTRACT(EPOCH FROM NOW()) * 1000)
     WHERE ausername = $2 AND acreated_at = $3 AND username = $4 AND created_at = $5 RETURNING *
   `, [content, comment.ausername, comment.acreatedAt, comment.username, comment.createdAt]);
 }
