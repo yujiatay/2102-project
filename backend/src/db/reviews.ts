@@ -44,7 +44,7 @@ export function getReview(rusername: string, dusername: string): Promise<Review 
  */
 export function updateReview(review: Review, comment: string, rating: number): Promise<Review | null> {
   return db.getOne(`
-    UPDATE Reviews SET (comment, rating, updated_at) = ($1, $2, NOW())
+    UPDATE Reviews SET (comment, rating, updated_at) = ($1, $2, EXTRACT(EPOCH FROM NOW()) * 1000)
     WHERE rusername = $3 AND dusername = $4 RETURNING *
   `, [comment, rating, review.rusername, review.dusername]);
 }

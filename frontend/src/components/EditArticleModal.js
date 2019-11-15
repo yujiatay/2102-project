@@ -16,6 +16,7 @@ import {
 class EditArticleModal extends React.Component {
   constructor(props) {
     super(props);
+    console.table(props);
     this.state = {
       username: props.username,
       createdAt: props.createdAt
@@ -23,13 +24,13 @@ class EditArticleModal extends React.Component {
   }
 
   handleSubmit(e) {
-    e.preventDefault()
-    const formData = new FormData(e.target)
-    const body = {}
-    formData.forEach((value, property) => body[property] = value)
-    console.table(body)
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
     // Request goes here.
-    http.patch(`/diners`, body)
+    http.patch(`/diners/${this.props.username}/articles/${this.props.createdAt}`, body)
       .then(res => {
         console.log(res);
       })

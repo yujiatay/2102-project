@@ -17,8 +17,8 @@ class EditCommentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: props.username,
-      createdAt: props.createdAt
+      username: props.ausername,
+      createdAt: props.acreatedAt
     }
   }
 
@@ -26,10 +26,10 @@ class EditCommentModal extends React.Component {
     e.preventDefault()
     const formData = new FormData(e.target)
     const body = {}
-    formData.forEach((value, property) => body[property] = value)
+    formData.forEach((value, property) => body[property] = value.toString())
     console.table(body)
     // Request goes here.
-    http.patch(`/diners/:username/articles/:created/comments/:username/:created`, null, { params: body })
+    http.patch(`/diners/${this.props.ausername}/articles/${this.props.acreatedAt}/comments/${this.props.commentUsername}/${this.props.commentCreatedAt}`, null, { params: body })
       .then(res => {
         console.log(res);
       })
@@ -61,10 +61,6 @@ class EditCommentModal extends React.Component {
           </div>
           <div className="modal-body">
             <Form onSubmit={e => this.handleSubmit(e)}>
-              <FormGroup>
-                <Label for="exampleText">Add Title:</Label>
-                <Input type="text" name="title" id="title" />
-              </FormGroup>
               <FormGroup>
                 <Label for="exampleText">Add Markdown Content:</Label>
                 <Input type="textarea" name="content" id="content" />
